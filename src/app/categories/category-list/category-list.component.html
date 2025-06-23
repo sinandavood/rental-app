@@ -1,0 +1,22 @@
+<section class="top-categories-section container">
+  <!-- Section Header -->
+  <div class="section-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>Browse From Top Categories</h2>
+      <div class="title-underline"></div>
+    </div>
+    <button class="btn btn-danger">View All</button>
+  </div>
+
+  <!-- Categories Grid -->
+  <div class="row text-center g-4">
+    <div class="col-6 col-sm-4 col-md-2" *ngFor="let category of categories">
+      <div class="category-box p-3 border rounded-3 h-100 d-flex flex-column align-items-center justify-content-center">
+        <img [src]="category.image" [alt]="category.name" class="category-icon mb-2" />
+        <p class="category-label mb-0">{{ category.name }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+

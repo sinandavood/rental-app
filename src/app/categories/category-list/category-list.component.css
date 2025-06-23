@@ -1,0 +1,41 @@
+.top-categories-section {
+  padding: 2rem 0;
+  background-color: #f9f9f9;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.title-underline {
+  width: 100px;
+  height: 4px;
+  background-color: #ff5050;
+  border-radius: 2px;
+}
+
+.category-box {
+  background-color: #fff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.category-box:hover {
+  background-color: #ff5050;
+  color: #fff;
+}
+
+.category-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.category-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+

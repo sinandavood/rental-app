@@ -1,0 +1,22 @@
+<section class="products-list">
+  <h2 class="text-center mb-4">Our Products</h2>
+
+  <div *ngIf="isLoading">Loading products...</div>
+  <div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="row" *ngIf="products.length > 0">
+    <div class="col-md-3 mb-4" *ngFor="let product of products">
+      <div class="card h-100 text-center">
+        <img [src]="product.image" class="card-img-top" alt="{{ product.name }}" />
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">{{ product.price | currency }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && products.length === 0">
+    No products found.
+  </div>
+</section>

@@ -1,0 +1,13 @@
+.our-products-section h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.title-underline {
+  width: 100px;
+  height: 4px;
+  background-color: #ff5050;
+  border-radius: 2px;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
