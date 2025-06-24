@@ -1,29 +1,27 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CategoryService } from '../category.service';
 import { CommonModule } from '@angular/common';
+import { ProductService } from 'src/app/products/product.service';
+import { Product } from 'src/app/models/product.model';
 
 @Component({
   selector: 'app-category-list',
   standalone:true,
   templateUrl: './category-list.component.html',
-  imports: [CommonModule],
+  imports:[CommonModule],
   styleUrls: ['./category-list.component.css']
 })
-export class CategoryListComponent {
-   categories = [
-    { name: 'Electronics', image: 'assets/images/books.jpg' },
-    { name: 'Furniture', image: 'assets/images/books.jpg' },
-    { name: 'Books', image: 'assets/images/books.jpg' },
-    { name: 'Furniture', image: 'assets/images/books.jpg' },
-    { name: 'Books', image: 'assets/images/books.jpg' },
-    { name: 'Sports', image: 'assets/images/books.jpg' }
-  ];
+export class CategoryListComponent implements OnInit {
+  products:Product[]=[];
+  constructor(public categoryService: CategoryService,public productservice:ProductService) {}
 
-  constructor(private router: Router) {}
-
-  goToCategory(name: string) {
-    // navigate to product list with this category as a query parameter
-    this.router.navigate(['/products'], { queryParams: { category: name } });
-  }
-
+  ngOnInit(): void {
+    this.categoryService.refreshList();
+  }
+  onCategorySelect(categoryName: string) {
+  // Call your product service to filter products
+  this.productservice.getFilteredProducts('', categoryName).subscribe(res => {
+    this.products = res;
+  });
+}
 }
