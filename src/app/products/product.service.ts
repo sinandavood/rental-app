@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from '../models/product.model'; // Adjust the import path as necessary
-import { HttpParams } from '@angular/common/http';
+import { Product } from '../models/product.model'; // Adjust path if needed
+import { environment } from '../env/environment-development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private baseUrl = 'http://localhost:3000/api'; // Adjust the base URL as needed
-  constructor(private http: HttpClient) { }
+  url: string = `${environment.apiBaseUrl}/item`;
+  list: Product[] = [];
 
- getFilteredProducts(keyword: string, location: string): Observable<Product[]> {
-  let params = new HttpParams();
-  if (keyword) params = params.set('keyword', keyword);
-  if (location) params = params.set('location', location);
+  constructor(private http: HttpClient) {}
 
+  getFilteredProducts(keyword: string, location: string): Observable<Product[]> {
+    let params = new HttpParams();
+    if (keyword) params = params.set('keyword', keyword);
+    if (location) params = params.set('location', location);
 
-  return this.http.get<Product[]>(`${this.baseUrl}/products`, { params });
-}
+    return this.http.get<Product[]>(this.url, { params });
+  }
 }
