@@ -14,14 +14,14 @@
         aria-label="Search keyword"
       />
       <select
-        class="form-select border-0"
-        [(ngModel)]="selectedLocation"
-        name="location"
-        aria-label="Select location"
-      >
-        <option value="" disabled>Select location</option>
-        <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
-      </select>
+  class="form-select border-0"
+  [(ngModel)]="selectedLocation"
+  name="location"
+  aria-label="Select location"
+>
+  <option value="" disabled>Select location</option>
+  <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+</select>
       <button type="submit" class="btn btn-danger d-flex align-items-center px-4 rounded-pill">
         <img src="assets/images/search-white.svg" alt="Search" style="width: 20px; height: 20px;" />
       </button>
