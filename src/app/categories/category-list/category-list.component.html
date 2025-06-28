@@ -1,19 +1,38 @@
-<section class="container my-5">
-  <h2 class="text-center mb-4 text-primary">Filter by Category</h2>
+<section class="categories-container">
+  <div class="categories-header">
+    <h2 class="categories-title">Browse From Top Categories</h2>
+    <div class="title-underline"></div>
+  </div>
 
-  <div class="row justify-content-center g-3">
-    <div class="col-auto" *ngFor="let cat of categoryService.list">
-      <button
-        class="btn btn-outline-primary d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
-        (click)="onCategorySelect(cat.name)"
+  <div *ngIf="categoryService.list.length > 0; else noCategories">
+    <div class="categories-grid">
+      <div
+        *ngFor="let cat of categoryService.list"
+        class="category-card"
+        (click)="onCategoryClick(cat)"
       >
-        <i class="bi bi-tag"></i> <!-- Bootstrap icon example -->
-        <span>{{ cat.name }}</span>
-      </button>
+        <div class="category-icon">
+          <img
+            [src]="getImageUrl(cat.name)"
+            [alt]="cat.name"
+            class="category-image"
+            loading="lazy"
+            
+          />
+        </div>
+        
+        <div class="category-name">{{ cat.name }}</div>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="categoryService.list.length === 0" class="text-center text-muted mt-4">
-    No categories found.
-  </div>
+  <ng-template #noCategories>
+    <div class="no-categories">
+      <p class="no-categories-text">No categories found.</p>
+    </div>
+  </ng-template>
 </section>
+
+
+
+

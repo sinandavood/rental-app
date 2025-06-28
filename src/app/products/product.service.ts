@@ -1,7 +1,9 @@
+// src/app/products/product.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from '../models/product.model'; // Adjust path if needed
+import { Product } from '../models/product.model';
 import { environment } from '../env/environment-development';
 
 @Injectable({
@@ -13,6 +15,17 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
+  // Get all products
+  getProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.url);
+  }
+
+  // Get product by ID
+  getProductById(id: string): Observable<Product> {
+    return this.http.get<Product>(`${this.url}/${id}`);
+  }
+
+  // Get filtered products
   getFilteredProducts(keyword: string, location: string): Observable<Product[]> {
     let params = new HttpParams();
     if (keyword) params = params.set('keyword', keyword);

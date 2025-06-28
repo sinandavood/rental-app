@@ -1,27 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { CategoryService } from '../category.service';
 import { CommonModule } from '@angular/common';
-import { ProductService } from 'src/app/products/product.service';
-import { Product } from 'src/app/models/product.model';
+import { CategoryService } from '../category.service';
+import { Category } from 'src/app/models/category.model';
 
 @Component({
   selector: 'app-category-list',
-  standalone:true,
+  standalone: true,
   templateUrl: './category-list.component.html',
-  imports:[CommonModule],
-  styleUrls: ['./category-list.component.css']
+  styleUrls: ['./category-list.component.css'],
+  imports: [CommonModule]
 })
 export class CategoryListComponent implements OnInit {
-  products:Product[]=[];
-  constructor(public categoryService: CategoryService,public productservice:ProductService) {}
+  constructor(public categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.categoryService.refreshList();
   }
-  onCategorySelect(categoryName: string) {
-  // Call your product service to filter products
-  this.productservice.getFilteredProducts('', categoryName).subscribe(res => {
-    this.products = res;
-  });
+
+  getImageUrl(categoryName: string): string {
+    const fileName = categoryName.toLowerCase().replace(/\s+/g, '-') + '.png';
+    return `assets/images/categories/${fileName}`;
+  }
+
+  
+
+
+  onCategoryClick(category: Category): void {
+    console.log('Clicked category:', category.name);
+    // You can navigate or filter products here
+  }
 }
-}
+
+
+
