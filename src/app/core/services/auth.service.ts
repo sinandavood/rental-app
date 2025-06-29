@@ -5,17 +5,22 @@ import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  apiUrl = 'http://localhost:5000/api/auth';
+  apiUrl = 'https://p2prental.runasp.net/api/Auth';
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  register(data: { name: string; emailOrPhone: string; password: string }): Observable<any> {
+  register(data:any)
+  {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
  login(credentials: {emailOrPhone: string; password: string}): Observable<any> {
   return this.http.post(`${this.apiUrl}/login`, credentials);
 }
+isLoggedIn(): boolean {
+  return !!localStorage.getItem('token');
+}
+
 
 
   logout(): void {

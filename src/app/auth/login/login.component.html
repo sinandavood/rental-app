@@ -1,52 +1,55 @@
 <div class="login-container d-flex justify-content-center align-items-center min-vh-100 bg-light">
-    <div class="login-card p-4 shadow-sm bg-white rounded">
-      <h2 class="text-center mb-1">Log in</h2>
-      <p class="text-center text-muted mb-4">Enter your details below</p>
-  
-      <!-- Login Form -->
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-        <!-- Email or Phone -->
-        <div class="mb-3">
-          <label for="emailOrPhone" class="form-label">Email or Phone Number</label>
-          <input
-            id="emailOrPhone"
-            class="form-control"
-            formControlName="emailOrPhone"
-            placeholder="you@example.com or +91 9876543210"
-            type="text"
-            required
-          />
+  <div class="login-card p-4 shadow-sm bg-white rounded" style="width: 100%; max-width: 400px;">
+    <h2 class="text-center mb-4">Log in</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+
+      <!-- Email or Phone -->
+      <div class="mb-3">
+        <label for="EmailAddress" class="form-label">Email or Phone Number</label>
+        <input id="EmailAddress" type="text" class="form-control" placeholder="johndoe@gmail.com / 9876543210"
+          formControlName="EmailAddress" [class.is-invalid]="hasDisplayError('EmailAddress')" />
+        <div class="invalid-feedback" *ngIf="hasDisplayError('EmailAddress')">
+          Email or phone is required.
         </div>
-  
-        <!-- Password -->
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input
-            id="password"
-            class="form-control"
-            formControlName="password"
-            type="password"
-            placeholder="Your password"
-            required
-          />
-        </div>
-  
-        <!-- Forgot Password Link -->
-        <div class="text-end mb-3">
-          <a href="/forgot-password" class="text-primary small">Forgot password?</a>
-        </div>
-  
-        <!-- Login Button -->
-        <button type="submit" class="btn btn-danger w-100" [disabled]="!loginForm.valid">
-          Log In
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3 position-relative">
+        <label for="password" class="form-label">Password</label>
+        <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" formControlName="password"
+          placeholder="Password" [class.is-invalid]="hasDisplayError('password')" />
+        <button type="button"
+          class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
+          (click)="showPassword = !showPassword">
+          {{ showPassword ? 'Hide' : 'Show' }}
         </button>
-      </form>
-  
-      <!-- Sign Up Link -->
-      <p class="text-center mt-3 small text-muted">
-        Don’t have an account?
-        <a href="/register" class="text-danger fw-bold">Sign up</a>
-      </p>
-    </div>
+        <div class="invalid-feedback" *ngIf="hasDisplayError('password')">
+          Password is required.
+        </div>
+      </div>
+
+      <!-- Google Login -->
+      <button type="button" class="btn btn-outline-danger w-100 mb-3" (click)="loginWithGoogle()">
+        <img src="assets/images/google.svg" alt="Google" width="20" class="me-2" />
+        Log in with Google
+      </button>
+
+      <!-- Forgot Password -->
+      <div class="text-end mb-3">
+        <a routerLink="/forgot-password" class="text-primary small">Forgot password?</a>
+      </div>
+
+      <!-- Login Button -->
+      <button type="submit" class="btn btn-danger w-100" [disabled]="loginForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Logging in...' : 'Log In' }}
+      </button>
+    </form>
+
+    <!-- Sign Up Link -->
+    <p class="text-center mt-3 small text-muted">
+      Don't have an account?
+      <a routerLink="./auth/register" class="text-danger fw-bold">Sign up</a>
+    </p>
   </div>
-  
+</div>

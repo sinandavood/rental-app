@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,4 +9,13 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
 
+  constructor(
+    public authService: AuthService, // make public to use in template
+    private router: Router
+  ) {}
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/auth/login']);
+  }
 }

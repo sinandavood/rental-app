@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
+import { MyWishlistComponent } from './mywishlist-list/mywishlist-list.component';
 
 const routes: Routes = [
   {path: '', component:  HomeComponent},
@@ -12,6 +13,11 @@ const routes: Routes = [
 
   {path:'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule),canActivate: [AuthGuard]},
   {path:'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),canActivate: [AdminGuard]},
+{
+    path: 'my-wishlist',
+    loadComponent: () => import('./mywishlist-list/mywishlist-list.component').then(m => m.MyWishlistComponent)
+  }
+
 
 ];
 

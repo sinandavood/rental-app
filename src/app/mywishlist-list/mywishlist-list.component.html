@@ -1,0 +1,42 @@
+<section class="wishlist-section container my-5">
+  <h2 class="section-title text-center mb-4">My Wishlists</h2>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted mt-2">Loading wishlist...</p>
+  </div>
+
+  <!-- No items message -->
+  <div *ngIf="!isLoading && wishlistItems.length === 0" class="text-center my-5">
+    <p class="text-muted">You have no items in your wishlist.</p>
+  </div>
+
+  <!-- Wishlist grid -->
+  <div class="row" *ngIf="!isLoading && wishlistItems.length > 0">
+    <div class="col-md-6 col-lg-4 col-xl-3 mb-4" *ngFor="let item of wishlistItems">
+      <div class="product-card h-100 shadow rounded-4 border bg-white">
+        <div class="position-relative">
+          <img [src]="item.image" alt="{{ item.itemName }}" class="product-image rounded-top-4 w-100" />
+          <button class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2 rounded-circle"
+                  (click)="removeFromWishlist(item.itemId)" title="Remove from Wishlist">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="product-info p-3">
+          <h5 class="fw-semibold text-truncate">{{ item.itemName }}</h5>
+          <p class="text-danger fw-bold">{{ item.price }}/day</p>
+          <p class="small text-muted">{{ item.itemDescription }}</p>
+          <p class="small"><i class="bi bi-tags"></i> {{ item.categoryName }}</p>
+          <p class="small"><i class="bi bi-clock"></i> {{ item.createdAt | date: 'mediumDate' }}</p>
+          <span class="badge" [ngClass]="item.availability ? 'bg-success' : 'bg-secondary'">
+            {{ item.availability ? 'Available' : 'Unavailable' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
