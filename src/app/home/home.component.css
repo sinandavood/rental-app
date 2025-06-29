@@ -13,3 +13,22 @@ select:focus {
   box-shadow: none !important;
   border: none !important;
 }
+
+.features-section {
+  background-color: #f8f9fa;
+}
+
+.feature-box img {
+  display: block;
+  margin: 0 auto;
+}
+
+.feature-box h5 {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.feature-box p {
+  color: #666;
+  font-size: 0.9rem;
+}

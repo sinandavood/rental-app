@@ -1,51 +1,47 @@
-<section class="container my-5">
-  <h2 class="text-center fw-bold mb-5 text-dark animate__animated animate__zoomIn">Available Products for Rent</h2>
+<section class="product-section container my-5">
+  <h2 class="section-title text-center mb-4">Available Products for Rent</h2>
 
-  <div class="row g-4" *ngIf="products.length > 0">
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let product of products; let i = index">
-      <div class="card h-100 shadow-lg border-0 rounded-4 bg-white position-relative product-card animate__animated animate__fadeInUp" [attr.data-delay]="i * 100 + 'ms'">
-        <!-- Top-right Icons -->
-        <div class="position-absolute top-0 end-0 m-2 d-flex flex-column align-items-center gap-2 animate__animated animate__bounceIn" [attr.data-delay]="i * 150 + 'ms'">
-          <i class="bi bi-heart-fill text-muted hover-icon heart-icon" title="Add to Favorites"></i>
-          <i class="bi bi-eye text-muted hover-icon view-icon" title="View Details"></i>
+  <!-- Show 'not found' message -->
+  <div *ngIf="!isLoading && products.length === 0" class="text-center my-5">
+    <p class="no-products text-muted">No products found. Check back later!</p>
+  </div>
+
+  <!-- Products grid -->
+  <div class="row" *ngIf="products.length > 0">
+    <div class="col-md-6 col-lg-4 col-xl-3 mb-4" *ngFor="let product of products">
+      <div class="product-card h-100 shadow rounded-4 border bg-white">
+        <!-- Image and icons -->
+        <div class="position-relative product-image-container">
+          <img [src]="product.image" alt="{{ product.name }}" class="product-image rounded-top-4 w-100" />
+          <div class="top-icons position-absolute top-0 end-0 m-2 d-flex flex-column gap-2">
+            <i class="bi bi-heart-fill icon text-muted" title="Add to Favorites"></i>
+            <i class="bi bi-eye icon text-muted" title="View Details"></i>
+          </div>
         </div>
 
-        <!-- Product Image -->
-        <div class="bg-light rounded-top-4 text-center p-3 product-image-wrapper animate__animated animate__slideInLeft" [attr.data-delay]="i * 120 + 'ms'">
-          <img [src]="product.image" alt="{{ product.name }}"
-               class="img-fluid h-100 object-fit-contain rounded-3 product-image" />
-        </div>
+        <!-- Product Info -->
+        <div class="product-info p-3">
+          <h5 class="product-name fw-semibold mb-2 text-truncate">{{ product.name }}</h5>
+          <p class="product-price text-danger fw-bold mb-2">${{ product.displayPrice }}/day</p>
 
-        <!-- Card Body -->
-        <div class="card-body d-flex flex-column p-4">
-          <h5 class="card-title fw-semibold text-dark mb-1 text-truncate animate__animated animate__fadeIn" [attr.data-delay]="i * 130 + 'ms'">{{ product.name }}</h5>
+          <div class="product-meta small text-muted mb-3">
+            <div><i class="bi bi-geo-alt me-1"></i>location : {{ product.location }}</div>
+            <div><i class="bi bi-person me-1"></i>owner : {{ product.ownerName }}</div>
+            <div><i class="bi bi-clock me-1"></i>posted at : {{ product.createdAt | date: 'mediumDate' }}</div>
+          </div>
 
-          <p class="text-primary fw-bold mb-2 price-text animate__animated animate__bounceIn" [attr.data-delay]="i * 140 + 'ms'">
-            {{ product.displayPrice }}/day
-          </p>
+          <div class="d-flex justify-content-between align-items-center">
+  <span class="badge-status"
+        [ngClass]="product.availability ? 'available' : 'unavailable'">
+    {{ product.availability ? 'Available for Rent' : 'Currently Unavailable' }}
+  </span>
+  <button class="btn btn-danger btn-sm" [routerLink]="['/products', product.id]">
+    Rent Now
+  </button>
+</div>
 
-          <p class="text-muted small mb-3 description-text animate__animated animate__fadeIn" [attr.data-delay]="i * 150 + 'ms'">{{ product.description | slice:0:80 }}{{ product.description.length > 80 ? '...' : '' }}</p>
-
-          <ul class="list-unstyled text-muted small mb-3 info-list animate__animated animate__slideInRight" [attr.data-delay]="i * 160 + 'ms'">
-            <li><i class="bi bi-geo-alt me-1"></i><strong>Location:</strong> {{ product.location }}</li>
-            <li><i class="bi bi-tag me-1"></i><strong>Category:</strong> {{ product.categoryName }}</li>
-            <li><i class="bi bi-person me-1"></i><strong>Owner:</strong> {{ product.ownerName }}</li>
-            <li><i class="bi bi-clock me-1"></i><strong>Posted:</strong> {{ product.createdAt | date: 'mediumDate' }}</li>
-          </ul>
-
-          <span class="badge mt-auto px-3 py-2 availability-badge animate__animated animate__pulse" [attr.data-delay]="i * 170 + 'ms'"
-                [ngClass]="product.availability ? 'bg-success' : 'bg-danger'">
-            {{ product.availability ? 'Available' : 'Unavailable' }}
-          </span>
-
-          <!-- Call to Action Button -->
-          <button class="btn btn-outline-primary btn-sm mt-2 cta-button animate__animated animate__bounceIn" [attr.data-delay]="i * 180 + 'ms'">Rent Now</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <div *ngIf="!isLoading && products.length === 0" class="text-center text-muted mt-5 animate__animated animate__tada">
-    <p class="no-products-text">No products found. Check back later!</p>
   </div>
 </section>

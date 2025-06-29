@@ -1,1 +1,18 @@
-<p>product-details works!</p>
+<div class="container my-5" *ngIf="!isLoading && product; else loaderTpl">
+  <h2 class="mb-3">{{ product.name }}</h2>
+  <img [src]="product.image" class="img-fluid mb-3" style="max-width: 400px;" />
+  <p><strong>Price:</strong> {{ product.displayPrice }}/day</p>
+  <p><strong>Location:</strong> {{ product.location }}</p>
+  <p><strong>Description:</strong> {{ product.description }}</p>
+  <button class="btn btn-outline-primary mt-3" routerLink="/products">Rent</button><br>
+  <button class="btn btn-outline-primary mt-3" routerLink="/products">Back to Products</button>
+ 
+</div>
+
+<ng-template #loaderTpl>
+  <div class="text-center p-5">
+    <span *ngIf="isLoading">Loading product details...</span>
+    <span *ngIf="error">{{ error }}</span>
+  </div>
+</ng-template>
+

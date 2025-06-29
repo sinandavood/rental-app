@@ -5,32 +5,89 @@ import { Router } from '@angular/router';
 import { CategoryListComponent } from '../categories/category-list/category-list.component';
 import { ProductListComponent } from '../products/product-list/product-list.component';
 
-
 @Component({
   selector: 'app-home',
-  standalone:true,
+  standalone: true,
+  imports: [CommonModule, FormsModule, CategoryListComponent, ProductListComponent],
   templateUrl: './home.component.html',
-  imports: [  CommonModule,
-    FormsModule,
-    CategoryListComponent, // <- also standalone
-    ProductListComponent ],
-  styleUrls: ['./home.component.css'],
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-constructor(private router: Router) { }
+  locations: string[] = [];
+  currentLocation = '';
+  searchKeyword = '';
+  selectedLocation = '';
 
-  locations:string[] = ['Chennai', 'Mumbai', 'Delhi'];
+  constructor(private router: Router) {}
 
-searchKeyword:string = '';
-selectedLocation:string = '';
+  ngOnInit(): void {
+    this.getCurrentLocation();
+    this.loadIndianCities();
+  }
 
+  /** Fetch geolocation and reverse geocode to get current city */
+  getCurrentLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          this.reverseGeocode(lat, lon); // Fetch city name
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          // Even if geolocation fails, you already have other locations loaded
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  }
 
-onSearch():void {
-  this.router.navigate(['/products'], {
-    queryParams: {
-      keyword: this.searchKeyword,
-      location: this.selectedLocation,
-    }
-  });
-}
+  /** Use OpenStreetMap Nominatim to get the city from lat/lon */
+  reverseGeocode(lat: number, lon: number): void {
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+      .then(res => res.json())
+      .then((data) => {
+        const city = data?.address?.city || data?.address?.town || data?.address?.village || '';
+        if (city) {
+          this.currentLocation = city;
+          this.locations.unshift('Current Location: ' + city); // Add at top of list
+        }
+      })
+      .catch((error) => {
+        console.error('Error reverse geocoding:', error);
+      });
+  }
+
+  /** Populate with Indian cities */
+  loadIndianCities(): void {
+    const indianCities = [
+      'Chennai',
+      'Mumbai',
+      'Delhi',
+      'Bangalore',
+      'Kolkata',
+      'Pune',
+      'Hyderabad',
+      'Ahmedabad',
+      'Jaipur',
+      'Lucknow',
+      'Surat',
+      'Chandigarh',
+      'Kochi',
+      'Bhopal',
+      'Patna'
+    ];
+    this.locations.push(...indianCities);
+  }
+
+  onSearch(): void {
+    this.router.navigate(['/products'], {
+      queryParams: {
+        keyword: this.searchKeyword,
+        location: this.selectedLocation,
+      },
+    });
+  }
 }

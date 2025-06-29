@@ -1,1 +1,56 @@
-<p>register works!</p>
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
+      <h3 class="text-center mb-4">Create Account</h3>
+  
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <!-- Name -->
+        <div class="mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Full Name"
+            formControlName="name"
+          />
+        </div>
+  
+        <!-- Email or phone -->
+        <div class="mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Email or Phone Number"
+            formControlName="emailOrPhone"
+          />
+        </div>
+  
+        <!-- Password -->
+        <div class="mb-3">
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Password"
+            formControlName="password"
+          />
+        </div>
+  
+        <!-- Create account -->
+        <button class="btn btn-primary w-100 mb-2" [disabled]="registerForm.invalid">Create Account</button>
+  
+        <!-- OR separator -->
+        <div class="text-center my-2 text-muted">OR</div>
+  
+        <!-- Sign up with Google -->
+        <button type="button" class="btn btn-outline-danger w-100 mb-3" (click)="signupWithGoogle()">
+          <img src="assets/images/google.svg" alt="Google" width="20" class="me-2" />
+          Sign up with Google
+        </button>
+  
+        <!-- Already have account? -->
+        <div class="text-center mt-2">
+          <span>Already have an account? </span>
+          <a routerLink="/login" class="text-decoration-none">Log in</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  
