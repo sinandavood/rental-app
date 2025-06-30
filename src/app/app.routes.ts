@@ -1,13 +1,18 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
-  { path: 'products', loadChildren: () => import('./products/products.module').then(m => m.ProductsModule) },
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+  },
+  {
+    path: 'products',
+    loadChildren: () => import('./products/products.module').then(m => m.ProductsModule),
+  },
   {
     path: 'products/:id',
     loadComponent: () =>
@@ -29,9 +34,3 @@ const routes: Routes = [
       import('./mywishlist-list/mywishlist-list.component').then(m => m.MyWishlistComponent),
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)], // ✅ FIXED
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}

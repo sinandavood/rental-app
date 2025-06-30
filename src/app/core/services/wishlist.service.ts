@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/app/env/environment-development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WishListService {
-  private baseUrl = 'https://localhost:7155/api/WishList'; 
+  private baseUrl = `${environment.apiBaseUrl}/wishlist`;
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Get all wishlist items
+  // ✅ Get all wishlist items for current user
   getWishlist(): Observable<any> {
     return this.http.get(this.baseUrl);
   }

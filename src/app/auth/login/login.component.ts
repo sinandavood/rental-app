@@ -31,6 +31,8 @@ export class LoginComponent implements OnInit {
   showPassword = false;
   isSubmitted = false;
   userInfo: User | null = null;
+  isSubmitting: boolean = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -42,17 +44,15 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required],
     });
   }
-  isSubmitting: boolean = false;
-
 
   ngOnInit(): void {
     this.checkCurrentUser();
   }
 
-  // ✅ Login handler
   onLogin(): void {
     this.isSubmitted = true;
     if (this.loginForm.invalid) return;
+    this.isSubmitting=true;
 
     const credentials = this.loginForm.value;
 
@@ -74,7 +74,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // ✅ Google login (Web only)
   async loginWithGoogle() {
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
@@ -92,7 +91,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // ✅ Toast alert
   showAlert(message: string, icon: 'success' | 'error' | 'warning' | 'info') {
     Swal.fire({
       toast: true,
@@ -109,13 +107,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // ✅ Validation error display helper
   hasDisplayError(controlName: string): boolean {
     const control: AbstractControl | null = this.loginForm.get(controlName);
     return !!control && control.invalid && (control.touched || control.dirty || this.isSubmitted);
   }
 
-  // ✅ Check for already logged-in Google user
   checkCurrentUser() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
