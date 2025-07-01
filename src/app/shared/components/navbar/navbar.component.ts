@@ -15,12 +15,13 @@ export class NavbarComponent {
 
   userfullname:string=""
 
-  ngOnInit():void{
-    if (this.authService.isLoggedIn()) {
-      const user = this.authService.getCurrentUser(); // You need to implement this
-      this.userfullname = user?.FullName || '';
-    }
-  }
+  ngOnInit(): void {
+  this.authService.user$.subscribe(user => {
+    this.userfullname = user?.unique_name || '';
+    console.log('User from stream:', user);
+
+  });
+}
   constructor(
     public authService: AuthService, // make public to use in template
     private router: Router

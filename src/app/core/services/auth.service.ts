@@ -6,27 +6,35 @@ import { environment } from 'src/app/env/environment-development';
 import { jwtDecode } from 'jwt-decode';
 import { HttpHeaders } from '@angular/common/http';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
+import { BehaviorSubject } from 'rxjs';
+
+
+export interface JwtPayload {
+  nameid: string;
+  email: string;
+  unique_name: string;
+  FullName?: string; // Optional in case it's missing
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+   private userSubject = new BehaviorSubject<JwtPayload | null>(null);
+  user$ = this.userSubject.asObservable();
+
   apiUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  getCurrentUser(): any {
+  getCurrentUser(): JwtPayload|null {
     const token = localStorage.getItem('token');
     if (!token) return null;
 
     try {
       const decoded: any = jwtDecode(token);
-      return {
-        id: decoded.nameid,
-        email: decoded.email,
-        FullName: decoded.unique_name || decoded.name || '',
-        role: decoded.role
-      };
+      this.userSubject.next(decoded);
+      return decoded;
     } catch (e) {
       return null;
     }
@@ -95,6 +103,7 @@ export class AuthService {
   saveUserData(token: string, role: string): void {
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
+    this.getCurrentUser();
   }
 
   getToken(): string | null {

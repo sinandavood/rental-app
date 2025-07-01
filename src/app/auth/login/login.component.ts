@@ -81,6 +81,7 @@ export class LoginComponent implements OnInit {
   this.authService.loginWithGoogle(response.credential).subscribe({
     next: (x: any) => {
       localStorage.setItem("token", x.token);
+      this.authService.saveUserData(x.token,x.role);
 
       Swal.fire({
         icon: 'success',
