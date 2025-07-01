@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,7 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import Swal from 'sweetalert2';
+import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
 
 import {
   getAuth,
@@ -17,8 +18,15 @@ import {
   GoogleAuthProvider,
   User,
   onAuthStateChanged,
-} from 'firebase/auth';
 
+} from 'firebase/auth';
+declare const google: any;
+
+declare global {
+  interface Window {
+    onGoogleLibraryLoad: () => void;
+  }
+}
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -32,39 +40,100 @@ export class LoginComponent implements OnInit {
   isSubmitted = false;
   userInfo: User | null = null;
   isSubmitting: boolean = false;
-
+  isGoogleLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private _ngZone: NgZone
   ) {
     this.loginForm = this.fb.group({
-      EmailAddress: ['', Validators.required],
-      password: ['', Validators.required],
+      EmailAddress: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   ngOnInit(): void {
     this.checkCurrentUser();
+    this.checkExistingAuth();
+
+    window.onGoogleLibraryLoad = () => {
+      google.accounts.id.initialize({
+        client_id: '65125654341-hisjvt2726pk134pfsfhb9qerltak6he.apps.googleusercontent.com',
+        callback: this.handleCreditialResponse.bind(this),
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById("google-login-btn"),
+        { theme: "outline", size: "large", width: "100%" }
+      );
+      google.accounts.id.prompt((notification: PromptMomentNotification) => { });
+
+    }
+  }
+
+  handleCreditialResponse(response: CredentialResponse): void {
+  this.isGoogleLoading = true;
+
+  this.authService.loginWithGoogle(response.credential).subscribe({
+    next: (x: any) => {
+      localStorage.setItem("token", x.token);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'Welcome back!',
+        timer: 1500,
+        showConfirmButton: false
+      });
+
+      this._ngZone.run(() => {
+        this.router.navigate(['/products']);
+      });
+    },
+    error: (error: any) => {
+      console.error("Google login error:", error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Something went wrong with Google login.',
+      });
+
+      this.isGoogleLoading = false;
+    }
+  });
+}
+
+
+  // ✅ Check if user is already authenticated with valid JWT
+  checkExistingAuth(): void {
+    if (this.authService.isAuthenticated() && this.authService.isTokenValid()) {
+      const userRole = this.authService.getUserRole();
+      this.redirectBasedOnRole(userRole);
+    }
   }
 
   onLogin(): void {
     this.isSubmitted = true;
     if (this.loginForm.invalid) return;
-    this.isSubmitting=true;
+    this.isSubmitting = true;
 
     const credentials = this.loginForm.value;
 
     this.authService.login(credentials).subscribe({
       next: (res: any) => {
+        // ✅ Save JWT token and user data
         this.authService.saveUserData(res.token, res.role);
         this.showAlert('Login successful!', 'success');
-        this.router.navigate(
-          res.role === 'admin' ? ['/admin-dashboard'] : ['/products']
-        );
+        this.redirectBasedOnRole(res.role);
+        this.isSubmitting = false;
       },
       error: (error) => {
+        this.isSubmitting = false;
         this.showAlert(
           error?.error?.message || 'Login failed. Please try again.',
           'error'
@@ -74,20 +143,17 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  async loginWithGoogle() {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      this.userInfo = user;
-      localStorage.setItem('user', JSON.stringify(user));
-      this.showAlert(`Welcome, ${user.displayName}`, 'success');
-      this.router.navigate(['/user-home']);
-    } catch (error: any) {
-      this.showAlert('Google login failed', 'error');
-      console.error('Google login error:', error?.message || error);
+  // ✅ Role-based redirection
+  redirectBasedOnRole(role: string | null): void {
+    switch (role) {
+      case 'admin':
+        this.router.navigate(['/admin']);
+        break;
+      case 'user':
+        this.router.navigate(['/products']);
+        break;
+      default:
+        this.router.navigate(['/products']);
     }
   }
 
@@ -98,7 +164,7 @@ export class LoginComponent implements OnInit {
       icon,
       title: message,
       showConfirmButton: false,
-      timer: 2500,
+      timer: 3000,
       timerProgressBar: true,
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer);
@@ -119,5 +185,10 @@ export class LoginComponent implements OnInit {
         this.userInfo = user;
       }
     });
+  }
+
+  // ✅ Toggle password visibility
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }
