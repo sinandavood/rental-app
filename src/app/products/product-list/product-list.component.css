@@ -116,3 +116,24 @@
   }
 }
 
+.badge-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.available {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.unavailable {
+  background-color: #dc3545;
+  color: #fff;
+}
+.underline {
+  height: 5px;
+  width: 140px;
+  border-radius: 2px;
+}

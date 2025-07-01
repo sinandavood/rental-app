@@ -1,0 +1,9 @@
+label {
+  font-weight: 500;
+}
+input, select, textarea {
+  border-radius: 0.5rem;
+}
+button {
+  border-radius: 0.5rem;
+}

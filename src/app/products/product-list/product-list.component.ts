@@ -1,9 +1,8 @@
-// src/app/products/product-list/product-list.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../product.service';
-import { Product } from '../../models/product.model'; // <- optional interface
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-product-list',
@@ -13,10 +12,9 @@ import { Product } from '../../models/product.model'; // <- optional interface
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
+  @Input() limit?: number;
 
-  products: Product[] = [
-    
-  ];  // <- empty list initially
+  products: Product[] = [];
   isLoading = true;
   errorMessage = '';
 
@@ -35,16 +33,21 @@ export class ProductListComponent implements OnInit {
 
   fetchFilteredProducts(keyword: string, location: string) {
     this.isLoading = true;
-    this.productService.getFilteredProducts(keyword, location).subscribe(
-      (data: Product[]) => {
+    this.productService.getFilteredProducts(keyword, location).subscribe({
+      next: (data: Product[]) => {
         this.products = data;
         this.isLoading = false;
       },
-      (error) => {
+      error: (err) => {
         this.errorMessage = 'Error fetching products';
+        console.error(err);
         this.isLoading = false;
-        console.error(error);
       }
-    );
+    });
+  }
+
+  get visibleProducts(): Product[] {
+    return this.limit ? this.products.slice(0, this.limit) : this.products;
   }
 }
+

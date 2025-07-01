@@ -33,4 +33,9 @@ export class ProductService {
 
     return this.http.get<Product[]>(this.url, { params });
   }
+
+  addProduct(formData: FormData) {
+  return this.http.post(`${this.url}/products`, formData); // Make sure this matches your API
+}
+
 }

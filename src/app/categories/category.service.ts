@@ -23,4 +23,10 @@ export class CategoryService {
     })
 
   }
+  getAll() {
+  return this.http.get<Category[]>(`${this.url}/categories`);
+}
+
+
+  
 }

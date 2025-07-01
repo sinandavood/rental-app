@@ -1,0 +1,30 @@
+.product-details h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .product-details p {
+    margin-bottom: 0.5rem;
+  }
+  .product-details .badge {
+    font-size: 0.9rem;
+  }
+  @media (max-width: 768px) {
+    .product-details {
+      padding-left: 0;
+      text-align: center;
+    }
+    .product-details .btn {
+      width: 100%;
+    }
+  }
+  .card-img-top {
+  object-fit: contain;
+  background-color: #f8f9fa;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+

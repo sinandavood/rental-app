@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CategoryListComponent } from '../categories/category-list/category-list.component';
 import { ProductListComponent } from '../products/product-list/product-list.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, CategoryListComponent, ProductListComponent],
+  imports: [CommonModule, FormsModule, CategoryListComponent, ProductListComponent,RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

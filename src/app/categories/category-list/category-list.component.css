@@ -19,8 +19,8 @@
 }
 
 .title-underline {
-  width: 60px;
-  height: 4px;
+  width: 160px;
+  height: 5px;
   background: linear-gradient(90deg, #e74c3c, #c0392b);
   margin: 15px auto 0;
   border-radius: 2px;

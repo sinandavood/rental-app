@@ -1,8 +1,8 @@
 <div class="search-section d-flex justify-content-center align-items-center"
-  [ngStyle]="{ 'background-image': 'url(assets/images/bg-img.png)' }"
+  [ngStyle]="{ 'background-image': 'url(assets/images/bg-orginal.jpg)' }"
   style="height: 80vh; background-size: cover; background-position: center;">
   <form (ngSubmit)="onSearch()" class="w-50">
-    <div class="input-group rounded-pill overflow-hidden shadow p-3 bg-white">
+    <div class="input-group rounded-pill overflow-hidden shadow p-4 bg-white">
 
       <input type="text" class="form-control border-0" placeholder="Search for products..." [(ngModel)]="searchKeyword"
         name="keyword" aria-label="Search keyword" />
@@ -19,7 +19,15 @@
 </div>
 
 <app-category-list></app-category-list>
-<app-product-list></app-product-list>
+<app-product-list [limit]="8"></app-product-list>
+
+<!-- Rent an Item Button -->
+<div class="rent-button-container">
+  <button class="btn btn-danger btn-lg shadow" [routerLink]="'/add-product'">
+    <i class="bi bi-plus-circle me-2"></i> Rent an Item
+  </button>
+</div>
+
 
 
 <!-- Features Section -->

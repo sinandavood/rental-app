@@ -1,18 +1,67 @@
-<div class="container my-5" *ngIf="!isLoading && product; else loaderTpl">
-  <h2 class="mb-3">{{ product.name }}</h2>
-  <img [src]="product.image" class="img-fluid mb-3" style="max-width: 400px;" />
-  <p><strong>Price:</strong> {{ product.displayPrice }}/day</p>
-  <p><strong>Location:</strong> {{ product.location }}</p>
-  <p><strong>Description:</strong> {{ product.description }}</p>
-  <button class="btn btn-outline-primary mt-3" routerLink="/products">Rent</button><br>
-  <button class="btn btn-outline-primary mt-3" routerLink="/products">Back to Products</button>
- 
+<div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="min-height: 300px;">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
 </div>
 
-<ng-template #loaderTpl>
-  <div class="text-center p-5">
-    <span *ngIf="isLoading">Loading product details...</span>
-    <span *ngIf="error">{{ error }}</span>
+<section class="container my-5">
+  <div class="row">
+    <!-- Product Image -->
+    <div class="col-md-6">
+      <div class="border rounded-4 overflow-hidden shadow-sm bg-white">
+        <img [src]="product?.image" alt="{{ product?.name }}" class="d-block w-100 object-fit-contain p-3" style="max-height: 500px;">
+      </div>
+    </div>
+
+    <!-- Product Details -->
+    <div class="col-md-6">
+      <div class="product-details ps-md-4 pt-4 pt-md-0">
+        <h2 class="fw-bold text-dark">{{ product?.name }}</h2>
+        <p class="text-danger fs-5 fw-semibold mb-2">Rs. {{ product?.displayPrice }}/day</p>
+
+        <div class="mb-3 text-muted">
+          <p><i class="bi bi-geo-alt me-2"></i>Location: {{ product?.location }}</p>
+          <p><i class="bi bi-person me-2"></i>Owner: {{ product?.ownerName }}</p>
+          <p><i class="bi bi-clock me-2"></i>Posted: {{ product?.createdAt | date: 'mediumDate' }}</p>
+        </div>
+
+        <div class="badge rounded-pill px-3 py-2 fs-6 mb-4"
+             [ngClass]="product?.availability ? 'bg-success text-white' : 'bg-danger text-white'">
+          {{ product?.availability ? 'Available for Rent' : 'Currently Unavailable' }}
+        </div>
+
+        <p class="text-dark lh-base mb-4">{{ product?.description }}</p>
+
+        <div class="d-flex gap-3">
+          <button class="btn btn-danger btn-lg px-4" [disabled]="!product?.availability">Rent Now</button>
+          <button class="btn btn-outline-secondary btn-lg px-4" routerLink="/products">Back to Products</button>
+        </div>
+      </div>
+    </div>
   </div>
-</ng-template>
+
+  <!-- Similar Products -->
+  <section class="mt-5" *ngIf="similarProducts.length > 0">
+    <h3 class="text-dark fw-bold mb-4">Similar Products</h3>
+    <div class="row">
+      <div class="col-md-3" *ngFor="let sim of similarProducts | slice:0:4">
+        <div class="card h-100 shadow-sm rounded-3">
+          <img [src]="sim.image" alt="{{ sim.name }}" class="card-img-top p-3 object-fit-contain" style="height: 200px;">
+          <div class="card-body">
+            <h6 class="card-title text-truncate">{{ sim.name }}</h6>
+            <p class="text-muted small mb-2">
+              <i class="bi bi-geo-alt me-1"></i>{{ sim.location }}
+            </p>
+            <p class="fw-semibold text-danger mb-2">Rs. {{ sim.displayPrice }}/day</p>
+            <a [routerLink]="['/products', sim.id]" class="btn btn-outline-danger btn-sm w-100">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+
+
+
 

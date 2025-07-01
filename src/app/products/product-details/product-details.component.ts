@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { ProductService } from '../product.service'; // your existing service
-import { Product } from 'src/app/models/product.model'; // optional interface
+import { ProductService } from '../product.service';
+import { Product } from 'src/app/models/product.model';
 
 @Component({
   selector: 'app-product-details',
@@ -11,8 +11,9 @@ import { Product } from 'src/app/models/product.model'; // optional interface
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css']
 })
-export class ProductDetailsComponent {
+export class ProductDetailsComponent implements OnInit {
   product?: Product;
+  similarProducts: Product[] = [];
   isLoading = true;
   error = '';
 
@@ -21,12 +22,18 @@ export class ProductDetailsComponent {
     private productService: ProductService
   ) {}
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+ ngOnInit(): void {
+  this.route.paramMap.subscribe(params => {
+    const id = params.get('id');
     if (id) {
       this.fetchProduct(id);
+      // Scroll to top when navigating
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }
+  });
+}
+
+
 
   fetchProduct(id: string): void {
     this.isLoading = true;
@@ -34,12 +41,25 @@ export class ProductDetailsComponent {
       next: (res) => {
         this.product = res;
         this.isLoading = false;
+
+        // Fetch similar products (limit to 4 and exclude current product)
+        if (res.categoryName) {
+          this.productService.getFilteredProducts('', res.categoryName).subscribe({
+            next: (similar) => {
+              this.similarProducts = similar
+                .filter(p => p.id !== res.id)
+                .slice(0, 4); // ✅ Only 4 items
+            }
+          });
+        }
       },
-      error: (err) => {
+      error: () => {
         this.error = 'Error loading product';
         this.isLoading = false;
       }
     });
   }
 }
+
+
 
