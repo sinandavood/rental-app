@@ -6,21 +6,11 @@
 
   <div *ngIf="categoryService.list.length > 0; else noCategories">
     <div class="categories-grid">
-      <div
-        *ngFor="let cat of categoryService.list"
-        class="category-card"
-        (click)="onCategoryClick(cat)"
-      >
+      <div *ngFor="let cat of categoryService.list" class="category-card" (click)="onCategoryClick(cat)">
         <div class="category-icon">
-          <img
-            [src]="getImageUrl(cat.name)"
-            [alt]="cat.name"
-            class="category-image"
-            loading="lazy"
-            
-          />
+          <img [src]="cat.icon" [alt]="cat.name" class="category-image" loading="lazy" />
         </div>
-        
+
         <div class="category-name">{{ cat.name }}</div>
       </div>
     </div>
@@ -32,7 +22,3 @@
     </div>
   </ng-template>
 </section>
-
-
-
-

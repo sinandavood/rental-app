@@ -1,48 +1,55 @@
 <section class="product-section container my-5">
-  <h2 class="text-center fw-bold mb-4  position-relative d-inline-block">
-  {{ limit ? 'Featured Products' : 'Products' }}
-  <span class="underline d-block mx-auto mt-2 bg-danger"></span>
-</h2>
+  <h2 class="section-title text-center mb-4">Available Products for Rent</h2>
 
-
+  <!-- Loading Spinner -->
   <div *ngIf="isLoading" class="text-center my-5">
-    <div class="spinner-border text-primary" role="status">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
       <span class="visually-hidden">Loading...</span>
     </div>
+    <p class="text-muted mt-2">Loading products...</p>
   </div>
 
-  <div *ngIf="!isLoading && errorMessage" class="text-danger text-center mb-3">
-    {{ errorMessage }}
+  <!-- Show 'not found' message -->
+  <div *ngIf="!isLoading && products.length === 0" class="text-center my-5">
+    <p class="no-products text-muted">No products found. Check back later!</p>
   </div>
 
-  <div *ngIf="!isLoading && visibleProducts.length === 0" class="text-center text-muted">
-    No products found. Try adjusting your filters.
-  </div>
-
+  <!-- Products grid -->
   <div class="row" *ngIf="!isLoading && visibleProducts.length > 0">
     <div class="col-md-6 col-lg-4 col-xl-3 mb-4" *ngFor="let product of visibleProducts">
       <div class="product-card h-100 shadow rounded-4 border bg-white">
+        
+        <!-- Image and icons -->
         <div class="position-relative product-image-container">
           <img [src]="product.image" alt="{{ product.name }}" class="product-image rounded-top-4 w-100" />
+
+          <!-- Wishlist and View icons -->
           <div class="top-icons position-absolute top-0 end-0 m-2 d-flex flex-column gap-2">
-            <i class="bi bi-heart-fill icon text-muted" title="Add to Favorites"></i>
+            <i class="bi icon"
+              [ngClass]="isInWishlist(product.id) ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'"
+              (click)="toggleWishlist(product.id)"
+              style="cursor: pointer;"
+              title="Add to Wishlist">
+            </i>
             <i class="bi bi-eye icon text-muted" title="View Details"></i>
           </div>
         </div>
         <div class="product-info p-3">
-          <h5 class="fw-semibold mb-2 text-truncate">{{ product.name }}</h5>
-          <p class="text-danger fw-bold mb-2">₹{{ product.displayPrice }}/day</p>
-          <div class="small text-muted mb-2">
-            <div><i class="bi bi-geo-alt me-1"></i>{{ product.location }}</div>
-            <div><i class="bi bi-person me-1"></i>{{ product.ownerName }}</div>
-            <div><i class="bi bi-clock me-1"></i>{{ product.createdAt | date: 'mediumDate' }}</div>
+          <h5 class="product-name fw-semibold mb-2 text-truncate">{{ product.name }}</h5>
+          <p class="product-price text-danger fw-bold mb-2">{{ product.displayPrice }}/day</p>
+
+          <div class="product-meta small text-muted mb-3">
+            <div><i class="bi bi-geo-alt me-1"></i>location : {{ product.location }}</div>
+            <div><i class="bi bi-person me-1"></i>owner : {{ product.ownerName }}</div>
+            <div><i class="bi bi-clock me-1"></i>posted at : {{ product.createdAt | date: 'mediumDate' }}</div>
           </div>
           <div class="d-flex justify-content-between align-items-center">
-            <span class="badge rounded-pill px-3 py-1" 
-              [ngClass]="product.availability ? 'bg-success text-white' : 'bg-danger text-white'">
-              {{ product.availability ? 'Available' : 'Unavailable' }}
+            <span class="badge-status" [ngClass]="product.availability ? 'available' : 'unavailable'">
+              {{ product.availability ? 'Available for Rent' : 'Currently Unavailable' }}
             </span>
-            <button class="btn btn-danger btn-sm" [routerLink]="['/products', product.id]">Rent Now</button>
+            <button class="btn btn-danger btn-sm" [routerLink]="['/products', product.id]">
+              Rent Now
+            </button>
           </div>
         </div>
       </div>

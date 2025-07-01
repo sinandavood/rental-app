@@ -16,15 +16,7 @@ export class CategoryListComponent implements OnInit {
   ngOnInit(): void {
     this.categoryService.refreshList();
   }
-
-  getImageUrl(categoryName: string): string {
-    const fileName = categoryName.toLowerCase().replace(/\s+/g, '-') + '.png';
-    return `assets/images/categories/${fileName}`;
-  }
-
   
-
-
   onCategoryClick(category: Category): void {
     console.log('Clicked category:', category.name);
     // You can navigate or filter products here

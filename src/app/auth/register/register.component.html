@@ -1,56 +1,84 @@
 <div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
-    <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
-      <h3 class="text-center mb-4">Create Account</h3>
-  
-      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-        <!-- Name -->
-        <div class="mb-3">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Full Name"
-            formControlName="name"
-          />
+  <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
+    <h3 class="text-center mb-4">Create Account</h3>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- Full Name -->
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Full Name" formControlName="fullName"
+          [class.is-invalid]="hasDisplayError('fullName')" />
+        <div class="invalid-feedback" *ngIf="hasDisplayError('fullName')">
+          Full name is required.
         </div>
-  
-        <!-- Email or phone -->
-        <div class="mb-3">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Email or Phone Number"
-            formControlName="emailOrPhone"
-          />
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <input type="email" class="form-control" placeholder="Email" formControlName="email"
+          [class.is-invalid]="hasDisplayError('email')" />
+        <div class="invalid-feedback" *ngIf="hasDisplayError('email')">
+          A valid email is required.
         </div>
-  
-        <!-- Password -->
-        <div class="mb-3">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Password"
-            formControlName="password"
-          />
+      </div>
+
+      <!-- Phone -->
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Phone Number" formControlName="phone"
+          [class.is-invalid]="hasDisplayError('phone')" />
+        <div class="invalid-feedback" *ngIf="hasDisplayError('phone')">
+          Phone number is required.
         </div>
-  
-        <!-- Create account -->
-        <button class="btn btn-primary w-100 mb-2" [disabled]="registerForm.invalid">Create Account</button>
-  
-        <!-- OR separator -->
-        <div class="text-center my-2 text-muted">OR</div>
-  
-        <!-- Sign up with Google -->
-        <button type="button" class="btn btn-outline-danger w-100 mb-3" (click)="signupWithGoogle()">
-          <img src="assets/images/google.svg" alt="Google" width="20" class="me-2" />
-          Sign up with Google
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3 position-relative">
+        <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="Password"
+          formControlName="password" [class.is-invalid]="hasDisplayError('password')" />
+        <button type="button"
+          class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
+          (click)="showPassword = !showPassword">
+          {{ showPassword ? 'Hide' : 'Show' }}
         </button>
-  
-        <!-- Already have account? -->
-        <div class="text-center mt-2">
-          <span>Already have an account? </span>
-          <a routerLink="/login" class="text-decoration-none">Log in</a>
+        <div class="invalid-feedback" *ngIf="hasDisplayError('password')">
+          Password must be at least 6 characters and include an uppercase letter and a number.
         </div>
-      </form>
-    </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-3 position-relative">
+        <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" placeholder="Confirm Password"
+          formControlName="confirmPassword"
+          [class.is-invalid]="hasDisplayError('confirmPassword') || hasPasswordMismatch()" />
+        <button type="button"
+          class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
+          (click)="showConfirmPassword = !showConfirmPassword">
+          {{ showConfirmPassword ? 'Hide' : 'Show' }}
+        </button>
+        <div class="invalid-feedback" *ngIf="hasDisplayError('confirmPassword')">
+          Confirm password is required.
+        </div>
+        <div class="invalid-feedback" *ngIf="hasPasswordMismatch()">
+          Passwords do not match.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn btn-primary w-100 mb-2" type="submit" [disabled]="form.invalid || isSubmitted">
+        {{ isSubmitted ? 'Creating Account...' : 'Create Account' }}
+      </button>
+
+      <!-- OR Separator -->
+      <div class="text-center my-2 text-muted">OR</div>
+
+      <!-- Google Signup -->
+
+
+      <!-- Already have account -->
+      <div class="text-center mt-2">
+        <span>Already have an account?</span>
+        <a routerLink="/auth/login" class="text-decoration-none">Log in</a>
+      </div>
+    </form>
   </div>
-  
+</div>
