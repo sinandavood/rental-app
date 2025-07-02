@@ -2,31 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../env/environment-development';
 import { Category } from '../models/category.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
 
-  url:string=environment.apiBaseUrl+'/Category';
-  list:Category[]=[]
+  private url: string = `${environment.apiBaseUrl}/Category`;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  
-  refreshList(){
-    this.http.get(this.url).subscribe({
-      next:res=>{
-        this.list=res as Category[]
-      },
-      error:err=>{console.log(err)}
-    })
-
+  // Get all categories
+  getAll(): Observable<Category[]> {
+    return this.http.get<Category[]>(this.url);
   }
-  getAll() {
-  return this.http.get<Category[]>(`${this.url}/categories`);
-}
-
-
-  
 }

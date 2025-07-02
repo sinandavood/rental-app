@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators ,ReactiveFormsModule} from '@angular/forms';
 import { CategoryService } from '../../categories/category.service';
 import { ProductService } from '../product.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-product',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-product.component.html',
-  styleUrls: ['./add-product.component.css']
+  styleUrls: ['./add-product.component.css'],
+  standalone:true,
+  imports:[CommonModule,ReactiveFormsModule]
 })
 export class AddProductComponent implements OnInit {
   productForm!: FormGroup;
   categories: any[] = [];
   imagePreview: string | ArrayBuffer | null = null;
+  selectedImage!: File;
   isSubmitting = false;
 
   constructor(
@@ -36,8 +37,7 @@ export class AddProductComponent implements OnInit {
       description: [''],
       price: ['', [Validators.required, Validators.min(1)]],
       location: ['', Validators.required],
-      categoryId: ['', Validators.required],
-      image: [null, Validators.required]
+      categoryId: ['', Validators.required]
     });
   }
 
@@ -51,7 +51,8 @@ export class AddProductComponent implements OnInit {
   onImageChange(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.productForm.patchValue({ image: file });
+      this.selectedImage = file;
+
       const reader = new FileReader();
       reader.onload = () => this.imagePreview = reader.result;
       reader.readAsDataURL(file);
@@ -59,12 +60,16 @@ export class AddProductComponent implements OnInit {
   }
 
   submitForm() {
-    if (this.productForm.invalid) return;
+    if (this.productForm.invalid || !this.selectedImage) return;
 
     const formData = new FormData();
-    Object.entries(this.productForm.value).forEach(([key, value]) =>
-      formData.append(key, value as any)
-    );
+    formData.append('name', this.productForm.get('name')?.value);
+    formData.append('description', this.productForm.get('description')?.value);
+    formData.append('price', this.productForm.get('price')?.value);
+    formData.append('location', this.productForm.get('location')?.value);
+    formData.append('categoryId', this.productForm.get('categoryId')?.value);
+    formData.append('availability', 'true');
+    formData.append('image', this.selectedImage); // ✅ Image file
 
     this.isSubmitting = true;
     this.productService.addProduct(formData).subscribe({

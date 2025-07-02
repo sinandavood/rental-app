@@ -10,7 +10,7 @@ import { environment } from '../env/environment-development';
   providedIn: 'root'
 })
 export class ProductService {
-  url: string = `${environment.apiBaseUrl}/item`;
+  url: string = `${environment.apiBaseUrl}/item`; // Matches your .NET API route
   list: Product[] = [];
 
   constructor(private http: HttpClient) {}
@@ -34,8 +34,24 @@ export class ProductService {
     return this.http.get<Product[]>(this.url, { params });
   }
 
-  addProduct(formData: FormData) {
-  return this.http.post(`${this.url}/products`, formData); // Make sure this matches your API
+  // Add a product with image (multipart/form-data)
+  addProduct(formData: FormData): Observable<any> {
+    return this.http.post(this.url, formData); // ✅ Corrected URL
+  }
+
+  getMyItems(): Observable<Product[]> {
+  return this.http.get<Product[]>(`${this.url}/my-items`);
 }
+deleteItem(id: number) {
+  return this.http.delete(`${this.url}/${id}`);
+}
+
+
+updateItem(id: number, formData: FormData): Observable<any> {
+  return this.http.put(`${this.url}/${id}`, formData);
+}
+
+
+
 
 }

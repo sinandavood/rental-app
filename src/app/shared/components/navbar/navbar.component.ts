@@ -13,12 +13,15 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class NavbarComponent {
 
-  userfullname:string=""
+  userfullname:string="";
+  profilePic: string | null = null;
 
   ngOnInit(): void {
   this.authService.user$.subscribe(user => {
     this.userfullname = user?.unique_name || '';
     console.log('User from stream:', user);
+    this.profilePic = localStorage.getItem('profilePic')
+     console.log('Profile Pic URL:', this.profilePic);
 
   });
 }
@@ -29,6 +32,13 @@ export class NavbarComponent {
 
   logout(): void {
     localStorage.removeItem('token');
+     localStorage.removeItem('profilePic');
     this.router.navigate(['/auth/login']);
   }
+ 
+
+
+
+
+
 }

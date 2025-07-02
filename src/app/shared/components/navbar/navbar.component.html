@@ -1,43 +1,61 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3">
-  <div class="container d-flex justify-content-between align-items-center">
+<nav class="bg-white shadow-sm border-b">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    
     <!-- Logo -->
-    <a class="navbar-brand fw-bold text-danger" routerLink="/">Rental App</a>
+    <a class="text-xl font-bold text-red-600" routerLink="/">Rental App</a>
 
-    <!-- Navbar toggler for mobile -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-      <span class="navbar-toggler-icon"></span>
+    <!-- Toggler for mobile -->
+    <button class="lg:hidden text-gray-600 focus:outline-none" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
     </button>
 
-    <!-- Centered nav links -->
-    <div class="collapse navbar-collapse justify-content-center" id="navbarContent">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/categories">Categories</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/about">About Us</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/contact">Contact</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/blog">Blog</a></li>
-        <li class="nav-item">
-          <a routerLink="/my-wishlist" class="btn btn-outline-primary">
-            <i class="bi bi-heart-fill me-1"></i> My Wishlist
-          </a>
-        </li>
-      </ul>
+    <!-- Nav links -->
+    <div id="navbarContent" class="hidden lg:flex space-x-6 text-sm font-medium text-gray-700">
+      <a routerLink="/" class="hover:text-red-600 transition">Home</a>
+      <a routerLink="/categories" class="hover:text-red-600 transition">Categories</a>
+      <a routerLink="/about" class="hover:text-red-600 transition">About Us</a>
+      <a routerLink="/contact" class="hover:text-red-600 transition">Contact</a>
+      <a routerLink="/blog" class="hover:text-red-600 transition">Blog</a>
+      <a routerLink="/my-wishlist" class="btn btn-outline-primary flex items-center gap-1 border px-3 py-1 rounded hover:bg-blue-50">
+        <i class="bi bi-heart-fill"></i> My Wishlist
+      </a>
+      <a routerLink="/my-items" class="hover:text-red-600 transition">My Items</a>
     </div>
 
-    <!-- Auth buttons -->
-    <div class="d-flex align-items-center gap-2">
-      <!-- Show when NOT logged in -->
+    <!-- Auth Section -->
+    <div class="flex items-center gap-3">
+      <!-- Not Logged In -->
       <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
-        <button class="btn btn-outline-dark me-2" routerLink="/auth/login">Sign In</button>
-        <button class="btn btn-danger rounded-pill" routerLink="/auth/register">Create Account</button>
+        <button
+          class="text-sm px-4 py-2 rounded border border-gray-500 text-gray-700 hover:bg-gray-100 transition"
+          routerLink="/auth/login"
+        >Sign In</button>
+        <button
+          class="text-sm px-4 py-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition"
+          routerLink="/auth/register"
+        >Create Account</button>
       </ng-container>
 
-      <!-- Show when logged in -->
+      <!-- Logged In -->
       <ng-template #loggedInBlock>
-        <div class="me-2 text-dark fw-semibold d-none d-lg-block">
-          👋 Hello, {{ userfullname }}
+        <div class="flex items-center gap-3">
+          <img
+            *ngIf="profilePic"
+            [src]="profilePic"
+            alt="Profile"
+            class="w-10 h-10 rounded-full object-cover border border-gray-300 shadow"
+          />
+          <div class="text-sm text-gray-800 hidden lg:block font-medium">
+            👋 Hello, <span class="text-red-600 font-semibold">{{ userfullname }}</span>
+          </div>
+          <button
+            (click)="logout()"
+            class="text-sm px-3 py-2 border border-red-500 text-red-500 rounded hover:bg-red-50 transition"
+          >Logout</button>
         </div>
-        <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
       </ng-template>
     </div>
   </div>

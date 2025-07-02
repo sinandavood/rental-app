@@ -4,7 +4,7 @@ export class Product{
     description:string="";
     displayPrice:number=0;
     image:string="";
-    location:string="Amminikkad";
+    location:string="";
     categoryName:string="";
     ownerName:string="";
     availability:boolean=true;

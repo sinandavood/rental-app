@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
+import { AddProductComponent } from './products/add-product/add-product.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -33,4 +34,19 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./mywishlist-list/mywishlist-list.component').then(m => m.MyWishlistComponent),
   },
+  {
+    path: 'add-product',component:AddProductComponent
+  },
+  {
+  path: 'my-items',
+  loadComponent: () => import('./products/my-items/my-items.component').then(m => m.MyItemsComponent)
+},
+
+{
+  path: 'edit-item/:id',
+  loadComponent: () => import('./products/edit-item/edit-item.component').then(m => m.EditItemComponent)
+}
+
+
+
 ];

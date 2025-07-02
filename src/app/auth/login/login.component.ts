@@ -41,6 +41,8 @@ export class LoginComponent implements OnInit {
   userInfo: User | null = null;
   isSubmitting: boolean = false;
   isGoogleLoading: boolean = false;
+  profilePic: string | null = null;
+
 
   constructor(
     private fb: FormBuilder,
@@ -80,8 +82,7 @@ export class LoginComponent implements OnInit {
 
   this.authService.loginWithGoogle(response.credential).subscribe({
     next: (x: any) => {
-      localStorage.setItem("token", x.token);
-      this.authService.saveUserData(x.token,x.role);
+      this.authService.saveUserData(x.token, x.role); // This now handles picture too
 
       Swal.fire({
         icon: 'success',
@@ -91,8 +92,8 @@ export class LoginComponent implements OnInit {
         showConfirmButton: false
       });
 
-      this._ngZone.run(() => {
-        this.router.navigate(['/products']);
+      this.router.navigate(['/products']).then(() => {
+  this.profilePic = this.authService.getUserProfilePic();
       });
     },
     error: (error: any) => {
@@ -108,6 +109,7 @@ export class LoginComponent implements OnInit {
     }
   });
 }
+
 
 
   // ✅ Check if user is already authenticated with valid JWT

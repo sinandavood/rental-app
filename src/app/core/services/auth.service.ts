@@ -14,6 +14,7 @@ export interface JwtPayload {
   email: string;
   unique_name: string;
   FullName?: string; // Optional in case it's missing
+  picture?:string;
 }
 
 @Injectable({
@@ -27,18 +28,24 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  getCurrentUser(): JwtPayload|null {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
+  getCurrentUser(): JwtPayload | null {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
 
-    try {
-      const decoded: any = jwtDecode(token);
-      this.userSubject.next(decoded);
-      return decoded;
-    } catch (e) {
-      return null;
+  try {
+    const decoded: any = jwtDecode(token);
+    this.userSubject.next(decoded);
+
+    // ✅ Store picture from token into localStorage
+    if (decoded.picture) {
+      localStorage.setItem('profilePic', decoded.picture);
     }
+
+    return decoded;
+  } catch (e) {
+    return null;
   }
+}
 
   register(data: any) {
     return this.http.post(`${this.apiUrl}/Auth/register`, data);
@@ -100,11 +107,24 @@ export class AuthService {
     window.location.reload();
   }
 
-  saveUserData(token: string, role: string): void {
-    localStorage.setItem('token', token);
-    localStorage.setItem('role', role);
-    this.getCurrentUser();
+saveUserData(token: string, role: string): void {
+  localStorage.setItem('token', token);
+  localStorage.setItem('role', role);
+
+  try {
+    const decoded: any = jwtDecode(token);
+    if (decoded.picture) {
+      localStorage.setItem('profilePic', decoded.picture);
+    } else {
+      localStorage.removeItem('profilePic'); // fallback
+    }
+
+    this.userSubject.next(decoded);
+  } catch (e) {
+    console.error('Failed to decode token:', e);
   }
+}
+
 
   getToken(): string | null {
     return localStorage.getItem('token');
@@ -121,4 +141,10 @@ export class AuthService {
   isAdmin(): boolean {
     return this.getUserRole() === 'admin';
   }
+
+
+  getUserProfilePic(): string | null {
+  return localStorage.getItem('profilePic');
+}
+
 }
