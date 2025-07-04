@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   AbstractControl,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import Swal from 'sweetalert2';
 import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
@@ -31,7 +31,7 @@ declare global {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
@@ -79,40 +79,40 @@ export class LoginComponent implements OnInit {
   }
 
   handleCreditialResponse(response: CredentialResponse): void {
-  this.isGoogleLoading = true;
+    this.isGoogleLoading = true;
 
-  this.authService.loginWithGoogle(response.credential).subscribe({
-    next: (x: any) => {
-      this.authService.saveUserData(x.token, x.role); // Includes profile pic now
+    this.authService.loginWithGoogle(response.credential).subscribe({
+      next: (x: any) => {
+        this.authService.saveUserData(x.token, x.role); // Includes profile pic now
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: 'Welcome back!',
-        timer: 1500,
-        showConfirmButton: false
-      });
-
-      this._ngZone.run(() => {
-        // ✅ Safe navigation and profilePic update inside Angular zone
-        this.router.navigate(['/products']).then(() => {
-          this.profilePic = this.authService.getUserProfilePic();
+        Swal.fire({
+          icon: 'success',
+          title: 'Login Successful',
+          text: 'Welcome back!',
+          timer: 1500,
+          showConfirmButton: false
         });
-      });
-    },
-    error: (error: any) => {
-      console.error("Google login error:", error);
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: 'Something went wrong with Google login.',
-      });
+        this._ngZone.run(() => {
+          // ✅ Safe navigation and profilePic update inside Angular zone
+          this.router.navigate(['/products']).then(() => {
+            this.profilePic = this.authService.getUserProfilePic();
+          });
+        });
+      },
+      error: (error: any) => {
+        console.error("Google login error:", error);
 
-      this.isGoogleLoading = false;
-    }
-  });
-}
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: 'Something went wrong with Google login.',
+        });
+
+        this.isGoogleLoading = false;
+      }
+    });
+  }
 
 
 
