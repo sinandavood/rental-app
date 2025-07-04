@@ -9,5 +9,7 @@ export class Product{
     ownerName:string="";
     availability:boolean=true;
     createdAt:string="";
+    ownerId:string="";
+    ownerProfileImage="";
 
 }

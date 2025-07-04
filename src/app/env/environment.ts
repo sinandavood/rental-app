@@ -8,5 +8,13 @@ export const environment = {
     storageBucket: "p2-app-demo.firebasestorage.app",
     messagingSenderId: "334943339418",
     appId: "1:334943339418:web:edfe40c0970f5423687023"
+  },
+  google:{
+    googlid:'65125654341-hisjvt2726pk134pfsfhb9qerltak6he.apps.googleusercontent.com',
+
   }
-};
+
+  }
+
+  
+

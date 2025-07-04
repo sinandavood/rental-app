@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import Swal from 'sweetalert2';
 import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
+import { environment } from 'src/app/env/environment-development';
 
 import {
   getAuth,
@@ -62,7 +63,7 @@ export class LoginComponent implements OnInit {
 
     window.onGoogleLibraryLoad = () => {
       google.accounts.id.initialize({
-        client_id: '65125654341-hisjvt2726pk134pfsfhb9qerltak6he.apps.googleusercontent.com',
+        client_id: environment.google.googlid,
         callback: this.handleCreditialResponse.bind(this),
         auto_select: false,
         cancel_on_tap_outside: true
@@ -70,7 +71,7 @@ export class LoginComponent implements OnInit {
 
       google.accounts.id.renderButton(
         document.getElementById("google-login-btn"),
-        { theme: "outline", size: "large", width: "100%" }
+        { theme: "outline", size: "large", width: 350 }
       );
       google.accounts.id.prompt((notification: PromptMomentNotification) => { });
 
@@ -82,7 +83,7 @@ export class LoginComponent implements OnInit {
 
   this.authService.loginWithGoogle(response.credential).subscribe({
     next: (x: any) => {
-      this.authService.saveUserData(x.token, x.role); // This now handles picture too
+      this.authService.saveUserData(x.token, x.role); // Includes profile pic now
 
       Swal.fire({
         icon: 'success',
@@ -92,8 +93,11 @@ export class LoginComponent implements OnInit {
         showConfirmButton: false
       });
 
-      this.router.navigate(['/products']).then(() => {
-  this.profilePic = this.authService.getUserProfilePic();
+      this._ngZone.run(() => {
+        // ✅ Safe navigation and profilePic update inside Angular zone
+        this.router.navigate(['/products']).then(() => {
+          this.profilePic = this.authService.getUserProfilePic();
+        });
       });
     },
     error: (error: any) => {
