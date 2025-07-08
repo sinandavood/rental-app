@@ -51,7 +51,7 @@
       <ng-template #loggedInBlock>
         <div class="relative group">
           <div class="flex items-center gap-1 cursor-pointer">
-            <img *ngIf="profilePic" [src]="'https://p2prental.runasp.net' + profilePic" alt="Profile"
+            <img  [src]="profilePic?'https://p2prental.runasp.net' + profilePic: 'assets/constant/empty-user-profilepic.webp'" alt="Profile"
               class="w-10 h-10 rounded-full object-cover border border-gray-300 shadow" />
             <i class="bi bi-caret-down-fill text-gray-600 text-lg group-hover:text-red-500"></i>
           </div>

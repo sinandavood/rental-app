@@ -78,42 +78,32 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  handleCreditialResponse(response: CredentialResponse): void {
-    this.isGoogleLoading = true;
+handleCreditialResponse(response: CredentialResponse): void {
+  this.isGoogleLoading = true;
 
-    this.authService.loginWithGoogle(response.credential).subscribe({
-      next: (x: any) => {
-        this.authService.saveUserData(x.token, x.role); // Includes profile pic now
+  this.authService.loginWithGoogle(response.credential).subscribe({
+    next: (x: any) => {
+      this.authService.saveUserData(x.token); // 🚫 No need to check role here
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Login Successful',
-          text: 'Welcome back!',
-          timer: 1500,
-          showConfirmButton: false
-        });
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'Welcome back!',
+        timer: 1500,
+        showConfirmButton: false
+      });
 
-        this._ngZone.run(() => {
-          // ✅ Safe navigation and profilePic update inside Angular zone
-          this.router.navigate(['/products']).then(() => {
-            this.profilePic = this.authService.getUserProfilePic();
-          });
-        });
-      },
-      error: (error: any) => {
-        console.error("Google login error:", error);
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Login Failed',
-          text: 'Something went wrong with Google login.',
-        });
-
-        this.isGoogleLoading = false;
-      }
-    });
-  }
-
+      this._ngZone.run(() => {
+        this.profilePic = this.authService.getUserProfilePic();
+      });
+    },
+    error: (error: any) => {
+      console.error("Google login error:", error);
+      this.isGoogleLoading = false;
+      Swal.fire({ icon: 'error', title: 'Login Failed', text: 'Something went wrong with Google login.' });
+    }
+  });
+}
 
 
   // ✅ Check if user is already authenticated with valid JWT
@@ -124,39 +114,37 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onLogin(): void {
-    this.isSubmitted = true;
-    if (this.loginForm.invalid) return;
-    this.isSubmitting = true;
+onLogin(): void {
+  this.isSubmitted = true;
+  if (this.loginForm.invalid) return;
+  this.isSubmitting = true;
 
-    const credentials = this.loginForm.value;
+  const credentials = this.loginForm.value;
 
-    this.authService.login(credentials).subscribe({
-      next: (res: any) => {
-        // ✅ Save JWT token and user data
-        this.authService.saveUserData(res.token, res.role);
-        this.showAlert('Login successful!', 'success');
-        this.redirectBasedOnRole(res.role);
-        this.isSubmitting = false;
-      },
-      error: (error) => {
-        this.isSubmitting = false;
-        this.showAlert(
-          error?.error?.message || 'Login failed. Please try again.',
-          'error'
-        );
-        console.error('Login error:', error);
-      },
-    });
-  }
+  this.authService.login(credentials).subscribe({
+    next: (res: any) => {
+      this.authService.saveUserData(res.token); // ✅ redirection handled inside
+      this.showAlert('Login successful!', 'success');
+      this.isSubmitting = false;
+    },
+    error: (error) => {
+      this.isSubmitting = false;
+      this.showAlert(
+        error?.error?.message || 'Login failed. Please try again.',
+        'error'
+      );
+      console.error('Login error:', error);
+    },
+  });
+}
 
   // ✅ Role-based redirection
   redirectBasedOnRole(role: string | null): void {
     switch (role) {
-      case 'admin':
+      case 'Admin':
         this.router.navigate(['/admin']);
         break;
-      case 'user':
+      case 'User':
         this.router.navigate(['/products']);
         break;
       default:
