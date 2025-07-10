@@ -45,6 +45,16 @@ export const routes: Routes = [
     {
         path: 'edit-item/:id',
         loadComponent: () => import('./products/edit-item/edit-item.component').then(m => m.EditItemComponent)
+    },
+    {
+        path:'profile',
+        loadComponent:()=>import('./user/profile/profile.component').then(m=>m.ProfileComponent)
+
+
+    },
+    {
+        path:'edit-profile',
+        loadComponent:()=>import('./user/edit-profile/edit-profile.component').then(m=>m.EditProfileComponent)
     }
 
 
