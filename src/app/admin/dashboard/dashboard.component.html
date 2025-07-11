@@ -1,1 +1,35 @@
-<p>dashboard works!</p>
+<div *ngIf="loading" class="text-center py-5">Loading dashboard...</div>
+
+<div *ngIf="!loading">
+  <div class="row text-center mb-4">
+    <div class="col"><h5>Total Users</h5><p>{{ summary.totalUsers }}</p></div>
+    <div class="col"><h5>Verified</h5><p>{{ summary.verifiedUsers }}</p></div>
+    <div class="col"><h5>Blocked</h5><p>{{ summary.blockedUsers }}</p></div>
+  </div>
+
+  <div class="row text-center mb-4">
+    <div class="col"><h5>Total Items</h5><p>{{ summary.totalItems }}</p></div>
+    <div class="col"><h5>Pending Items</h5><p>{{ summary.pendingItems }}</p></div>
+    <div class="col"><h5>Bookings This Month</h5><p>{{ summary.bookingsThisMonth }}</p></div>
+  </div>
+
+  <div class="row text-center mb-4">
+    <div class="col"><h5>Revenue</h5><p>₹{{ summary.revenue }}</p></div>
+  </div>
+
+  <h5>⚠ Recent Complaints</h5>
+  <ul class="list-group mb-4">
+    <li class="list-group-item" *ngFor="let c of summary.complaints">
+      {{ c.user }} - {{ c.reason }}
+    </li>
+  </ul>
+
+  <h5>🔄 Recent Activity</h5>
+  <ul class="list-group">
+    <li class="list-group-item" *ngFor="let activity of summary.recentActivities">
+      {{ activity.message }} <small class="text-muted">({{ activity.time }})</small>
+    </li>
+  </ul>
+</div>
+
+

@@ -1,3 +1,10 @@
-<app-navbar></app-navbar>
+<!-- Show user layout only when not in /admin routes -->
+<ng-container *ngIf="!isAdminRoute">
+  <app-navbar></app-navbar>
+</ng-container>
+
 <router-outlet></router-outlet>
-<app-footer></app-footer>
+
+<ng-container *ngIf="!isAdminRoute">
+  <app-footer></app-footer>
+</ng-container>

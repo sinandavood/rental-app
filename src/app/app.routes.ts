@@ -45,8 +45,9 @@ export const routes: Routes = [
     {
         path: 'edit-item/:id',
         loadComponent: () => import('./products/edit-item/edit-item.component').then(m => m.EditItemComponent)
-    }
+    },
 
+    { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
 
 
 ];

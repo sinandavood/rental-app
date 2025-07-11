@@ -5,6 +5,7 @@
     <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/users">Users</a></li>
     <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/categories">Categories</a></li>
     <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/kyc-requests">KYC</a></li>
+      <button class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
   </ul>
 </nav>
 
@@ -12,3 +13,8 @@
   <router-outlet></router-outlet>
 </div>
 
+<footer class="bg-dark text-white py-3 fixed-bottom">
+  <div class="container text-center">
+    <span>&copy; 2025 YourAppName. All rights reserved.</span>
+  </div>
+</footer>
