@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from 'src/app/env/environment-development';
 import { jwtDecode } from 'jwt-decode';
+import { User } from 'src/app/models/user.model';
 
 export interface JwtPayload {
   nameid: string;
@@ -12,6 +13,8 @@ export interface JwtPayload {
   FullName?: string;
   picture?: string;
   role?: string;
+  iat?:number;
+  phoneNumber?: string;
 }
 
 @Injectable({
@@ -122,6 +125,10 @@ export class AuthService {
     return this.http.get<{ profileImage: string }>(`${this.apiUrl}/User/${userId}/profile-image`);
   }
 
+getUserProfile(userId: string): Observable<User> {
+  return this.http.get<User>(`${this.apiUrl}/User/${userId}`);
+}
+
   isTokenValid(): boolean {
     const token = this.getToken();
     if (!token) return false;
@@ -178,4 +185,27 @@ export class AuthService {
     const token = this.getToken();
     return this.http.post(`${this.apiUrl}/Auth/refresh-token`, { token });
   }
+
+  getUserFromBackend(): Observable<User> {
+  return this.http.get<User>(`${this.apiUrl}/User/me`);
+}
+
+setUserFromBackend(user: User): void {
+  const newPayload: JwtPayload = {
+    nameid: user.id,
+    email: user.email,
+    unique_name: user.fullName, // 👈 full name goes here
+    FullName: user.fullName,
+    picture: user.photoUrl,
+    role: this.getUserRole()?? undefined,
+    phoneNumber: user.phoneNumber.toString(),
+    iat: Math.floor(Date.now() / 1000)
+  };
+
+  this.userSubject.next(newPayload);
+  localStorage.setItem('profilePic', user.photoUrl ?? '');
+}
+
+
+
 }

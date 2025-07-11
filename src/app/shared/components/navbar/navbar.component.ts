@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // ✅ Subscribe to user changes
     this.userSubscription = this.authService.user$.subscribe(user => {
       if (user) {
-        this.userfullname = user.unique_name || user.FullName || '';
+        this.userfullname = user.unique_name , '';
         this.profilePic = this.authService.getUserProfilePic();
         console.log('User updated:', { userfullname: this.userfullname, profilePic: this.profilePic });
       } else {

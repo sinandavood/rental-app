@@ -1,0 +1,61 @@
+<div class="container my-5">
+    <div class="card shadow rounded-4 p-4 mx-auto" style="max-width: 700px;">
+        <h2 class="mb-4 text-center text-danger fw-bold">
+            <i class="bi bi-pencil-square me-2"></i>Edit Profile
+        </h2>
+        
+        <!-- ✅ Success or Error Message -->
+        <div *ngIf="successMessage" class="alert alert-success text-center">{{ successMessage }}</div>
+        <div *ngIf="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
+        
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" novalidate>
+            <div class="mb-4 text-center">
+              <label class="form-label fw-medium">Profile Picture</label>
+              <div class="mb-3">
+               <img  [src]="profilePic?'https://p2prental.runasp.net' + profilePic: 'assets/constant/empty-user-profilepic.webp'" alt="Profile"
+                     alt="Preview" class="rounded-circle shadow border" width="140" height="140"
+                     style="object-fit: cover;">
+              </div>
+            
+              <input id="profileImage" type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control mb-2">
+              
+              <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeImage()" *ngIf="imagePreview || selectedFile">
+                <i class="bi bi-trash"></i> Remove Image
+              </button>
+            </div>
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label class="form-label fw-medium">Full Name</label>
+                <input formControlName="fullName" type="text" class="form-control"
+                [ngClass]="{'is-invalid': isFieldInvalid('fullName')}">
+                <div *ngIf="getError('fullName')" class="invalid-feedback">{{ getError('fullName') }}</div>
+            </div>
+            
+            <!-- Email -->
+      <div class="mb-3">
+        <label class="form-label fw-medium">Email</label>
+        <input formControlName="email" type="email" class="form-control"
+               [ngClass]="{'is-invalid': isFieldInvalid('email')}">
+        <div *ngIf="getError('email')" class="invalid-feedback">{{ getError('email') }}</div>
+      </div>
+
+      <!-- Phone -->
+      <div class="mb-3">
+        <label class="form-label fw-medium">Phone Number</label>
+        <input formControlName="phoneNumber" type="text" class="form-control"
+               [ngClass]="{'is-invalid': isFieldInvalid('phoneNumber')}">
+        <div *ngIf="getError('phoneNumber')" class="invalid-feedback">{{ getError('phoneNumber') }}</div>
+      </div>
+
+      <!-- Profile Picture -->
+
+      <!-- Submit Button -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-danger" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

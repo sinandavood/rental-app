@@ -1,1 +1,70 @@
-<p>profile works!</p>
+<div class="container my-5">
+
+  <!-- Spinner while loading -->
+  <div *ngIf="loading" class="d-flex justify-content-center align-items-center min-vh-50">
+    <div class="spinner-border text-danger" style="width: 4rem; height: 4rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Profile content once loaded -->
+  <div *ngIf="!loading" class="card shadow-lg rounded-4 p-4 min-vh-50">
+    <div class="row align-items-center g-4">
+
+      <!-- Profile Picture -->
+      <div class="col-md-auto text-center">
+        <img [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
+             alt="Profile"
+             class="rounded-circle border border-3 border-secondary shadow"
+             style="width: 160px; height: 160px; object-fit: cover;" />
+      </div>
+
+      <!-- User Info -->
+      <div class="col">
+        <!-- Name -->
+        <h2 class="h3 fw-bold d-flex align-items-center gap-2 text-dark mb-3">
+          <i class="bi bi-person-circle text-danger fs-4"></i> {{ user?.fullName }}
+        </h2>
+
+        <!-- Email -->
+        <p class="lead d-flex align-items-center gap-2 text-muted mb-3">
+          <i class="bi bi-envelope-fill text-primary fs-5"></i> {{ user?.email }}
+        </p>
+
+        <!-- Phone -->
+        <p class="lead d-flex align-items-center gap-2 text-muted mb-3">
+          <i class="bi bi-phone text-primary fs-5"></i> {{ isPhoneNumberempty() }}
+        </p>
+
+        <!-- KYC -->
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-shield-check fs-5"
+             [ngClass]="user?.isKycVerified ? 'text-success' : 'text-danger'"></i>
+          <span class="badge rounded-pill px-3 py-2"
+             [ngClass]="user?.isKycVerified ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+            {{ user?.isKycVerified ? 'KYC Verified' : 'KYC Not Verified' }}
+          </span>
+        </div>
+
+        <!-- Member Since -->
+        <div class="text-secondary fst-italic d-flex align-items-center gap-2 mb-4">
+          <i class="bi bi-calendar-check text-purple fs-5"></i> Member since {{ memberSince }}
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex flex-wrap gap-3">
+          <a routerLink="/edit-profile" class="btn btn-danger d-flex align-items-center gap-2 shadow-sm">
+            <i class="bi bi-pencil-square"></i> Edit Profile
+          </a>
+
+          <a *ngIf="!user?.isKycVerified" routerLink="/kyc"
+             class="btn btn-warning d-flex align-items-center gap-2 shadow-sm">
+            <i class="bi bi-shield-exclamation"></i> Complete KYC
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
