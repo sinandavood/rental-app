@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ import { AuthService } from './core/services/auth.service';
     RouterOutlet,
     NavbarComponent,
     FooterComponent,
-    RouterModule
+    RouterModule,
+    CommonModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -20,9 +22,16 @@ import { AuthService } from './core/services/auth.service';
 export class AppComponent {
   title = 'your-app-name';
 
-  constructor(private authservice:AuthService){}
+   constructor(
+    private authservice: AuthService,
+    public router: Router // ✅ injected Router here
+  ) {}
 
   ngOnInit():void{
     this.authservice.getCurrentUser();
+  }
+
+  get isAdminRoute(): boolean {
+    return this.router.url.startsWith('/admin');
   }
 }
