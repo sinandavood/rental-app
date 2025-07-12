@@ -17,7 +17,8 @@ import { WishListService } from 'src/app/core/services/wishlist.service';
 export class ProductListComponent implements OnInit {
   @Input() limit?: number;
 
-  products: Product[] = [];
+  @Input() products:any[]=[];
+
   isLoading = true;
   errorMessage = '';
   wishlist:Set<number>= new Set();

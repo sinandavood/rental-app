@@ -1,93 +1,43 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { environment } from '../env/environment';
+
+// Import standalone components
 import { CategoryListComponent } from '../categories/category-list/category-list.component';
 import { ProductListComponent } from '../products/product-list/product-list.component';
+
+// If you use routerLink in template
+import { RouterModule } from '@angular/router';
+import { SearchService } from '../core/services/search.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, CategoryListComponent, ProductListComponent,RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule,
+    CategoryListComponent,
+    ProductListComponent
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  locations: string[] = [];
-  currentLocation = '';
-  searchKeyword = '';
-  selectedLocation = '';
+export class HomeComponent implements OnInit {
 
-  constructor(private router: Router) {}
+  searchResults:any[]=[];
+
+  constructor(private searchService:SearchService){}
 
   ngOnInit(): void {
-    this.getCurrentLocation();
-    this.loadIndianCities();
+    this.searchService.searchResults$.subscribe(results=>{
+      this.searchResults=results;
+    })
   }
 
-  /** Fetch geolocation and reverse geocode to get current city */
-  getCurrentLocation(): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          this.reverseGeocode(lat, lon); // Fetch city name
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-          // Even if geolocation fails, you already have other locations loaded
-        }
-      );
-    } else {
-      console.error('Geolocation is not supported by this browser.');
-    }
-  }
-
-  /** Use OpenStreetMap Nominatim to get the city from lat/lon */
-  reverseGeocode(lat: number, lon: number): void {
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
-      .then(res => res.json())
-      .then((data) => {
-        const city = data?.address?.city || data?.address?.town || data?.address?.village || '';
-        if (city) {
-          this.currentLocation = city;
-          this.locations.unshift('Current Location: ' + city); // Add at top of list
-        }
-      })
-      .catch((error) => {
-        console.error('Error reverse geocoding:', error);
-      });
-  }
-
-  /** Populate with Indian cities */
-  loadIndianCities(): void {
-    const indianCities = [
-      'Chennai',
-      'Mumbai',
-      'Delhi',
-      'Bangalore',
-      'Kolkata',
-      'Pune',
-      'Hyderabad',
-      'Ahmedabad',
-      'Jaipur',
-      'Lucknow',
-      'Surat',
-      'Chandigarh',
-      'Kochi',
-      'Bhopal',
-      'Patna'
-    ];
-    this.locations.push(...indianCities);
-  }
-
-  onSearch(): void {
-    this.router.navigate(['/products'], {
-      queryParams: {
-        keyword: this.searchKeyword,
-        location: this.selectedLocation,
-      },
-    });
-  }
 }

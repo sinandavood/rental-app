@@ -9,6 +9,7 @@ import { environment } from './app/env/environment-development';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { AuthInterceptor } from './app/core/interceptors/auth.interceptor'
+import { provideEcharts } from 'ngx-echarts';
 
 // ✅ Initialize Firebase
 initializeApp(environment.firebaseConfig);
@@ -16,6 +17,7 @@ initializeApp(environment.firebaseConfig);
 // ✅ Bootstrap application with DI-based interceptor
 bootstrapApplication(AppComponent, {
   providers: [
+    provideEcharts(),
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),

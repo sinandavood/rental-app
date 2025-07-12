@@ -1,37 +1,24 @@
-<div class="search-section d-flex justify-content-center align-items-center"
-  [ngStyle]="{ 'background-image': 'url(assets/images/bg-orginal.jpg)' }"
-  style="height: 80vh; background-size: cover; background-position: center;">
-  <form (ngSubmit)="onSearch()" class="w-50">
-    <div class="input-group rounded-pill overflow-hidden shadow p-4 bg-white">
+<!-- 🏠 Default Home View -->
+<div>
+  <app-category-list></app-category-list>
+  <!-- <app-product-list [limit]="8"></app-product-list> -->
+  <app-product-list *ngIf="searchResults" [products]="searchResults"></app-product-list>
 
-      <input type="text" class="form-control border-0" placeholder="Search for products..." [(ngModel)]="searchKeyword"
-        name="keyword" aria-label="Search keyword" />
-      <select class="form-select border-0" [(ngModel)]="selectedLocation" name="location" aria-label="Select location">
-        <option value="" disabled>Select location</option>
-        <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
-      </select>
 
-      <button type="submit" class="btn btn-danger d-flex align-items-center px-4 rounded-pill">
-        <img src="assets/images/search-white.svg" alt="Search" style="width: 20px; height: 20px;" />
-      </button>
-    </div>
-  </form>
 </div>
 
-<app-category-list></app-category-list>
-<app-product-list [limit]="8"></app-product-list>
+
 
 <!-- Rent an Item Button -->
 
 
 
 
-<!-- Features Section -->
+
 <section class="features-section py-5 bg-light">
   <div class="container">
     <div class="row text-center">
 
-      <!-- 24/7 Customer Support -->
       <div class="col-md-3 mb-4">
         <div class="feature-box p-3 border rounded bg-white h-100 shadow-sm">
           <img src="assets/images/support.png" alt="Customer Support" class="mb-3" style="width: 48px;" />
@@ -40,7 +27,7 @@
         </div>
       </div>
 
-      <!-- Money-Back Guarantee -->
+
       <div class="col-md-3 mb-4">
         <div class="feature-box p-3 border rounded bg-white h-100 shadow-sm">
           <img src="assets/images/gaurentee.png" alt="Money-Back Guarantee" class="mb-3" style="width: 48px;" />
@@ -49,7 +36,7 @@
         </div>
       </div>
 
-      <!-- Fast Delivery -->
+
       <div class="col-md-3 mb-4">
         <div class="feature-box p-3 border rounded bg-white h-100 shadow-sm">
           <img src="assets/images/fast-delivery.png" alt="Fast Delivery" class="mb-3" style="width: 48px;" />
@@ -58,7 +45,7 @@
         </div>
       </div>
 
-      <!-- Trusted by Many -->
+
       <div class="col-md-3 mb-4">
         <div class="feature-box p-3 border rounded bg-white h-100 shadow-sm">
           <img src="assets/images/customers.png" alt="Trusted Customers" class="mb-3" style="width: 48px;" />

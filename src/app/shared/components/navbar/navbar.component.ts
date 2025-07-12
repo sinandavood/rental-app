@@ -4,13 +4,14 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Subscription } from 'rxjs';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule, RouterModule,SearchBarComponent]
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   userfullname: string = "";
@@ -73,4 +74,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.profilePic = null;
     this.router.navigate(['/auth/login']);
   }
+
+   onSearch(query: string) {
+    if (query?.trim()) {
+      this.router.navigate(['/search'], { queryParams: { q: query.trim() } });
+    }
+}
 }

@@ -1,99 +1,91 @@
-<nav class="bg-white shadow-sm border-b ">
-  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+<nav class="bg-white shadow-sm border-b">
+  <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
 
     <!-- Logo -->
     <a class="text-xl font-bold text-red-600 text-decoration-none" routerLink="/">Rental App</a>
 
-    <!-- Toggler for mobile -->
+    <!-- Mobile Toggler (optional for future) -->
     <button class="lg:hidden text-gray-600 focus:outline-none" data-bs-toggle="collapse"
       data-bs-target="#navbarContent">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
       </svg>
     </button>
 
-    <!-- Nav links -->
-    <div id="navbarContent" class="hidden lg:flex space-x-6 text-lg font-medium text-gray-700 ">
-      <a routerLink="/" class="hover:text-red-600 transition text-decoration-none text-black">Home</a>
-      <a routerLink="/categories" class="hover:text-red-600 transition text-decoration-none text-black">Categories</a>
-      <a routerLink="/about" class="hover:text-red-600 transition text-decoration-none text-black">About Us</a>
-      <a routerLink="/contact" class="hover:text-red-600 transition text-decoration-none text-black">Contact</a>
-      <a routerLink="/blog" class="hover:text-red-600 transition text-decoration-none text-black">Blog</a>
-     
-    </div>
+    <!-- 🔍 Search Bar (visible only on large screens) -->
+   <!-- Centered Search Bar Aligned with Flex -->
+<div class="hidden lg:flex items-center flex-grow justify-center">
+  <div class="w-full max-w-xl">
+    <app-search-bar (search)="onSearch($event)"></app-search-bar>
+  </div>
+</div>
 
-    <!-- Auth Section -->
+
+    <!-- 🔐 Auth & Actions -->
     <div class="flex items-center gap-3">
-      <!-- Not Logged In -->
-      
-       <a routerLink="/notifications" class="hover:text-red-600 transition text-decoration-none text-black text-lg">
+
+      <!-- 🔔 Notifications -->
+      <a routerLink="/notifications" class="hover:text-red-600 transition text-black text-lg">
         <i class="bi bi-bell"></i>
       </a>
-      <a routerLink="/my-wishlist" class="hover:text-red-600 transition text-decoration-none text-black  text-lg">
+
+      <!-- ❤️ Wishlist -->
+      <a routerLink="/my-wishlist" class="hover:text-red-600 transition text-black text-lg">
         <i class="bi bi-heart"></i>
       </a>
-    
 
-      <!-- Rent Button -->
-      <div class="rent-button-container">
-        <button class="btn btn-danger border-end  border-4 shadow rounded-5" (click)="handleListItemClick()">
+      <!-- ➕ List Item -->
+      <div>
+        <button class="btn btn-danger border-end border-4 shadow rounded-5" (click)="handleListItemClick()">
           <i class="bi bi-plus-circle me-2"></i> List an item
         </button>
       </div>
 
-        <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
+      <!-- 👤 Auth Options -->
+      <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
         <button class="text-sm px-4 py-2 rounded border border-gray-500 text-gray-700 hover:bg-gray-100 transition"
-          routerLink="/auth/login">Login or Register</button>
+          routerLink="/auth/login">
+          Login or Register
+        </button>
       </ng-container>
-      
 
-      <!-- Logged In Dropdown -->
+      <!-- 👤 Logged In Dropdown -->
       <ng-template #loggedInBlock>
         <div class="relative group">
           <div class="flex items-center gap-1 cursor-pointer">
-            <img  [src]="profilePic?'https://p2prental.runasp.net' + profilePic: 'assets/constant/empty-user-profilepic.webp'" alt="Profile"
+            <img [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
+              alt="Profile"
               class="w-10 h-10 rounded-full object-cover border border-gray-300 shadow" />
             <i class="bi bi-caret-down-fill text-gray-600 text-lg group-hover:text-red-500"></i>
           </div>
 
-          <!-- Dropdown Menu -->
+          <!-- Dropdown -->
           <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg p-2 z-50 hidden group-hover:block">
             <div class="text-lg font-semibold text-gray-800 px-4 py-2">
               {{ userfullname }}
             </div>
             <hr class="my-1" />
 
-            <!-- My Items -->
-            <a routerLink="/my-items"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-card-list text-gray-600"></i>
-              My Items
+            <a routerLink="/my-items" class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
+              <i class="bi bi-card-list text-gray-600"></i> My Items
             </a>
 
-            <!-- My Profile -->
-            <a routerLink="/profile"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-person-circle text-gray-600"></i>
-              My Profile
+            <a routerLink="/profile" class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
+              <i class="bi bi-person-circle text-gray-600"></i> My Profile
             </a>
 
-            <!-- My Bookings -->
-            <a routerLink="/my-bookings"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-calendar-check text-gray-600"></i>
-              My Bookings
+            <a routerLink="/my-bookings" class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
+              <i class="bi bi-calendar-check text-gray-600"></i> My Bookings
             </a>
 
             <hr class="my-1" />
 
-            <!-- Logout -->
             <button (click)="logout()"
               class="flex items-center gap-2 w-full text-left px-4 py-2 text-lg text-red-500 hover:bg-red-100 rounded no-underline">
-              <i class="bi bi-box-arrow-right text-red-500"></i>
-              Logout
+              <i class="bi bi-box-arrow-right text-red-500"></i> Logout
             </button>
           </div>
-
         </div>
       </ng-template>
     </div>

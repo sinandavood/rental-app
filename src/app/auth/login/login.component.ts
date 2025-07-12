@@ -123,20 +123,26 @@ onLogin(): void {
 
   this.authService.login(credentials).subscribe({
     next: (res: any) => {
-      this.authService.saveUserData(res.token); // ✅ redirection handled inside
+      this.authService.saveUserData(res.token);
       this.showAlert('Login successful!', 'success');
       this.isSubmitting = false;
     },
     error: (error) => {
       this.isSubmitting = false;
-      this.showAlert(
-        error?.error?.message || 'Login failed. Please try again.',
-        'error'
-      );
+      
+      if (error.status === 403) {
+        this.showAlert('Your account is blocked. Please contact support.', 'warning');
+      } else if (error.status === 400 || error.status === 401) {
+        this.showAlert('Invalid email or password.', 'error');
+      } else {
+        this.showAlert('Login failed. Please try again later.', 'error');
+      }
+
       console.error('Login error:', error);
     },
   });
 }
+
 
   // ✅ Role-based redirection
   redirectBasedOnRole(role: string | null): void {

@@ -9,5 +9,6 @@ export interface User {
  isKycVerified:boolean;
  phoneNumber:number;
  photoUrl:string;
+ lockoutEnd: string | null;
   // Add other user properties as needed
 }
