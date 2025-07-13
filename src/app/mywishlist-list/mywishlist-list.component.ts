@@ -1,19 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { WishListService } from 'src/app/core/services/wishlist.service';
 import Swal from 'sweetalert2';
+import { Product } from '../models/product.model';
 
 @Component({
   selector: 'app-my-wishlist',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterModule],
   templateUrl: './mywishlist-list.component.html',
   styleUrls: ['./mywishlist-list.component.css']
 })
 export class MyWishlistComponent implements OnInit {
   wishlistItems: any[] = [];
   isLoading = false;
-
+ 
   private wishlistservice = inject(WishListService);
 
   constructor() {}

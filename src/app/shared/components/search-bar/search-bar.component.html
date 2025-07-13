@@ -1,55 +1,12 @@
-<div class="container my-4 shadow-sm p-4 rounded bg-white">
-  <div class="row g-3 align-items-end">
+<div class="container my-1 shadow-sm p-2 rounded bg-dark-subtle">
+  <div class="row g-2 align-items-end">
 
     <!-- 🔍 Search with Autocomplete & Recent -->
-    <div class="col-md-4 position-relative">
-      <label class="form-label fw-semibold">🔍 Search</label>
-      <input
-        type="text"
-        [formControl]="searchControl"
-        class="form-control rounded-pill px-4"
-        placeholder="Search items..."
-        (focus)="showSuggestions = suggestions.length > 0 || recentSearches.length > 0"
-        (blur)="hideSuggestionsWithDelay()" />
-
-      <!-- 🔽 Suggestions / Recent -->
-      <ul
-        *ngIf="showSuggestions"
-        class="list-group position-absolute w-100 mt-1 shadow"
-        style="z-index: 10; max-height: 250px; overflow-y: auto;">
-        
-        <!-- Suggestions -->
-        <li *ngFor="let suggestion of suggestions"
-            (click)="onSuggestionClick(suggestion)"
-            class="list-group-item list-group-item-action">
-          {{ suggestion }}
-        </li>
-
-        <!-- Recent Searches -->
-        <ng-container *ngIf="suggestions.length === 0 && recentSearches.length > 0">
-          <li class="list-group-item disabled text-muted small">Recent Searches</li>
-          <li *ngFor="let recent of recentSearches"
-              (click)="onSuggestionClick(recent)"
-              class="list-group-item list-group-item-action text-secondary">
-            🔁 {{ recent }}
-          </li>
-          <li class="list-group-item text-end">
-            <button
-              class="btn btn-sm btn-link text-danger p-0"
-              (click)="clearRecentSearches()">
-              🧹 Clear All
-            </button>
-          </li>
-        </ng-container>
-      </ul>
-    </div>
-
+    
     <!-- 📍 Location Filter -->
     <div class="col-md-3">
-      <label class="form-label fw-semibold">📍 Location</label>
-      <select
-        class="form-select rounded-pill"
-        [(ngModel)]="selectedLocation">
+      <!-- <label class="form-label fw-semibold">📍 Location</label> -->
+      <select class="form-select rounded" [(ngModel)]="selectedLocation">
         <option value="All">All Locations</option>
         <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
       </select>
@@ -57,31 +14,53 @@
 
     <!-- 🧩 Category Filter -->
     <div class="col-md-3">
-      <label class="form-label fw-semibold">🧩 Category</label>
-      <select
-        class="form-select rounded-pill"
-        [(ngModel)]="selectedCategoryId">
+      <!-- <label class="form-label fw-semibold">🧩 Category</label> -->
+      <select class="form-select rounded" [(ngModel)]="selectedCategoryId">
         <option [value]="0">All Categories</option>
         <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
       </select>
     </div>
-
+    
     <!-- 🎯 Buttons -->
+    <div class="col-md-4 position-relative ">
+      <!-- <label class="form-label fw-semibold">🔍 Search</label> -->
+      <input type="text" [formControl]="searchControl" class="form-control rounded px-4" placeholder="Search items..."
+        (focus)="showSuggestions = suggestions.length > 0 || recentSearches.length > 0"
+        (blur)="hideSuggestionsWithDelay()" />
+  
+      <!-- 🔽 Suggestions / Recent -->
+      <ul *ngIf="showSuggestions" class="list-group position-absolute w-100 mt-1 shadow"
+        style="z-index: 10; max-height: 250px; overflow-y: auto;">
+  
+        <!-- Suggestions -->
+        <li *ngFor="let suggestion of suggestions" (click)="onSuggestionClick(suggestion)"
+          class="list-group-item list-group-item-action">
+          {{ suggestion }}
+        </li>
+  
+        <!-- Recent Searches -->
+        <ng-container *ngIf="suggestions.length === 0 && recentSearches.length > 0">
+          <li class="list-group-item disabled text-muted small">Recent Searches</li>
+          <li *ngFor="let recent of recentSearches" (click)="onSuggestionClick(recent)"
+            class="list-group-item list-group-item-action text-secondary">
+            🔁 {{ recent }}
+          </li>
+          <li class="list-group-item text-end">
+            <button class="btn btn-sm btn-link text-danger p-0" (click)="clearRecentSearches()">
+              🧹 Clear All
+            </button>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
     <div class="col-md-2 d-flex gap-2">
-      <button class="btn btn-dark w-100 rounded-pill" (click)="onFilterChange()">
+      <button class="btn btn-dark w-100 rounded" (click)="onFilterChange()">
         Search
       </button>
-      <button class="btn btn-outline-secondary w-100 rounded-pill" (click)="onClear()">
-        Clear
+      <button class="btn w-100 rounded-pill" (click)="onClear()">
+        <i class="bi bi-x"></i>
       </button>
     </div>
-
-  </div> <!-- End .row -->
-</div> <!-- End .container -->
-
-<!-- 🔍 Results -->
-<!-- <div class="container mt-4" *ngIf="searchControl.value || selectedLocation !== 'All' || selectedCategoryId !== 0">
-  <h5 *ngIf="searchResults.length > 0" class="mb-3">🔎 Results ({{ searchResults.length }})</h5>
-  <app-product-list [products]="searchResults"></app-product-list>
-  <p *ngIf="searchResults.length === 0" class="text-muted mt-4">😕 No matching items found.</p>
-</div> -->
+    
+  </div>
+</div>

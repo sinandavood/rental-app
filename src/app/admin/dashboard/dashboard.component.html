@@ -1,36 +1,162 @@
-
-<div *ngIf="loading" class="text-center py-5">Loading dashboard...</div>
-
-<div *ngIf="!loading">
-  <div class="row text-center mb-4">
-    <div class="col"><h5>Total Users</h5><p>{{ summary.totalUsers }}</p></div>
-    <div class="col"><h5>Verified</h5><p>{{ summary.verifiedUsers }}</p></div>
-    <div class="col"><h5>Blocked</h5><p>{{ summary.blockedUsers }}</p></div>
+<ng-container *ngIf="loading; else dashboardContent">
+  <div class="flex items-center justify-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+    <p class="mt-4 text-gray-600 text-lg">Loading dashboard...</p>
   </div>
+</ng-container>
 
-  <div class="row text-center mb-4">
-    <div class="col"><h5>Total Items</h5><p>{{ summary.totalItems }}</p></div>
-    <div class="col"><h5>Pending Items</h5><p>{{ summary.pendingItems }}</p></div>
-    <div class="col"><h5>Bookings This Month</h5><p>{{ summary.bookingsThisMonth }}</p></div>
+<ng-template #dashboardContent>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl sm:text-3xl font-bold text-blue-700">Admin Dashboard</h2>
+      <div class="text-gray-500 text-sm">
+        Last Updated: {{ summary.lastUpdated | date: 'medium' }}
+      </div>
+    </div>
+
+    <!-- User Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-blue-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <div>
+            <h5 class="text-sm font-semibold text-gray-600 uppercase">Total Users</h5>
+            <p class="text-3xl font-bold text-gray-900">{{ summary.totalUsers }}</p>
+            <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded-full">
+              {{ summary.activeUsers }} Active
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <h5 class="text-sm font-semibold text-gray-600 uppercase">Verified Users</h5>
+            <p class="text-3xl font-bold text-green-600">{{ summary.totalVerifiedUsers }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-red-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <h5 class="text-sm font-semibold text-gray-600 uppercase">Inactive Users</h5>
+            <p class="text-3xl font-bold text-red-600">{{ summary.inactiveUsers }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-teal-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <div>
+            <h5 class="text-sm font-semibold text-gray-600 uppercase">Total Items</h5>
+            <p class="text-3xl font-bold text-gray-900">{{ summary.totalItems }}</p>
+            <span class="inline-block bg-teal-100 text-teal-700 text-xs font-medium px-2.5 py-0.5 rounded-full">
+              {{ summary.activeItems }} Active
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-yellow-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <h5 class="text-sm font-semibold text-gray-600 uppercase">Pending Items</h5>
+            <p class="text-3xl font-bold text-yellow-600">{{ summary.pendingItems }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-blue-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <div>
+            <h5 class="text-sm font-semibold text-gray-600 uppercase">Bookings This Month</h5>
+            <p class="text-3xl font-bold text-blue-600">{{ summary.bookingsThisMonth }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue and Wishlist -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <h5 class="text-sm font-semibold text-gray-600 uppercase">Total Revenue</h5>
+            <p class="text-3xl font-bold text-green-600">₹{{ summary.totalRevenue }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-red-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+          </svg>
+          <div>
+            <h5 class="text-sm font-semibold text-gray-600 uppercase">Wishlist Items</h5>
+            <p class="text-3xl font-bold text-red-600">{{ summary.totalWishlistItems }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Complaints and Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h5 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+          <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+          Recent Complaints
+        </h5>
+        <ul class="space-y-3">
+          <li class="text-gray-700" *ngFor="let c of summary.complaints">
+            <strong>{{ c.user }}</strong> — {{ c.reason }}
+          </li>
+          <li class="text-gray-500 text-sm italic" *ngIf="summary.complaints.length === 0">
+            No recent complaints.
+          </li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h5 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+          <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Recent Activity
+        </h5>
+        <ul class="space-y-3">
+          <li class="text-gray-700 flex justify-between" *ngFor="let activity of summary.recentActivities">
+            <span>{{ activity.message }}</span>
+            <span class="text-gray-500 text-sm">({{ activity.time | date: 'short' }})</span>
+          </li>
+          <li class="text-gray-500 text-sm italic" *ngIf="summary.recentActivities.length === 0">
+            No recent activity found.
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-
-  <div class="row text-center mb-4">
-    <div class="col"><h5>Revenue</h5><p>₹{{ summary.revenue }}</p></div>
-  </div>
-
-  <h5>⚠ Recent Complaints</h5>
-  <ul class="list-group mb-4">
-    <li class="list-group-item" *ngFor="let c of summary.complaints">
-      {{ c.user }} - {{ c.reason }}
-    </li>
-  </ul>
-
-  <h5>🔄 Recent Activity</h5>
-  <ul class="list-group">
-    <li class="list-group-item" *ngFor="let activity of summary.recentActivities">
-      {{ activity.message }} <small class="text-muted">({{ activity.time }})</small>
-    </li>
-  </ul>
-</div>
-
-
+</ng-template>

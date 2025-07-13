@@ -1,1 +1,60 @@
-<p>products works!</p>
+<div class="container">
+  <h3>Listed Items</h3>
+
+  <!-- 🔄 Loading Spinner -->
+  <div *ngIf="isloading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading items...</p>
+  </div>
+
+  <!-- ✅ Show items only if not loading -->
+  <ng-container *ngIf="!isloading">
+    <input
+      type="text"
+      class="form-control my-3"
+      [(ngModel)]="searchQuery"
+      (input)="applyFilters()"
+      placeholder="Search by name, owner, or category" />
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Owner</th>
+          <th>Price</th>
+          <th>Location</th>
+          <th>Availability</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredItems | slice:(page-1)*pageSize:page*pageSize">
+          <td>
+            <img [src]="'https://p2prental.runasp.net' + item.image" alt="Image" width="50" height="50" />
+          </td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.categoryName }}</td>
+          <td>{{ item.ownerName }}</td>
+          <td>₹{{ item.price }}</td>
+          <td>{{ item.location }}</td>
+          <td>
+            <span class="badge" [ngClass]="item.availability ? 'bg-success' : 'bg-secondary'">
+              {{ item.availability ? 'Available' : 'Unavailable' }}
+            </span>
+          </td>
+          <td>{{ item.createdAt | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-outline-primary" (click)="prevPage()" [disabled]="page === 1">Previous</button>
+      <span>Page {{ page }}</span>
+      <button class="btn btn-outline-primary" (click)="nextPage()" [disabled]="(page * pageSize) >= filteredItems.length">Next</button>
+    </div>
+  </ng-container>
+</div>

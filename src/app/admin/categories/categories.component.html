@@ -1,1 +1,73 @@
-<p>categories works!</p>
+<div class="container mt-3">
+  <h4>📁 Manage Categories</h4>
+
+  <!-- 🔄 Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <!-- ➕ Create Form -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Create Category</h5>
+      <div class="row g-2">
+        <div class="col-md-3">
+          <input [(ngModel)]="newCategory.name" class="form-control" placeholder="Name" />
+        </div>
+        <div class="col-md-4">
+          <input [(ngModel)]="newCategory.description" class="form-control" placeholder="Description" />
+        </div>
+        <div class="col-md-3">
+          <input [(ngModel)]="newCategory.icon" class="form-control" placeholder="Icon (bi-camera)" />
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" (click)="createCategory()">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔍 Search Input -->
+  <input
+    type="text"
+    class="form-control mb-3"
+    [(ngModel)]="searchTerm"
+    (input)="applyFilters()"
+    placeholder="Search categories..."
+  />
+
+  <!-- 📋 Category Table -->
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Icon</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cat of filteredCategories | slice:(page-1)*pageSize:page*pageSize; let i = index">
+        <td>{{ i + 1 + ((page - 1) * pageSize) }}</td>
+        <td>{{ cat.name }}</td>
+        <td>{{ cat.description }}</td>
+        <td><i [class]="'bi ' + cat.icon"></i> <small class="text-muted">{{ cat.icon }}</small></td>
+        <td>
+          <button class="btn btn-sm btn-danger" (click)="deleteCategory(cat.id)">
+            <i class="bi bi-trash"></i> Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 🔢 Pagination -->
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <button class="btn btn-outline-primary btn-sm" (click)="prevPage()" [disabled]="page === 1">Previous</button>
+    <span>Page {{ page }}</span>
+    <button class="btn btn-outline-primary btn-sm" (click)="nextPage()" [disabled]="(page * pageSize) >= filteredCategories.length">
+      Next
+    </button>
+  </div>
+</div>
