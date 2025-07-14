@@ -31,18 +31,32 @@ export class ProductListComponent implements OnInit {
     private searchservice:SearchService
   ) {}
 
-  ngOnInit(): void {
-   this.route.queryParams.subscribe(params => {
-  const keyword = params['q'] || '';
-  const location = params['location'] || '';
-  const categoryId = +params['categoryId'] || 0;
+ ngOnInit(): void {
+  // 🔄 React to live search/filter results from SearchBarComponent
+  this.searchservice.searchResults$.subscribe(data => {
+    this.products = data;
+    this.isLoading=false;
+  });
 
-  this.fetchFilteredProducts(keyword, location, categoryId);
+  // ⏳ Sync skeleton animation visibility
+  this.searchservice.loading$.subscribe(state => {
+    this.isLoading = state;
+  });
+
+  // 🌐 Initial load from query params (like /search?q=canon)
+  this.route.queryParams.subscribe(params => {
+    const keyword = params['q'] || '';
+    const location = params['location'] || '';
+    const categoryId = +params['categoryId'] || 0;
+
+    this.fetchFilteredProducts(keyword, location, categoryId);
+  });
+
   this.loadwishlist();
-  
-});
+}
 
-  }
+
+
   loadwishlist()
   {
     this.wishlistservice.getWishlist().subscribe({

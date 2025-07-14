@@ -66,7 +66,7 @@ export class SearchBarComponent {
     const query = this.searchControl.value?.trim() || '';
     const locParam = this.selectedLocation !== 'All' ? `&location=${encodeURIComponent(this.selectedLocation)}` : '';
     const catParam = this.selectedCategoryId !== 0 ? `&categoryId=${this.selectedCategoryId}` : '';
-    this.loading=true;
+    this.searchService.setLoading(true)
 
     this.http.get<any[]>(`${this.apibaseurl}/item/search?q=${encodeURIComponent(query)}${locParam}${catParam}`)
       .subscribe(results => {
