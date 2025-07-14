@@ -24,9 +24,11 @@
     <!-- 🎯 Buttons -->
     <div class="col-md-4 position-relative ">
       <!-- <label class="form-label fw-semibold">🔍 Search</label> -->
+       <form (ngSubmit)="onSearch()">
       <input type="text" [formControl]="searchControl" class="form-control rounded px-4" placeholder="Search items..."
         (focus)="showSuggestions = suggestions.length > 0 || recentSearches.length > 0"
-        (blur)="hideSuggestionsWithDelay()" />
+        (blur)="hideSuggestionsWithDelay()"  />
+    </form>
   
       <!-- 🔽 Suggestions / Recent -->
       <ul *ngIf="showSuggestions" class="list-group position-absolute w-100 mt-1 shadow"
@@ -54,7 +56,7 @@
       </ul>
     </div>
     <div class="col-md-2 d-flex gap-2">
-      <button class="btn btn-dark w-100 rounded" (click)="onFilterChange()">
+      <button class="btn btn-dark w-100 rounded" (click)="onSearch()" (click)="fetchFilteredItems()">
         Search
       </button>
       <button class="btn w-100 rounded-pill" (click)="onClear()">
@@ -64,3 +66,4 @@
     
   </div>
 </div>
+

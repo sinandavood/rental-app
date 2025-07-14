@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 import { AddProductComponent } from './products/add-product/add-product.component';
+import { ProductListComponent } from './products/product-list/product-list.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -33,6 +34,7 @@ export const routes: Routes = [
         path: 'my-wishlist',
         loadComponent: () =>
             import('./mywishlist-list/mywishlist-list.component').then(m => m.MyWishlistComponent),
+        canActivate: [AuthGuard],
     },
     {
         path: 'add-product', component: AddProductComponent
@@ -41,6 +43,21 @@ export const routes: Routes = [
         path: 'my-items',
         loadComponent: () => import('./products/my-items/my-items.component').then(m => m.MyItemsComponent)
     },
+
+    {
+        path:'notifications',
+        loadComponent:()=> import('./notifications/notifications.component').then(m=>m.NotificationsComponent),
+        canActivate:[AuthGuard],
+
+    },
+
+     {
+        path:'my-bookings',
+        loadComponent:()=> import('./my-bookings/my-bookings.component').then(m=>m.MyBookingsComponent),
+        canActivate:[AuthGuard],
+
+    },
+
 
     {
         path: 'edit-item/:id',
@@ -52,6 +69,11 @@ export const routes: Routes = [
         loadComponent:()=>import('./user/profile/profile.component').then(m=>m.ProfileComponent)
 
 
+    },
+
+    {
+        path:'search',
+        component:ProductListComponent
     },
     {
         path:'edit-profile',

@@ -18,25 +18,24 @@
   <div class="row" *ngIf="!isLoading && visibleProducts.length > 0">
     <div class="col-md-6 col-lg-4 col-xl-3 mb-4" *ngFor="let product of visibleProducts">
       <div class="product-card h-100 shadow rounded-4 border bg-white">
-        
+
         <!-- Image and icons -->
         <div class="position-relative product-image-container">
-          <img [src]=" 'https://p2prental.runasp.net'+product.image" alt="{{ product.name }}" class="product-image rounded-top-4 w-100" />
+          <img [src]=" 'https://p2prental.runasp.net'+product.image" alt="{{ product.name }}"
+            class="product-image rounded-top-4 w-100" />
 
           <!-- Wishlist and View icons -->
           <div class="top-icons position-absolute top-0 end-0 m-2 d-flex flex-column gap-2">
             <i class="bi icon"
               [ngClass]="isInWishlist(product.id) ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'"
-              (click)="toggleWishlist(product.id)"
-              style="cursor: pointer;"
-              title="Add to Wishlist">
+              (click)="toggleWishlist(product.id)" style="cursor: pointer;" title="Add to Wishlist">
             </i>
             <!-- <i class="bi bi-eye icon text-muted" title="View Details"></i> -->
           </div>
         </div>
         <div class="product-info p-3">
           <h5 class="product-name fw-semibold mb-2 text-truncate">{{ product.name }}</h5>
-          <p class="product-price text-danger fw-bold mb-2">{{ product.displayPrice }}/day</p>
+          <p class="product-price text-danger fw-bold mb-2">{{ product.price| currency:'INR' }}/day</p>
 
           <div class="product-meta small text-muted mb-3">
             <div><i class="bi bi-geo-alt me-1"></i>location : {{ product.location }}</div>
@@ -61,5 +60,3 @@
     <a routerLink="/products" class="btn btn-danger btn-lg px-3">View All Products</a>
   </div>
 </section>
-
-

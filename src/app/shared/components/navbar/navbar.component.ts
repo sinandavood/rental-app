@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Router,NavigationEnd } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { Subscription } from 'rxjs';
+import { Subscription,filter } from 'rxjs';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
+
 
 @Component({
   selector: 'app-navbar',
@@ -17,12 +18,41 @@ export class NavbarComponent implements OnInit, OnDestroy {
   userfullname: string = "";
   profilePic: string | null = null;
   private userSubscription: Subscription | null = null;
+  @Input() showSearchBar:boolean=true;
 
   constructor(
-    public authService: AuthService,
-    private router: Router
-  ) {}
+  public authService: AuthService,
+  private router: Router
+) {
+  this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe((event) => {
+      const navEnd = event as NavigationEnd;
+      const currentUrl = navEnd.urlAfterRedirects.toLowerCase();
 
+      const hiddenRoutes = [
+        // Home & product listing
+        '/auth/login',
+        '/auth/register',
+        '/login',
+        '/notifications',
+        '/my-wishlist',
+        '/add-product',
+        '/my-items',
+        '/profile',
+        '/edit-profile',
+        '/my-bookings'
+      ];
+
+      const dynamicPrefixes = [
+        '/products/' // Will match /products/31, /products/abc, etc.
+      ];
+
+      this.showSearchBar =
+        !hiddenRoutes.includes(currentUrl) &&
+        !dynamicPrefixes.some(prefix => currentUrl.startsWith(prefix));
+    });
+}
   ngOnInit(): void {
     // ✅ Initialize with current user data if available
     this.initializeUserData();
@@ -75,9 +105,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.router.navigate(['/auth/login']);
   }
 
-   onSearch(query: string) {
-    if (query?.trim()) {
-      this.router.navigate(['/search'], { queryParams: { q: query.trim() } });
-    }
+  onSearch(query: string) {
+  console.log('Search triggered with:', query);
+  if (query?.trim()) {
+    this.router.navigate(['/search'], { queryParams: { q: query.trim() } });
+  }
 }
+
 }

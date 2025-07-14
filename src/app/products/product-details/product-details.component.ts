@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../product.service';
 import { Product } from 'src/app/models/product.model';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { number } from 'echarts';
 
 @Component({
   selector: 'app-product-details',
@@ -23,7 +24,7 @@ export class ProductDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -40,7 +41,7 @@ export class ProductDetailsComponent implements OnInit {
     this.productService.getProductById(id).subscribe({
       next: (res) => {
         this.product = res;
-        this.profilepic=res.ownerProfileImage;
+        this.profilepic = res.ownerProfileImage;
         this.isLoading = false;
 
         // ✅ Fetch owner's profile image
@@ -53,18 +54,28 @@ export class ProductDetailsComponent implements OnInit {
               console.error('Failed to load owner profile image.');
             }
           });
-        }
+        }console.log('Product Response:', res); // Add this here
+        console.log('Product Response:', res);
+console.log('res.categoryId:', res.categoryId);
+
+
 
         // ✅ Fetch similar products
-        if (res.categoryName) {
-          this.productService.getFilteredProducts('', res.categoryName).subscribe({
+        if (res.categoryId) {
+          const categoryId = Number(res.categoryId); // Optional cast
+          this.productService.getSimilarProducts(res.id).subscribe({
             next: (similar) => {
-              this.similarProducts = similar
-                .filter(p => p.id !== res.id)
-                .slice(0, 4);
+              console.log('Similar Products:', similar);
+
+              this.similarProducts = similar.slice(0, 4); // just to limit if needed
+            },
+            error: () => {
+              console.error('Failed to load similar products');
             }
           });
+
         }
+
       },
       error: () => {
         this.error = 'Error loading product';

@@ -17,7 +17,7 @@
    <!-- Centered Search Bar Aligned with Flex -->
 <div class="hidden lg:flex items-center flex-grow justify-center">
   <div class="w-full max-w-xl">
-    <app-search-bar (search)="onSearch($event)"></app-search-bar>
+    <app-search-bar (search)="onSearch($event)" *ngIf="showSearchBar"></app-search-bar>
   </div>
 </div>
 

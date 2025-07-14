@@ -5,6 +5,7 @@ import { ProductService } from '../product.service';
 
 import { Product } from '../../models/product.model'; // <- optional interface
 import { WishListService } from 'src/app/core/services/wishlist.service';
+import { SearchService } from 'src/app/core/services/search.service';
 
 
 @Component({
@@ -26,16 +27,21 @@ export class ProductListComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private wishlistservice:WishListService
+    private wishlistservice:WishListService,
+    private searchservice:SearchService
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const keyword = params['keyword'] || '';
-      const location = params['location'] || '';
-      this.fetchFilteredProducts(keyword, location);
-      this.loadwishlist();
-    });
+   this.route.queryParams.subscribe(params => {
+  const keyword = params['q'] || '';
+  const location = params['location'] || '';
+  const categoryId = +params['categoryId'] || 0;
+
+  this.fetchFilteredProducts(keyword, location, categoryId);
+  this.loadwishlist();
+  
+});
+
   }
   loadwishlist()
   {
@@ -62,20 +68,22 @@ isInWishlist(productId: number): boolean {
   return this.wishlist.has(productId);
 }
 
-  fetchFilteredProducts(keyword: string, location: string) {
-    this.isLoading = true;
-    this.productService.getFilteredProducts(keyword, location).subscribe({
-      next: (data: Product[]) => {
-        this.products = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.errorMessage = 'Error fetching products';
-        console.error(err);
-        this.isLoading = false;
-      }
-    });
-  }
+fetchFilteredProducts(keyword: string, location: string, categoryId: number) {
+  this.isLoading = true;
+  this.productService.getFilteredProducts(keyword, location, categoryId).subscribe({
+    next: (data: Product[]) => {
+      console.log('Fetched products:', data);
+      this.products = data;
+      this.isLoading = false;
+    },
+    error: (err) => {
+      this.errorMessage = 'Error fetching products';
+      console.error(err);
+      this.isLoading = false;
+    }
+  });
+}
+
 
   get visibleProducts(): Product[] {
     return this.limit ? this.products.slice(0, this.limit) : this.products;

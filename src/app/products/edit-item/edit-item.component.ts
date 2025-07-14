@@ -58,7 +58,7 @@ export class EditItemComponent implements OnInit {
       this.productForm.patchValue({
         name: item.name,
         description: item.description,
-        price: item.displayPrice,
+        price: item.price,
         location: item.location,
         categoryId: item.categoryName,
         availability: item.availability

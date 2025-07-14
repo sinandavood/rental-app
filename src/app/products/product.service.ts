@@ -26,13 +26,13 @@ export class ProductService {
   }
 
   // Get filtered products
-  getFilteredProducts(keyword: string, location: string): Observable<Product[]> {
-    let params = new HttpParams();
-    if (keyword) params = params.set('keyword', keyword);
-    if (location) params = params.set('location', location);
+ getFilteredProducts(keyword: string, location: string, categoryId: number) {
+  let url = `${this.url}/search?q=${encodeURIComponent(keyword)}`;
+  if (location) url += `&location=${encodeURIComponent(location)}`;
+  if (categoryId) url += `&categoryId=${categoryId}`;
+  return this.http.get<Product[]>(url);
+}
 
-    return this.http.get<Product[]>(this.url, { params });
-  }
 
   // Add a product with image (multipart/form-data)
   addProduct(formData: FormData): Observable<any> {
@@ -52,6 +52,9 @@ updateItem(id: number, formData: FormData): Observable<any> {
 }
 
 
+getSimilarProducts(id: number): Observable<Product[]> {
+  return this.http.get<Product[]>(`${this.url}/${id}/similar`);
+}
 
 
 }

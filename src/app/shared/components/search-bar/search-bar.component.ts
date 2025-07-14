@@ -18,7 +18,7 @@ import { SearchService } from 'src/app/core/services/search.service';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule,ProductListComponent ],
+    RouterModule, ],
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css']
 })
@@ -40,7 +40,8 @@ export class SearchBarComponent {
   showSuggestions = false;
 
   recentSearches: string[] = [];
-
+  loading=false;
+ searchText = '';
   constructor(private http: HttpClient,private searchService:SearchService) {}
 
   ngOnInit(): void {
@@ -65,11 +66,13 @@ export class SearchBarComponent {
     const query = this.searchControl.value?.trim() || '';
     const locParam = this.selectedLocation !== 'All' ? `&location=${encodeURIComponent(this.selectedLocation)}` : '';
     const catParam = this.selectedCategoryId !== 0 ? `&categoryId=${this.selectedCategoryId}` : '';
+    this.loading=true;
 
     this.http.get<any[]>(`${this.apibaseurl}/item/search?q=${encodeURIComponent(query)}${locParam}${catParam}`)
       .subscribe(results => {
         this.searchService.setResults(results);
         this.showSuggestions = false;
+        this.loading=false;
       });
 
     this.saveRecentSearch(query);
@@ -83,6 +86,28 @@ export class SearchBarComponent {
     localStorage.setItem('recentSearches', JSON.stringify(this.recentSearches));
   }
 
+  onSearch(event?:Event) {
+    if (event) event.preventDefault();
+    console.log('Enter pressed');
+    
+    const query = this.searchControl.value?.trim();
+    if (query) {
+      console.log('SearchBarComponent emitting search:', query);
+      this.search.emit(query); // 🔥 THIS LINE sends it to Navbar
+      this.addToRecentSearches(query);
+      this.fetchFilteredItems();
+    }
+  }
+
+    addToRecentSearches(query: string) {
+    const maxItems = 5;
+    if (!this.recentSearches.includes(query)) {
+      this.recentSearches.unshift(query);
+      if (this.recentSearches.length > maxItems) {
+        this.recentSearches.pop();
+      }
+    }
+  }
   onFilterChange() {
     this.fetchFilteredItems();
   }

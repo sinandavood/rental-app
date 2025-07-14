@@ -1,15 +1,15 @@
-export class Product{
-    id:number=0
-    name:string=""
-    description:string="";
-    displayPrice:number=0;
-    image:string="";
-    location:string="";
-    categoryName:string="";
-    ownerName:string="";
-    availability:boolean=true;
-    createdAt:string="";
-    ownerId:string="";
-    ownerProfileImage="";
-
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+ price: number;
+  image: string;
+  location: string;
+  categoryName: string;
+  ownerName: string;
+  availability: boolean;
+  createdAt: string;
+  ownerId: string;
+  ownerProfileImage: string;
+  categoryId: number;
 }
