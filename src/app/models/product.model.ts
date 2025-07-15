@@ -2,7 +2,7 @@ export interface Product {
   id: number;
   name: string;
   description: string;
- price: number;
+  price: number;
   image: string;
   location: string;
   categoryName: string;
@@ -12,4 +12,5 @@ export interface Product {
   ownerId: string;
   ownerProfileImage: string;
   categoryId: number;
+  status:string;
 }

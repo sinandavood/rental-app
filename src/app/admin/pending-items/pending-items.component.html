@@ -1,0 +1,22 @@
+<div class="container mt-3">
+  <h2>🕒 Pending Items</h2>
+  <div *ngIf="pendingItems.length === 0">No pending items.</div>
+
+  <div *ngFor="let item of pendingItems" class="card my-3 shadow-sm">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img [src]=" 'https://p2prental.runasp.net'+item.image" alt="{{ item.name }}" class="img-fluid rounded-start" alt="..."  width="350" height="350"/>
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.name }}</h5>
+          <p class="card-text"><strong>Category:</strong> {{ item.categoryName }}</p>
+          <p class="card-text"><strong>Owner:</strong> {{ item.ownerName }}</p>
+          <p class="card-text"><strong>Location:</strong> {{ item.location }}</p>
+          <p class="card-text"><strong>Price:</strong> ₹{{ item.price }}</p>
+          <button class="btn btn-success" (click)="approveItem(item.id)">✅ Approve</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

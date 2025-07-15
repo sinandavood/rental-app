@@ -9,4 +9,5 @@ export interface ListedItemAdmin {
   availability: boolean;
   createdAt: string;
   location: string;
+  status:string;
 }

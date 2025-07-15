@@ -80,6 +80,12 @@ export const routes: Routes = [
         loadComponent:()=>import('./user/edit-profile/edit-profile.component').then(m=>m.EditProfileComponent)
     },
 
+    // {
+    //     path:'pending-items',
+    //     loadComponent:()=>import('./admin/pending-items/pending-items.component').then(m=>m.PendingItemsComponent)
+
+    // },
+
 
     { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
 

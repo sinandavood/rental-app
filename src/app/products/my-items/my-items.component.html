@@ -37,7 +37,8 @@
         <h3 class="text-lg font-semibold text-gray-800 truncate">{{ item.name }}</h3>
         <p class="text-sm text-gray-500">Posted on: {{ item.createdAt | date: 'mediumDate' }}</p>
         <p class="text-sm text-gray-500">Category: {{ item.categoryName }}</p>
-        <p class="text-red-600 font-bold text-lg mt-2">{{ item.price }}</p>
+        <p class="text-sm text-gray-500">Product Status: {{ item.status }}</p>
+        <p class="text-red-600 font-bold text-lg mt-2">{{ item.price| currency:'INR'}}</p>
         <p class="text-gray-600 text-sm mt-1">{{ item.description | truncate: 100 }}</p>
 
         <!-- Availability -->

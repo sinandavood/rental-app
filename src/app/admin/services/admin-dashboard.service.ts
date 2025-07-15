@@ -76,7 +76,7 @@ export class DashboardService {
    * Optionally: Get item approval queue
    */
   getPendingItems(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/items/pending`);
+    return this.http.get<any[]>(`${this.baseUrl}/admin/pending-items`);
   }
 
   updateBlockStatus(userId: string, isBlocked: boolean): Observable<any> {
