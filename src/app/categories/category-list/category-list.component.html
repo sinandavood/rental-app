@@ -1,23 +1,19 @@
-<!-- <section class="categories-container">
-  <div class="categories-header">
-    <h2 class="categories-title">Browse From Top Categories</h2>
-    <div class="title-underline"></div>
-  </div>
-
-  <div *ngIf="categories$ | async as categories; else noCategories">
-    <div class="categories-grid">
-      <div *ngFor="let cat of categories" class="category-card" (click)="onCategoryClick(cat)">
-        <div class="category-icon">
-          <img [src]="cat.icon" [alt]="cat.name" class="category-image" loading="lazy" />
-        </div>
-        <div class="category-name">{{ cat.name }}</div>
-      </div>
+<section class="category-section container my-5">
+<div *ngIf="categories$ | async as categories">
+  <div class="category-scroll d-flex flex-nowrap gap-3">
+    <div
+      class="category-card text-center"
+      *ngFor="let cat of categories"
+      (click)="onCategoryClick(cat)"
+    >
+      <img
+        [src]="cat.icon"
+        [alt]="cat.name"
+        class="category-icon mb-2"
+        loading="lazy"
+      />
+      <div class="category-name fw-medium">{{ cat.name }}</div>
     </div>
   </div>
-
-  <ng-template #noCategories>
-    <div class="no-categories">
-      <p class="no-categories-text">No categories found.</p>
-    </div>
-  </ng-template>
-</section> -->
+</div>
+</section>
