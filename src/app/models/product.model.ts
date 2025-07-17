@@ -13,4 +13,5 @@ export interface Product {
   ownerProfileImage: string;
   categoryId: number;
   status:string;
+  views:number;
 }

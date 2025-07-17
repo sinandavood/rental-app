@@ -1,1 +1,38 @@
-<p>notifications works!</p>
+<div class="px-4 py-4 w-full max-w-7xl mx-auto space-y-4">
+  <div *ngFor="let n of notifications"
+       class="bg-white shadow-lg rounded-xl px-6 py-3 border-l-4 border-blue-500 flex justify-between items-start min-h-[70px] relative"
+       [class.border-red-500]="!n.isRead"
+       [class.bg-red-50]="!n.isRead">
+    
+    <!-- Red dot indicator for unread notifications -->
+    <div *ngIf="!n.isRead" 
+         class="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full border-2 border-white">
+    </div>
+    
+    <div class="flex-1">
+      <h5 class="text-lg font-semibold text-blue-600 mb-1">
+        {{ n.title }}
+        <span *ngIf="!n.isRead" class="text-red-500 ml-2">•</span>
+      </h5>
+      <p class="text-sm text-gray-800">
+        <strong></strong> {{ n.message }}
+      </p>
+      <p class="text-sm text-gray-600">
+        <strong></strong> {{ n.description }}
+      </p>
+    </div>
+
+    <div class="text-xs text-gray-400 text-right ml-6 whitespace-nowrap flex flex-col items-end">
+      <div>{{ n.createdAt | date:'dd MMM, y h:mm a' }}</div>
+      <button *ngIf="!n.isRead" 
+              (click)="markAsRead(n.id)"
+              class="mt-2 text-blue-500 hover:text-blue-700 text-xs underline">
+        Mark as read
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="notifications.length === 0" class="text-center text-gray-500 mt-10">
+    No notifications found.
+  </div>
+</div>

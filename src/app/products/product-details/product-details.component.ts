@@ -33,6 +33,12 @@ export class ProductDetailsComponent implements OnInit {
         this.fetchProduct(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+     if (id) {
+      console.log('Tracking view fo item',id);
+      
+  this.productService.trackView(Number(id)).subscribe();
+}
+
     });
   }
 
@@ -54,9 +60,9 @@ export class ProductDetailsComponent implements OnInit {
               console.error('Failed to load owner profile image.');
             }
           });
-        }console.log('Product Response:', res); // Add this here
+        } console.log('Product Response:', res); // Add this here
         console.log('Product Response:', res);
-console.log('res.categoryId:', res.categoryId);
+        console.log('res.categoryId:', res.categoryId);
 
 
 

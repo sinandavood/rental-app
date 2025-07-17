@@ -99,4 +99,18 @@ export class MyItemsComponent implements OnInit {
   handleImageError(event: Event): void {
     (event.target as HTMLImageElement).src = 'assets/placeholder-image.jpg';
   }
+
+  toggleAvailability(item: any) {
+  this.productService.toggleAvailability(item.id).subscribe({
+    next: (res) => {
+      item.availability = res.availability;
+    },
+    error: (err) => {
+      console.error('Failed to toggle availability:', err);
+    }
+    
+  });
+  
+}
+
 }

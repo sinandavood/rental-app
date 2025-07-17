@@ -56,5 +56,13 @@ getSimilarProducts(id: number): Observable<Product[]> {
   return this.http.get<Product[]>(`${this.url}/${id}/similar`);
 }
 
+trackView(id:number)
+{
+  return this.http.post(`${this.url}/${id}/track-view`,null);
+}
+
+toggleAvailability(id: number) {
+  return this.http.patch<{ availability: boolean }>(`${this.url}/${id}/toggle-availability`, {});
+}
 
 }

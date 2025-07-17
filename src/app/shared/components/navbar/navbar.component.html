@@ -8,31 +8,41 @@
     <button class="lg:hidden text-gray-600 focus:outline-none" data-bs-toggle="collapse"
       data-bs-target="#navbarContent">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M4 6h16M4 12h16M4 18h16" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
     </button>
 
     <!-- 🔍 Search Bar (visible only on large screens) -->
-   <!-- Centered Search Bar Aligned with Flex -->
-<div class="hidden lg:flex items-center flex-grow justify-center">
-  <div class="w-full max-w-xl">
-    <app-search-bar (search)="onSearch($event)" *ngIf="showSearchBar"></app-search-bar>
-  </div>
-</div>
+    <!-- Centered Search Bar Aligned with Flex -->
+    <div class="hidden lg:flex items-center flex-grow justify-center">
+      <div class="w-full max-w-xl">
+        <app-search-bar (search)="onSearch($event)" *ngIf="showSearchBar"></app-search-bar>
+      </div>
+    </div>
 
 
     <!-- 🔐 Auth & Actions -->
     <div class="flex items-center gap-3">
 
       <!-- 🔔 Notifications -->
-      <a routerLink="/notifications" class="hover:text-red-600 transition text-black text-lg">
-        <i class="bi bi-bell"></i>
-      </a>
+     <div class="relative">
+  <a routerLink="/notifications" class="hover:text-red-600 transition text-black text-lg">
+    <i class="bi bi-bell text-2xl"></i>
+
+    <!-- 🔴 Notification Badge -->
+    <span *ngIf="unreadCount > 0"
+      class="absolute -top-1 -right-1 transform translate-x-1/2 -translate-y-1/2 
+             bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center 
+             rounded-full font-bold shadow ring-2 ring-white">
+      {{ unreadCount }}
+    </span>
+  </a>
+</div>
+
 
       <!-- ❤️ Wishlist -->
       <a routerLink="/my-wishlist" class="hover:text-red-600 transition text-black text-lg">
-        <i class="bi bi-heart"></i>
+        <i class="bi bi-heart text-2xl"></i>
       </a>
 
       <!-- ➕ List Item -->
@@ -54,9 +64,9 @@
       <ng-template #loggedInBlock>
         <div class="relative group">
           <div class="flex items-center gap-1 cursor-pointer">
-            <img [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
-              alt="Profile"
-              class="w-10 h-10 rounded-full object-cover border border-gray-300 shadow" />
+            <img
+              [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
+              alt="Profile" class="w-10 h-10 rounded-full object-cover border border-gray-300 shadow" />
             <i class="bi bi-caret-down-fill text-gray-600 text-lg group-hover:text-red-500"></i>
           </div>
 
@@ -67,15 +77,18 @@
             </div>
             <hr class="my-1" />
 
-            <a routerLink="/my-items" class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
+            <a routerLink="/my-items"
+              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
               <i class="bi bi-card-list text-gray-600"></i> My Items
             </a>
 
-            <a routerLink="/profile" class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
+            <a routerLink="/profile"
+              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
               <i class="bi bi-person-circle text-gray-600"></i> My Profile
             </a>
 
-            <a routerLink="/my-bookings" class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
+            <a routerLink="/my-bookings"
+              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
               <i class="bi bi-calendar-check text-gray-600"></i> My Bookings
             </a>
 

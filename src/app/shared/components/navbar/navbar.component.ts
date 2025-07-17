@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Subscription,filter } from 'rxjs';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
+import { NotificationService } from 'src/app/core/services/notification.service';
 
 
 @Component({
@@ -18,11 +19,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   userfullname: string = "";
   profilePic: string | null = null;
   private userSubscription: Subscription | null = null;
+  unreadCount=0;
   @Input() showSearchBar:boolean=true;
 
   constructor(
   public authService: AuthService,
-  private router: Router
+  private router: Router,
+  private notificationService:NotificationService
 ) {
   this.router.events
     .pipe(filter(event => event instanceof NavigationEnd))
@@ -68,6 +71,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.profilePic = null;
       }
     });
+
+    this.notificationService.unreadCount$.subscribe(count=>{
+      this.unreadCount=count;
+    })
   }
 
   ngOnDestroy(): void {
