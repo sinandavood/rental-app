@@ -102,5 +102,8 @@ export const routes: Routes = [
 
     { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
 
-
+    {
+        path: 'category/:id',
+        loadComponent: () => import('./categories/subcategory/subcategory.component').then(m => m.SubcategoryComponent)
+    },
 ];
