@@ -26,6 +26,7 @@
           <th>Category</th>
           <th>Owner</th>
           <th>Price</th>
+          <th>Views</th>
           <th>Location</th>
           <th>Availability</th>
           <th>Created</th>
@@ -40,6 +41,7 @@
           <td>{{ item.categoryName }}</td>
           <td>{{ item.ownerName }}</td>
           <td>₹{{ item.price }}</td>
+          <td>{{item.views}}</td>
           <td>{{ item.location }}</td>
           <td>
             <span class="badge" [ngClass]="item.availability ? 'bg-success' : 'bg-secondary'">

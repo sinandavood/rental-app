@@ -10,4 +10,5 @@ export interface ListedItemAdmin {
   createdAt: string;
   location: string;
   status:string;
+  views:number;
 }

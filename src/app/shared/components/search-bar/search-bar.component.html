@@ -1,4 +1,4 @@
-<div class="container my-1 shadow-sm p-2 rounded bg-dark-subtle">
+<div class="container my-1 shadow-sm p-2 rounded-5 bg-dark-subtle">
   <div class="row g-2 align-items-end">
 
     <!-- 🔍 Search with Autocomplete & Recent -->
@@ -6,7 +6,7 @@
     <!-- 📍 Location Filter -->
     <div class="col-md-3">
       <!-- <label class="form-label fw-semibold">📍 Location</label> -->
-      <select class="form-select rounded" [(ngModel)]="selectedLocation">
+      <select class="form-select rounded-5" [(ngModel)]="selectedLocation">
         <option value="All">All Locations</option>
         <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
       </select>
@@ -15,17 +15,17 @@
     <!-- 🧩 Category Filter -->
     <div class="col-md-3">
       <!-- <label class="form-label fw-semibold">🧩 Category</label> -->
-      <select class="form-select rounded" [(ngModel)]="selectedCategoryId">
+      <select class="form-select rounded-5" [(ngModel)]="selectedCategoryId">
         <option [value]="0">All Categories</option>
         <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
       </select>
     </div>
     
     <!-- 🎯 Buttons -->
-    <div class="col-md-4 position-relative ">
+    <div class="col-md-4 position-relative">
       <!-- <label class="form-label fw-semibold">🔍 Search</label> -->
        <form (ngSubmit)="onSearch()">
-      <input type="text" [formControl]="searchControl" class="form-control rounded px-4" placeholder="Search items..."
+      <input type="text" [formControl]="searchControl" class="form-control rounded-5 px-4" placeholder="Search items..."
         (focus)="showSuggestions = suggestions.length > 0 || recentSearches.length > 0"
         (blur)="hideSuggestionsWithDelay()"  />
     </form>
@@ -56,10 +56,10 @@
       </ul>
     </div>
     <div class="col-md-2 d-flex gap-2">
-      <button class="btn btn-dark w-100 rounded" (click)="onSearch()" (click)="fetchFilteredItems()">
-        Search
+      <button class="btn btn-dark w-100 rounded-circle" (click)="onSearch()" (click)="fetchFilteredItems()">
+      <i class="bi bi-search"></i>
       </button>
-      <button class="btn w-100 rounded-pill" (click)="onClear()">
+      <button class="btn w-100 btn-danger rounded-circle" (click)="onClear()">
         <i class="bi bi-x"></i>
       </button>
     </div>

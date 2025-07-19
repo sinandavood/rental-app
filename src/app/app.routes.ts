@@ -79,6 +79,19 @@ export const routes: Routes = [
         path:'edit-profile',
         loadComponent:()=>import('./user/edit-profile/edit-profile.component').then(m=>m.EditProfileComponent)
     },
+    {
+        path:'customer-support',
+        loadComponent:()=>import('./customer-support/customer-support.component').then(m=>m.CustomerSupportComponent)
+    },
+    {
+        path:'wallet',
+        loadComponent:()=>import('./wallet/wallet.component').then(m=>m.WalletComponent)
+    },
+    {
+        path:'banks',
+        loadComponent:()=>import('./banks/banks.component').then(m=>m.BanksComponent)
+    },
+
 
     // {
     //     path:'pending-items',
