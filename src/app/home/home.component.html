@@ -1,6 +1,39 @@
 <!-- 🏠 Default Home View -->
 <div>
   <app-category-list></app-category-list>
+
+  <!-- home.component.html -->
+<section class="section">
+  <div class="section-header">
+    <h2>🆕 Recently Added</h2>
+    <a routerLink="/products">View All</a>
+  </div>
+
+  <div class="scroll-row">
+    <div *ngFor="let product of recentlyAddedProducts" class="product-card">
+      <img [src]="product.image" alt="{{ product.name }}" />
+      <h4>{{ product.name }}</h4>
+      <p>₹{{ product.price }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <h2>⭐ Top Rated</h2>
+    <a routerLink="/products">View All</a>
+  </div>
+
+  <div class="scroll-row">
+    <div *ngFor="let product of topRatedProducts" class="product-card">
+      <img [src]="product.image" alt="{{ product.name }}" />
+      <h4>{{ product.name }}</h4>
+      <p>₹{{ product.price }}</p>
+    </div>
+  </div>
+</section>
+
+
   <!-- <app-product-list [limit]="8"></app-product-list> -->
   <app-product-list *ngIf="searchResults" [products]="searchResults"></app-product-list>
 

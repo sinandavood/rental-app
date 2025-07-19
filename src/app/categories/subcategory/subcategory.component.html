@@ -1,0 +1,11 @@
+<div class="subcategory-container">
+  <h2>Choose a Subcategory</h2>
+
+  <div class="subcategory-grid">
+    <div class="subcategory-card" *ngFor="let sub of subcategories" (click)="onSubcategoryClick(sub)">
+      <img [src]="sub.icon" alt="{{ sub.name }}">
+      <p>{{ sub.name }}</p>
+    </div>
+  </div>
+</div>
+

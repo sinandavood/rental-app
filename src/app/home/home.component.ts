@@ -1,16 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 import { environment } from '../env/environment';
 
-// Import standalone components
 import { CategoryListComponent } from '../categories/category-list/category-list.component';
 import { ProductListComponent } from '../products/product-list/product-list.component';
-
-// If you use routerLink in template
-import { RouterModule } from '@angular/router';
 import { SearchService } from '../core/services/search.service';
 
 @Component({
@@ -18,8 +13,6 @@ import { SearchService } from '../core/services/search.service';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
     CategoryListComponent,
@@ -29,15 +22,32 @@ import { SearchService } from '../core/services/search.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  recentlyAddedProducts: any[] = [];
+  topRatedProducts: any[] = [];
+  searchResults: any[] = [];
 
-  searchResults:any[]=[];
+  private apiBaseUrl = environment.apiBaseUrl;
 
-  constructor(private searchService:SearchService){}
+  constructor(private http: HttpClient, private searchService: SearchService) {}
 
   ngOnInit(): void {
-    this.searchService.searchResults$.subscribe(results=>{
-      this.searchResults=results;
-    })
+    this.loadRecentlyAdded();
+    this.loadTopRated();
+
+    this.searchService.searchResults$.subscribe(results => {
+      this.searchResults = results;
+    });
   }
 
+  loadRecentlyAdded() {
+    this.http.get<any[]>(`${this.apiBaseUrl}/item/recent`).subscribe(data => {
+      this.recentlyAddedProducts = data;
+    });
+  }
+
+  loadTopRated() {
+    this.http.get<any[]>(`${this.apiBaseUrl}/item/top-rated`).subscribe(data => {
+      this.topRatedProducts = data;
+    });
+  }
 }
