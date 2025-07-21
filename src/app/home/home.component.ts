@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
   topRatedProducts: any[] = [];
   searchResults: any[] = [];
 
-  private apiBaseUrl = environment.apiBaseUrl;
+  private apiBaseUrl = environment.apiBaseUrl+'/item';
 
   constructor(private http: HttpClient, private searchService: SearchService) {}
 
@@ -40,14 +40,17 @@ export class HomeComponent implements OnInit {
   }
 
   loadRecentlyAdded() {
-    this.http.get<any[]>(`${this.apiBaseUrl}/item/recent`).subscribe(data => {
+    this.http.get<any[]>(`${this.apiBaseUrl}/recently-added`).subscribe(data => {
       this.recentlyAddedProducts = data;
     });
   }
 
   loadTopRated() {
-    this.http.get<any[]>(`${this.apiBaseUrl}/item/top-rated`).subscribe(data => {
+    this.http.get<any[]>(`${this.apiBaseUrl}/top-rated`).subscribe(data => {
       this.topRatedProducts = data;
     });
   }
+  
+
+
 }

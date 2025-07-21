@@ -11,9 +11,12 @@
 
   <div class="scroll-row">
     <div *ngFor="let product of recentlyAddedProducts" class="product-card">
-      <img [src]="product.image" alt="{{ product.name }}" />
+      <img [src]=" 'https://p2prental.runasp.net'+product.image" alt="{{ product.name }}" />
       <h4>{{ product.name }}</h4>
-      <p>₹{{ product.price }}</p>
+      <p>{{ product.price |currency:'INR'}}</p>
+      <p>{{ product.description}}</p>
+      <p>{{ product.ownerName}}</p>
+      <p>{{product.createdAt|date}}</p>   
     </div>
   </div>
 </section>
@@ -26,9 +29,14 @@
 
   <div class="scroll-row">
     <div *ngFor="let product of topRatedProducts" class="product-card">
-      <img [src]="product.image" alt="{{ product.name }}" />
+      <img [src]=" 'https://p2prental.runasp.net'+product.image" alt="{{ product.name }}" />
       <h4>{{ product.name }}</h4>
-      <p>₹{{ product.price }}</p>
+      <p>{{ product.price |currency:'INR'}}</p>
+      <p>{{ product.description}}</p>
+      <p>{{ product.ownerName}}</p>
+      <p>{{product.createdAt|date}}</p>   
+      <p>{{product.location}}</p>
+      <p>{{product.availability}}</p>
     </div>
   </div>
 </section>
