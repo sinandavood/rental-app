@@ -1,6 +1,175 @@
-.card {
-  transition: box-shadow 0.3s ease;
-}
-.card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
+  /* Modern Container */
+  .modern-container {
+    max-width: 1200px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+    padding: 1.5rem;
+  }
+
+  /* Title */
+  .modern-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #28a745;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.75rem;
+  }
+
+  /* Loader */
+  .modern-spinner {
+    width: 3rem;
+    height: 3rem;
+    border-width: 4px;
+  }
+
+  .modern-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+  }
+
+  /* No Items Message */
+  .modern-no-items {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-size: 1.1rem;
+    color: #6c757d;
+  }
+
+  /* Card */
+  .modern-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .modern-image {
+    transition: transform 0.3s ease;
+  }
+
+  .modern-image:hover {
+    transform: scale(1.05);
+  }
+
+  .modern-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0d6efd;
+  }
+
+  .modern-price {
+    color: #28a745;
+    font-weight: 500;
+  }
+
+  .modern-text {
+    font-size: 0.9rem;
+  }
+
+  .modern-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .modern-btn {
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+  }
+
+  .modern-btn-sm {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .modern-btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+  }
+
+  .modern-btn-danger:hover:not(:disabled) {
+    background-color: #c82333;
+    border-color: #bd2130;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .modern-btn-outline-danger {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    background-color: transparent;
+  }
+
+  .modern-btn-outline-danger:hover:not(:disabled) {
+    background-color: #dc3545;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .modern-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 1rem;
+    }
+
+    .modern-title {
+      font-size: 1.75rem;
+    }
+
+    .modern-card {
+      padding: 1rem;
+      flex-direction: column;
+    }
+
+    .modern-image {
+      width: 100%;
+      height: 120px;
+    }
+
+    .modern-card-title {
+      font-size: 1.1rem;
+    }
+
+    .modern-text {
+      font-size: 0.85rem;
+    }
+
+    .modern-badge {
+      font-size: 0.7rem;
+    }
+
+    .modern-btn-sm {
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      min-width: 70px;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3rem;
+    }
+  }

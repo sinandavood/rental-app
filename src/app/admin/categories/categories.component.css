@@ -1,0 +1,247 @@
+/* Modern Container */
+  .modern-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Title */
+  .modern-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Spinner */
+  .modern-spinner {
+    width: 3rem;
+    height: 3rem;
+    border-width: 4px;
+  }
+
+  .modern-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+  }
+
+  /* Create Form */
+  .modern-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .modern-card-body {
+    padding: 1.5rem;
+  }
+
+  .modern-card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+  }
+
+  .modern-input {
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #ced4da;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .modern-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+
+  /* Search Input */
+  .search-container {
+    position: relative;
+  }
+
+  /* Table */
+  .modern-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .modern-table thead th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    padding: 1rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  .modern-table tbody tr {
+    transition: background-color 0.2s ease;
+  }
+
+  .modern-table-row:hover {
+    background-color: #f1f3f5;
+  }
+
+  .modern-table td {
+    padding: 1rem;
+    vertical-align: middle;
+    font-size: 0.95rem;
+    color: #444;
+  }
+
+  .modern-icon {
+    font-size: 1.2rem;
+    vertical-align: middle;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .modern-btn {
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+  }
+
+  .modern-btn-sm {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .modern-btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+  }
+
+  .modern-btn-primary:hover:not(:disabled) {
+    background-color: #0056b3;
+    border-color: #004085;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .modern-btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+  }
+
+  .modern-btn-danger:hover:not(:disabled) {
+    background-color: #c82333;
+    border-color: #bd2130;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .modern-btn-outline {
+    border: 1px solid #007bff;
+    color: #007bff;
+    background-color: transparent;
+  }
+
+  .modern-btn-outline:hover:not(:disabled) {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .modern-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Pagination */
+  .pagination-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+  }
+
+  .page-info {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 1rem;
+    }
+
+    .modern-title {
+      font-size: 1.5rem;
+    }
+
+    .modern-card {
+      margin: 1rem 0;
+    }
+
+    .modern-card-body {
+      padding: 1rem;
+    }
+
+    .modern-card-title {
+      font-size: 1.2rem;
+    }
+
+    .modern-input {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .modern-btn-sm {
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      min-width: 35px;
+    }
+
+    .modern-table td, .modern-table th {
+      font-size: 0.85rem;
+      padding: 0.75rem;
+    }
+
+    .modern-icon {
+      font-size: 1rem;
+    }
+
+    .page-info {
+      font-size: 0.9rem;
+    }
+
+    .row.g-3 {
+      flex-direction: column;
+    }
+
+    .row.g-3 > div {
+      width: 100%;
+    }
+  }

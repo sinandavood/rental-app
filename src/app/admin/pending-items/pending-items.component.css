@@ -1,0 +1,136 @@
+ /* Modern Container */
+  .modern-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Title */
+  .modern-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+  }
+
+  /* No Items Text */
+  .no-items-text {
+    font-size: 1.1rem;
+    color: #6c757d;
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  /* Card */
+  .modern-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .modern-image {
+    border-radius: 12px 0 0 12px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    max-height: 350px;
+  }
+
+  .modern-image:hover {
+    transform: scale(1.05);
+  }
+
+  .modern-card-body {
+    padding: 1.5rem;
+  }
+
+  .modern-card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+  }
+
+  .modern-card-text {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 0.75rem;
+  }
+
+  .price {
+    color: #28a745;
+    font-weight: 500;
+  }
+
+  /* Button */
+  .modern-btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .modern-btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #fff;
+  }
+
+  .modern-btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 1rem;
+    }
+
+    .modern-title {
+      font-size: 1.5rem;
+    }
+
+    .modern-card {
+      margin: 1rem 0;
+    }
+
+    .modern-image {
+      border-radius: 12px 12px 0 0;
+      max-height: 200px;
+    }
+
+    .modern-card-body {
+      padding: 1rem;
+    }
+
+    .modern-card-title {
+      font-size: 1.2rem;
+    }
+
+    .modern-card-text {
+      font-size: 0.9rem;
+    }
+
+    .modern-btn {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+    }
+  }

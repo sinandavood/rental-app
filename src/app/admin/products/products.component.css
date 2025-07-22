@@ -1,0 +1,179 @@
+  /* Modern Container */
+  .modern-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Title */
+  .modern-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Spinner */
+  .modern-spinner {
+    width: 3rem;
+    height: 3rem;
+    border-width: 4px;
+  }
+
+  .modern-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+  }
+
+  /* Search Input */
+  .search-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .modern-input {
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #ced4da;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .modern-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+
+  /* Table */
+  .modern-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .modern-table thead th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    padding: 1rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  .modern-table tbody tr {
+    transition: background-color 0.2s ease;
+  }
+
+  .modern-table-row:hover {
+    background-color: #f1f3f5;
+  }
+
+  .modern-table td {
+    padding: 1rem;
+    vertical-align: middle;
+    font-size: 0.95rem;
+    color: #444;
+  }
+
+  .modern-image {
+    border-radius: 8px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .modern-image:hover {
+    transform: scale(1.1);
+  }
+
+  .price {
+    font-weight: 500;
+    color: #28a745;
+  }
+
+  .modern-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* Pagination */
+  .pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .modern-btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .modern-btn-outline {
+    border: 1px solid #007bff;
+    color: #007bff;
+    background-color: transparent;
+  }
+
+  .modern-btn-outline:hover:not(:disabled) {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .modern-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .page-info {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .modern-container {
+      padding: 1rem;
+    }
+
+    .modern-title {
+      font-size: 1.5rem;
+    }
+
+    .modern-table td, .modern-table th {
+      font-size: 0.85rem;
+      padding: 0.75rem;
+    }
+
+    .modern-image {
+      width: 40px;
+      height: 40px;
+    }
+
+    .modern-btn {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+    }
+  }

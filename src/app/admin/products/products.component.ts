@@ -16,7 +16,7 @@ export class ProductsComponent implements OnInit {
   filteredItems: ListedItemAdmin[] = [];
   searchQuery = '';
   page = 1;
-  pageSize = 5;
+  pageSize = 50;
   isloading=false;
 
   constructor(private dashboardService: DashboardService) {}

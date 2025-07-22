@@ -21,7 +21,7 @@ export class UsersComponent implements OnInit {
 
   // Pagination
   page = 1;
-  pageSize = 12;
+  pageSize = 50;
   apiBaseUrl=environment.apiBaseUrl;
 
   // Sorting

@@ -18,7 +18,7 @@ export class CategoriesComponent implements OnInit {
   newCategory = { name: '', description: '', icon: '' };
   loading = false;
   page = 1;
-  pageSize = 7;
+  pageSize = 50;
   searchTerm = '';
 
   constructor(private categoryService: CategoryService) {}
