@@ -3,43 +3,117 @@
   <app-category-list></app-category-list>
 
   <!-- home.component.html -->
-<section class="section">
-  <div class="section-header">
-    <h2>🆕 Recently Added</h2>
-    <a routerLink="/products">View All</a>
+
+  <div class="container py-5">
+
+  <!-- Recently Added Section Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold mb-0 fs-3">
+      <i class="bi bi-clock-history me-2 text-danger"></i>Recently Added
+    </h4>
+    <a routerLink="/products" class="btn btn-danger">View All</a>
   </div>
 
-  <div class="scroll-row">
-    <div *ngFor="let product of recentlyAddedProducts" class="product-card">
-      <img [src]=" 'https://p2prental.runasp.net'+product.image" alt="{{ product.name }}" />
-      <h4>{{ product.name }}</h4>
-      <p>{{ product.price |currency:'INR'}}</p>
-      <p>{{ product.description}}</p>
-      <p>{{ product.ownerName}}</p>
-      <p>{{product.createdAt|date}}</p>   
+  <!-- Recently Added Horizontal Scroll -->
+  <div class="d-flex overflow-auto gap-4 pb-3">
+    <!-- Product Card -->
+    <div class="flex-shrink-0" *ngFor="let product of recentlyAddedProducts" style="width: 300px;">
+      <div class="product-card shadow rounded-4 border bg-white h-100">
+        <div class="position-relative">
+          <img [src]="'https://p2prental.runasp.net' + product.image"
+               [alt]="product.name"
+               class="rounded-top-4 w-100"
+               style="height: 220px; object-fit: cover;" />
+          <div class="position-absolute top-0 end-0 m-2 d-flex flex-column gap-2">
+            <i class="bi icon fs-5"
+               [ngClass]="isInWishlist(product.id) ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'"
+               (click)="toggleWishlist(product.id)"
+               style="cursor: pointer;" title="Add to Wishlist">
+            </i>
+          </div>
+        </div>
+        <div class="p-3">
+          <h6 class="fw-semibold text-truncate fs-6">{{ product.name }}</h6>
+          <p class="text-danger fw-bold mb-1 fs-6">{{ product.price | currency:'INR' }}/day</p>
+          <small class="text-muted d-block mb-1">
+            <i class="bi bi-geo-alt me-1"></i>{{ product.location }}
+          </small>
+          <small class="text-muted d-block mb-1">
+            <i class="bi bi-person me-1"></i>{{ product.ownerName }}
+          </small>
+          <small class="text-muted d-block mb-2">
+            <i class="bi bi-clock me-1"></i>{{ product.createdAt | date: 'mediumDate' }}
+          </small>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="badge-status"
+                  [ngClass]="product.availability ? 'available' : 'unavailable'">
+              {{ product.availability ? 'Available' : 'Unavailable' }}
+            </span>
+            <button class="btn btn-sm btn-danger" [routerLink]="['/products', product.id]">
+              Rent Now
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</section>
 
-<section class="section">
-  <div class="section-header">
-    <h2>⭐ Top Rated</h2>
-    <a routerLink="/products">View All</a>
+  <!-- Top Rated Section Header -->
+  <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+    <h4 class="fw-bold mb-0 fs-3">
+      <i class="bi bi-star-fill me-2 text-warning"></i>Top Rated
+    </h4>
+    <a routerLink="/products" class="btn btn-danger">View All</a>
   </div>
 
-  <div class="scroll-row">
-    <div *ngFor="let product of topRatedProducts" class="product-card">
-      <img [src]=" 'https://p2prental.runasp.net'+product.image" alt="{{ product.name }}" />
-      <h4>{{ product.name }}</h4>
-      <p>{{ product.price |currency:'INR'}}</p>
-      <p>{{ product.description}}</p>
-      <p>{{ product.ownerName}}</p>
-      <p>{{product.createdAt|date}}</p>   
-      <p>{{product.location}}</p>
-      <p>{{product.availability}}</p>
+  <!-- Top Rated Horizontal Scroll -->
+  <div class="d-flex overflow-auto gap-4 pb-3">
+    <!-- Product Card -->
+    <div class="flex-shrink-0" *ngFor="let product of topRatedProducts" style="width: 300px;">
+      <div class="product-card shadow rounded-4 border bg-white h-100">
+        <div class="position-relative">
+          <img [src]="'https://p2prental.runasp.net' + product.image"
+               [alt]="product.name"
+               class="rounded-top-4 w-100"
+               style="height: 220px; object-fit: cover;" />
+          <div class="position-absolute top-0 end-0 m-2 d-flex flex-column gap-2">
+            <i class="bi icon fs-5"
+               [ngClass]="isInWishlist(product.id) ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'"
+               (click)="toggleWishlist(product.id)"
+               style="cursor: pointer;" title="Add to Wishlist">
+            </i>
+          </div>
+        </div>
+        <div class="p-3">
+          <h6 class="fw-semibold text-truncate fs-6">{{ product.name }}</h6>
+          <p class="text-danger fw-bold mb-1 fs-6">{{ product.price | currency:'INR' }}/day</p>
+          <small class="text-muted d-block mb-1">
+            <i class="bi bi-geo-alt me-1"></i>{{ product.location }}
+          </small>
+          <small class="text-muted d-block mb-1">
+            <i class="bi bi-person me-1"></i>{{ product.ownerName }}
+          </small>
+          <small class="text-muted d-block mb-2">
+            <i class="bi bi-clock me-1"></i>{{ product.createdAt | date: 'mediumDate' }}
+          </small>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="badge-status"
+                  [ngClass]="product.availability ? 'available' : 'unavailable'">
+              {{ product.availability ? 'Available' : 'Unavailable' }}
+            </span>
+            <button class="btn btn-sm btn-danger" [routerLink]="['/products', product.id]">
+              Rent Now
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</section>
+
+</div>
+
+
+
 
 
   <!-- <app-product-list [limit]="8"></app-product-list> -->

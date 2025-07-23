@@ -26,9 +26,17 @@ export class HomeComponent implements OnInit {
   topRatedProducts: any[] = [];
   searchResults: any[] = [];
 
-  private apiBaseUrl = environment.apiBaseUrl+'/item';
+  isLoadingRecentlyAdded = true;
+  isLoadingTopRated = true;
 
-  constructor(private http: HttpClient, private searchService: SearchService) {}
+  wishlist: number[] = [];
+
+  private apiBaseUrl = environment.apiBaseUrl + '/item';
+
+  constructor(
+    private http: HttpClient,
+    private searchService: SearchService
+  ) {}
 
   ngOnInit(): void {
     this.loadRecentlyAdded();
@@ -37,20 +45,58 @@ export class HomeComponent implements OnInit {
     this.searchService.searchResults$.subscribe(results => {
       this.searchResults = results;
     });
+
+    this.loadWishlist(); // If you want wishlist
   }
 
   loadRecentlyAdded() {
-    this.http.get<any[]>(`${this.apiBaseUrl}/recently-added`).subscribe(data => {
-      this.recentlyAddedProducts = data;
+    this.isLoadingRecentlyAdded = true;
+    this.http.get<any[]>(`${this.apiBaseUrl}/recently-added`).subscribe({
+      next: (data) => {
+        this.recentlyAddedProducts = data;
+        this.isLoadingRecentlyAdded = false;
+      },
+      error: () => {
+        this.isLoadingRecentlyAdded = false;
+      }
     });
   }
 
   loadTopRated() {
-    this.http.get<any[]>(`${this.apiBaseUrl}/top-rated`).subscribe(data => {
-      this.topRatedProducts = data;
+    this.isLoadingTopRated = true;
+    this.http.get<any[]>(`${this.apiBaseUrl}/top-rated`).subscribe({
+      next: (data) => {
+        this.topRatedProducts = data;
+        this.isLoadingTopRated = false;
+      },
+      error: () => {
+        this.isLoadingTopRated = false;
+      }
     });
   }
-  
 
+  // Optional: Wishlist features
+  loadWishlist() {
+    this.http.get<number[]>(`${environment.apiBaseUrl}/wishlist`).subscribe({
+      next: (ids) => this.wishlist = ids,
+      error: () => this.wishlist = []
+    });
+  }
 
+  isInWishlist(productId: number): boolean {
+    return this.wishlist.includes(productId);
+  }
+
+  toggleWishlist(productId: number): void {
+    if (this.isInWishlist(productId)) {
+      this.http.delete(`${environment.apiBaseUrl}/wishlist/${productId}`).subscribe(() => {
+        this.wishlist = this.wishlist.filter(id => id !== productId);
+      });
+    } else {
+      this.http.post(`${environment.apiBaseUrl}/wishlist`, { productId }).subscribe(() => {
+        this.wishlist.push(productId);
+      });
+    }
+  }
 }
+

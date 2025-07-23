@@ -112,3 +112,30 @@ ul.list-group {
   object-fit: cover;
   border-radius: 6px;
 }
+
+.badge-status.available {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.badge-status.unavailable {
+  background-color: #f8d7da;
+  color: #842029;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.product-card {
+  transition: transform 0.2s ease-in-out;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+}
+/* Optional: Smooth horizontal scroll for mobile */
+::-webkit-scrollbar {
+  display: none;
+}
