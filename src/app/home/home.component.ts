@@ -7,6 +7,7 @@ import { environment } from '../env/environment';
 import { CategoryListComponent } from '../categories/category-list/category-list.component';
 import { ProductListComponent } from '../products/product-list/product-list.component';
 import { SearchService } from '../core/services/search.service';
+import { WishListService } from '../core/services/wishlist.service';
 
 @Component({
   selector: 'app-home',
@@ -28,14 +29,16 @@ export class HomeComponent implements OnInit {
 
   isLoadingRecentlyAdded = true;
   isLoadingTopRated = true;
+  wishlist:Set<number>= new Set();
 
-  wishlist: number[] = [];
 
   private apiBaseUrl = environment.apiBaseUrl + '/item';
 
+
   constructor(
     private http: HttpClient,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private wishlistservice:WishListService
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +49,7 @@ export class HomeComponent implements OnInit {
       this.searchResults = results;
     });
 
-    this.loadWishlist(); // If you want wishlist
+    this.loadwishlist(); // If you want wishlist
   }
 
   loadRecentlyAdded() {
@@ -76,27 +79,31 @@ export class HomeComponent implements OnInit {
   }
 
   // Optional: Wishlist features
-  loadWishlist() {
-    this.http.get<number[]>(`${environment.apiBaseUrl}/wishlist`).subscribe({
-      next: (ids) => this.wishlist = ids,
-      error: () => this.wishlist = []
-    });
+
+  loadwishlist()
+  {
+    this.wishlistservice.getWishlist().subscribe({
+      next:(data:any[])=>{
+        const itemIds=data.map(item=> item.itemId);
+        this.wishlist=new Set(itemIds);
+      }
+    })
   }
 
   isInWishlist(productId: number): boolean {
-    return this.wishlist.includes(productId);
+    return this.wishlist.has(productId);
   }
 
-  toggleWishlist(productId: number): void {
-    if (this.isInWishlist(productId)) {
-      this.http.delete(`${environment.apiBaseUrl}/wishlist/${productId}`).subscribe(() => {
-        this.wishlist = this.wishlist.filter(id => id !== productId);
-      });
-    } else {
-      this.http.post(`${environment.apiBaseUrl}/wishlist`, { productId }).subscribe(() => {
-        this.wishlist.push(productId);
-      });
-    }
+  toggleWishlist(productId: number) {
+  if (this.wishlist.has(productId)) {
+    this.wishlistservice.removeFromWishlist(productId).subscribe(() => {
+      this.wishlist.delete(productId);
+    });
+  } else {
+    this.wishlistservice.addToWishlist(productId).subscribe(() => {
+      this.wishlist.add(productId);
+    });
   }
+}
 }
 
