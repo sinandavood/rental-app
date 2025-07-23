@@ -1,0 +1,41 @@
+<div class="container p-4 rounded-lg shadow modern-container">
+  <h3 class="modern-title mb-4">📢 Broadcast Notification</h3>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="modern-form">
+    <div class="mb-4">
+      <label class="form-label modern-label">Title</label>
+      <input
+        formControlName="title"
+        type="text"
+        class="form-control modern-input"
+        placeholder="Enter notification title" />
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label modern-label">Message</label>
+      <textarea
+        formControlName="message"
+        class="form-control modern-input"
+        rows="4"
+        placeholder="Enter notification message"></textarea>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label modern-label">Description</label>
+      <textarea
+        formControlName="description"
+        class="form-control modern-input"
+        rows="4"
+        placeholder="Enter notification description"></textarea>
+    </div>
+
+    <div class="text-center">
+      <button
+        type="submit"
+        class="btn modern-btn modern-btn-primary px-5 py-2"
+        [disabled]="form.invalid">
+        Send Notification
+      </button>
+    </div>
+  </form>
+</div>

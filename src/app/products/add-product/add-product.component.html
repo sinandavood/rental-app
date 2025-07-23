@@ -1,69 +1,102 @@
-<section class="container my-5">
-  <h2 class="text-center mb-4 fw-bold text-danger border-bottom pb-2">Rent Your Item</h2>
+<section class="container my-10 px-4 modern-container">
+  <h2 class="text-center mb-6 fw-bold text-danger border-bottom pb-3 modern-title">
+    Rent Your Item
+  </h2>
 
-  <form [formGroup]="productForm" (ngSubmit)="submitForm()" class="row g-4 justify-content-center">
+  <form [formGroup]="productForm" (ngSubmit)="submitForm()" class="row g-4 justify-content-center modern-form">
     <div class="col-md-6">
-      <label class="form-label">Product Name</label>
-      <input formControlName="name" type="text" class="form-control" placeholder="Enter product name" />
-      <div class="text-danger small mt-1" *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid">
+      <label class="form-label modern-label">Product Name</label>
+      <input
+        formControlName="name"
+        type="text"
+        class="form-control modern-input"
+        placeholder="Enter product name" />
+      <div
+        class="text-danger small mt-1 modern-error"
+        *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid">
         Product name is required.
       </div>
     </div>
 
     <div class="col-md-6">
-      <label class="form-label">Location</label>
-      <input formControlName="location" type="text" class="form-control" placeholder="Enter location" />
-      <div class="text-danger small mt-1" *ngIf="productForm.get('location')?.touched && productForm.get('location')?.invalid">
+      <label class="form-label modern-label">Location</label>
+      <input
+        formControlName="location"
+        type="text"
+        class="form-control modern-input"
+        placeholder="Enter location" />
+      <div
+        class="text-danger small mt-1 modern-error"
+        *ngIf="productForm.get('location')?.touched && productForm.get('location')?.invalid">
         Location is required.
       </div>
     </div>
 
     <div class="col-md-6">
-      <label class="form-label">Price/Day (Rs)</label>
-      <input formControlName="price" type="number" class="form-control" placeholder="Enter rental price" />
-      <div class="text-danger small mt-1" *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid">
+      <label class="form-label modern-label">Price/Day (Rs)</label>
+      <input
+        formControlName="price"
+        type="number"
+        class="form-control modern-input"
+        placeholder="Enter rental price" />
+      <div
+        class="text-danger small mt-1 modern-error"
+        *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid">
         Valid price is required.
       </div>
     </div>
 
     <div class="col-md-6">
-      <label class="form-label">Category</label>
-      <select formControlName="categoryId" class="form-select">
+      <label class="form-label modern-label">Category</label>
+      <select formControlName="categoryId" class="form-select modern-select">
         <option value="" disabled selected>Select category</option>
         <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
       </select>
-      <div class="text-danger small mt-1" *ngIf="productForm.get('categoryId')?.touched && productForm.get('categoryId')?.invalid">
+      <div
+        class="text-danger small mt-1 modern-error"
+        *ngIf="productForm.get('categoryId')?.touched && productForm.get('categoryId')?.invalid">
         Please select a category.
       </div>
     </div>
 
     <div class="col-12">
-      <label class="form-label">Description</label>
-      <textarea formControlName="description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+      <label class="form-label modern-label">Description</label>
+      <textarea
+        formControlName="description"
+        class="form-control modern-input"
+        rows="4"
+        placeholder="Enter description"></textarea>
     </div>
 
     <div class="col-md-6">
-      <label class="form-label">Product Image</label>
-      <input type="file" class="form-control" (change)="onImageChange($event)" />
-      <div class="text-danger small mt-1" *ngIf="productForm.get('image')?.touched && productForm.get('image')?.invalid">
+      <label class="form-label modern-label">Product Image</label>
+      <input
+        type="file"
+        class="form-control modern-input"
+        (change)="onImageChange($event)" />
+      <div
+        class="text-danger small mt-1 modern-error"
+        *ngIf="productForm.get('image')?.touched && productForm.get('image')?.invalid">
         Image is required.
       </div>
-      <div class="mt-2" *ngIf="imagePreview">
-        <img [src]="imagePreview" class="img-thumbnail" style="max-height: 200px;" />
+      <div class="mt-3" *ngIf="imagePreview">
+        <img
+          [src]="imagePreview"
+          class="img-thumbnail modern-image"
+          style="max-height: 200px;" />
       </div>
     </div>
 
     <div class="col-12 text-center">
-      <div class="spinner-border text-danger mb-3" role="status" *ngIf="isSubmitting">
+      <div class="spinner-border text-danger mb-3 modern-spinner" role="status" *ngIf="isSubmitting">
         <span class="visually-hidden">Uploading...</span>
       </div>
-      <button type="submit" class="btn btn-danger px-5" [disabled]="isSubmitting || productForm.invalid">
+      <button
+        type="submit"
+        class="btn modern-btn modern-btn-danger px-5 py-2"
+        [disabled]="isSubmitting || productForm.invalid">
         {{ isSubmitting ? 'Uploading...' : 'Submit Product' }}
       </button>
     </div>
   </form>
 </section>
-
-
-
-

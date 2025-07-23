@@ -1,65 +1,90 @@
-<!-- 🔄 Loading Spinner -->
-<div *ngIf="loading" class="text-center my-5">
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">Loading...</span>
+<div class="container modern-container mt-4">
+  <!-- 🔄 Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary modern-spinner" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted modern-text">Loading users...</p>
   </div>
-  <p class="mt-2 text-muted">Loading users...</p>
-</div>
 
-<!-- ✅ Show table once loaded -->
-<ng-container *ngIf="!loading">
-  <div class="mb-3 d-flex justify-content-between align-items-center">
-    <input [(ngModel)]="searchTerm" (input)="applyFilters()" class="form-control w-50"
+  <!-- ✅ Show table once loaded -->
+  <ng-container *ngIf="!loading">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <input
+        [(ngModel)]="searchTerm"
+        (input)="applyFilters()"
+        class="form-control modern-input w-50"
         placeholder="Search by name or email..." />
-    <span class="text-muted">Page {{ page }}</span>
-  </div>
+      <span class="page-info">Page {{ page }}</span>
+    </div>
 
-  <table class="table table-bordered table-hover table-sm">
-    <thead class="table-light">
-      <tr>
-        <th>#</th>
-        <th (click)="toggleSort('fullName')" style="cursor: pointer;">Name</th>
-        <th (click)="toggleSort('email')" style="cursor: pointer;">Email</th>
-        <th>KYC</th>
-        <th>Status</th>
-        <th (click)="toggleSort('joinedAt')" style="cursor: pointer;">Joined</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of filteredUsers.slice((page - 1) * pageSize, page * pageSize); let i = index">
-        <td>{{ i + 1 + ((page - 1) * pageSize) }}</td>
-        <td>{{ user.fullName }}</td>
-        <td>{{ user.email }}</td>
-        <td>
-          <span class="badge" [ngClass]="user.isKycVerified ? 'bg-success' : 'bg-secondary'">
-            {{ user.isKycVerified ? 'Verified' : 'Not Verified' }}
-          </span>
-        </td>
-        <td>
-          <span class="badge" [ngClass]="user.isBlocked ? 'bg-danger' : 'bg-success'">
-            {{ user.isBlocked ? 'Blocked' : 'Active' }}
-          </span>
-        </td>
-        <td>{{ user.joinedAt | date: 'short' }}</td>
-        <td>
-          <button class="btn btn-sm" [ngClass]="user.isBlocked ? 'btn-success' : 'btn-danger'"
-            (click)="blockUnblockUser(user)">
-            {{ user.isBlocked ? 'Unblock' : 'Block' }}
-          </button>
-          <button class="btn btn-sm btn-danger ms-1" (click)="deleteUser(user)">
-            <i class="bi bi-trash"></i> Delete
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="table-responsive">
+      <table class="table modern-table table-sm">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th (click)="toggleSort('fullName')" class="sortable">Name</th>
+            <th (click)="toggleSort('email')" class="sortable">Email</th>
+            <th>KYC</th>
+            <th>Status</th>
+            <th (click)="toggleSort('joinedAt')" class="sortable">Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers.slice((page - 1) * pageSize, page * pageSize); let i = index" class="modern-table-row">
+            <td>{{ i + 1 + ((page - 1) * pageSize) }}</td>
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span
+                class="badge modern-badge"
+                [ngClass]="user.isKycVerified ? 'bg-success' : 'bg-secondary'">
+                {{ user.isKycVerified ? 'Verified' : 'Not Verified' }}
+              </span>
+            </td>
+            <td>
+              <span
+                class="badge modern-badge"
+                [ngClass]="user.isBlocked ? 'bg-danger' : 'bg-success'">
+                {{ user.isBlocked ? 'Blocked' : 'Active' }}
+              </span>
+            </td>
+            <td>{{ user.joinedAt | date: 'short' }}</td>
+            <td>
+              <div class="action-buttons d-flex align-items-center gap-2">
+                <button
+                  class="btn modern-btn modern-btn-sm"
+                  [ngClass]="user.isBlocked ? 'modern-btn-success' : 'modern-btn-danger'"
+                  (click)="blockUnblockUser(user)">
+                  {{ user.isBlocked ? 'Unblock' : 'Block' }}
+                </button>
+                <button
+                  class="btn modern-btn modern-btn-sm modern-btn-danger"
+                  (click)="deleteUser(user)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <!-- Pagination -->
-  <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
-    <button class="btn btn-sm btn-outline-primary" [disabled]="page === 1"
-      (click)="goToPreviousPage()">Previous</button>
-    <button class="btn btn-sm btn-outline-primary" [disabled]="page * pageSize >= filteredUsers.length"
-      (click)="goToNextPage()">Next</button>
-  </div>
-</ng-container>
+    <!-- Pagination -->
+    <div class="pagination-container d-flex justify-content-center align-items-center gap-3 mt-4">
+      <button
+        class="btn modern-btn modern-btn-outline modern-btn-sm"
+        [disabled]="page === 1"
+        (click)="goToPreviousPage()">
+        Previous
+      </button>
+      <button
+        class="btn modern-btn modern-btn-outline modern-btn-sm"
+        [disabled]="page * pageSize >= filteredUsers.length"
+        (click)="goToNextPage()">
+        Next
+      </button>
+    </div>
+  </ng-container>
+</div>

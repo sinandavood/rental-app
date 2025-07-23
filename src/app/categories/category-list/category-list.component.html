@@ -1,19 +1,10 @@
 <section class="category-section container my-5">
-<div *ngIf="categories$ | async as categories">
-  <div class="category-scroll d-flex flex-nowrap gap-3">
-    <div
-      class="category-card text-center"
-      *ngFor="let cat of categories"
-      (click)="onCategoryClick(cat)"
-    >
-      <img
-        [src]="cat.icon"
-        [alt]="cat.name"
-        class="category-icon mb-2"
-        loading="lazy"
-      />
-      <div class="category-name fw-medium">{{ cat.name }}</div>
+  <div *ngIf="categories$ | async as categories">
+    <div class="category-scroll d-flex flex-nowrap gap-3">
+      <div class="category-card text-center" *ngFor="let cat of categories" (click)="onCategoryClick(cat)">
+        <img [src]="cat.icon" [alt]="cat.name" class="category-icon mb-2" loading="lazy" />
+        <div class="category-name fw-medium">{{ cat.name }}</div>
+      </div>
     </div>
   </div>
-</div>
 </section>
