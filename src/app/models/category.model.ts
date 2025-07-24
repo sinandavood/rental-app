@@ -3,4 +3,6 @@ export class Category{
     name:string="";
     icon:string="";
     description:string="";
+    parentCategoryId?: number | null;
+    parentCategory?: Category;
 }

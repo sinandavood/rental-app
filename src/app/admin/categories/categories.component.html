@@ -15,41 +15,83 @@
       <h5 class="card-title modern-card-title">Create Category</h5>
       <div class="row g-3 align-items-center">
         <div class="col-md-3">
-          <input
-            [(ngModel)]="newCategory.name"
-            class="form-control modern-input"
-            placeholder="Name" />
+          <input [(ngModel)]="newCategory.name" class="form-control modern-input" placeholder="Name" />
         </div>
         <div class="col-md-4">
-          <input
-            [(ngModel)]="newCategory.description"
-            class="form-control modern-input"
-            placeholder="Description" />
+          <input [(ngModel)]="newCategory.description" class="form-control modern-input" placeholder="Description" />
         </div>
         <div class="col-md-3">
-          <input
-            [(ngModel)]="newCategory.icon"
-            class="form-control modern-input"
+          <input [(ngModel)]="newCategory.icon" class="form-control modern-input"
             placeholder="Icon (e.g., bi-camera)" />
         </div>
         <div class="col-md-2">
-          <button
-            class="btn modern-btn modern-btn-primary w-100"
-            (click)="createCategory()">
+          <button class="btn modern-btn modern-btn-primary w-100" (click)="createCategory()">
             Create
           </button>
         </div>
+        <!-- ⬇️ Insert into your Create Form row -->
+
       </div>
     </div>
   </div>
 
+  <!----------------------------------------------------------------------------------------------------------------------->
+
+  <!-- ➕ Create Subcategory Form -->
+  <div class="card modern-card mb-4">
+    <div class="card-body modern-card-body">
+      <h5 class="card-title modern-card-title">Create Subcategory</h5>
+      <form (ngSubmit)="createSubCategory()" #subcategoryForm="ngForm">
+        <div class="row g-3 align-items-center">
+
+          <!-- Name -->
+          <div class="col-md-3">
+            <input [(ngModel)]="subForm.name" name="name" required class="form-control modern-input"
+              placeholder="Name" />
+          </div>
+
+          <!-- Description -->
+          <div class="col-md-4">
+            <input [(ngModel)]="subForm.description" name="description" required class="form-control modern-input"
+              placeholder="Description" />
+          </div>
+
+          <!-- Icon -->
+          <div class="col-md-3">
+            <input [(ngModel)]="subForm.icon" name="icon" required class="form-control modern-input"
+              placeholder="Icon (e.g., bi-camera)" />
+          </div>
+
+          <!-- Parent Category -->
+          <div class="col-md-3">
+            <select [(ngModel)]="subForm.parentCategoryId" name="parentCategoryId" required
+              class="form-select modern-input">
+              <option [ngValue]="null" disabled selected>Select Category</option>
+              <option *ngFor="let cat of filteredCategories" [ngValue]="cat.id">
+                {{ cat.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="col-md-2">
+            <button type="submit" class="btn modern-btn modern-btn-primary w-100" [disabled]="subcategoryForm.invalid">
+              Create
+            </button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!---------------------------------------------------------------------------->
+
+
   <!-- 🔍 Search Input -->
   <div class="search-container mb-4">
-    <input
-      type="text"
-      class="form-control modern-input"
-      [(ngModel)]="searchTerm"
-      (input)="applyFilters()"
+    <input type="text" class="form-control modern-input" [(ngModel)]="searchTerm" (input)="applyFilters()"
       placeholder="Search categories..." />
   </div>
 
@@ -61,24 +103,28 @@
           <th>#</th>
           <th>Name</th>
           <th>Description</th>
+          <th>Parent Category</th>
           <th>Icon</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cat of filteredCategories | slice:(page-1)*pageSize:page*pageSize; let i = index" class="modern-table-row">
+        <tr *ngFor="let cat of filteredCategories | slice:(page-1)*pageSize:page*pageSize; let i = index"
+          class="modern-table-row">
           <td>{{ i + 1 + ((page - 1) * pageSize) }}</td>
           <td>{{ cat.name }}</td>
           <td>{{ cat.description }}</td>
+          <td>
+            <span *ngIf="cat.parentCategory">{{ cat.parentCategory.name }}</span>
+            <span *ngIf="!cat.parentCategory" class="text-muted">—</span>
+          </td>
           <td>
             <i [class]="'bi ' + cat.icon" class="modern-icon"></i>
             <small class="text-muted ms-1">{{ cat.icon }}</small>
           </td>
           <td>
             <div class="action-buttons d-flex align-items-center">
-              <button
-                class="btn modern-btn modern-btn-sm modern-btn-danger"
-                (click)="deleteCategory(cat.id)">
+              <button class="btn modern-btn modern-btn-sm modern-btn-danger" (click)="deleteCategory(cat.id)">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
@@ -90,16 +136,11 @@
 
   <!-- 🔢 Pagination -->
   <div class="pagination-container d-flex justify-content-between align-items-center mt-4">
-    <button
-      class="btn modern-btn modern-btn-outline modern-btn-sm"
-      (click)="prevPage()"
-      [disabled]="page === 1">
+    <button class="btn modern-btn modern-btn-outline modern-btn-sm" (click)="prevPage()" [disabled]="page === 1">
       Previous
     </button>
     <span class="page-info">Page {{ page }}</span>
-    <button
-      class="btn modern-btn modern-btn-outline modern-btn-sm"
-      (click)="nextPage()"
+    <button class="btn modern-btn modern-btn-outline modern-btn-sm" (click)="nextPage()"
       [disabled]="(page * pageSize) >= filteredCategories.length">
       Next
     </button>

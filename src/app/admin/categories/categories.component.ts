@@ -15,13 +15,26 @@ export class CategoriesComponent implements OnInit {
 
   categories: Category[] = [];
   filteredCategories: Category[] = [];
-  newCategory = { name: '', description: '', icon: '' };
+  newCategory: Partial<Category> = {
+    name: '',
+    description: '',
+    icon: '',
+    parentCategoryId: null
+  };
   loading = false;
   page = 1;
   pageSize = 50;
   searchTerm = '';
 
-  constructor(private categoryService: CategoryService) {}
+  subForm = {
+    name: '',
+    description: '',
+    icon: '',
+    parentCategoryId: null
+  };
+  subcategories: any[] = [];
+
+  constructor(private categoryService: CategoryService) { }
 
   ngOnInit(): void {
     this.fetchCategories();
@@ -43,7 +56,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   createCategory() {
-    if (!this.newCategory.name.trim()) {
+    if (!this.newCategory.name?.trim()) {
       alert("Name is required");
       return;
     }
@@ -52,7 +65,13 @@ export class CategoriesComponent implements OnInit {
       next: (created) => {
         this.categories.unshift(created);
         this.applyFilters();
-        this.newCategory = { name: '', description: '', icon: '' };
+        // Fixed: Reset newCategory with all required properties
+        this.newCategory = {
+          name: '',
+          description: '',
+          icon: '',
+          parentCategoryId: null
+        };
       },
       error: (err) => {
         console.error('Create failed:', err);
@@ -81,15 +100,53 @@ export class CategoriesComponent implements OnInit {
     const term = this.searchTerm.toLowerCase();
     this.filteredCategories = this.categories.filter(c =>
       c.name.toLowerCase().includes(term) ||
-      c.description.toLowerCase().includes(term)
+      (c.description && c.description.toLowerCase().includes(term))
     );
   }
 
+  // Fixed: Added proper pagination logic
+  get paginatedCategories(): Category[] {
+    const startIndex = (this.page - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.filteredCategories.slice(startIndex, endIndex);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredCategories.length / this.pageSize);
+  }
+
+  get hasNextPage(): boolean {
+    return this.page < this.totalPages;
+  }
+
+  get hasPrevPage(): boolean {
+    return this.page > 1;
+  }
+
   prevPage() {
-    if (this.page > 1) this.page--;
+    if (this.hasPrevPage) {
+      this.page--;
+    }
   }
 
   nextPage() {
-    if ((this.page * this.pageSize) < this.filteredCategories.length) this.page++;
+    if (this.hasNextPage) {
+      this.page++;
+    }
   }
+
+  // Method to handle search changes and reset pagination
+  onSearchChange() {
+    this.page = 1; // Reset to first page when searching
+    this.applyFilters();
+  }
+
+  createSubCategory() {
+    const payload = { ...this.subForm };
+    this.categoryService.createSubCategory(payload).subscribe(() => {
+      alert('Subcategory created!');
+      this.subForm = { name: '', description: '', icon: '', parentCategoryId: null }; // Refresh category list if you display them
+    });
+  }
+
 }
