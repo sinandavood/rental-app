@@ -1,0 +1,32 @@
+.support-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.section-tabs button {
+  margin: 5px;
+  padding: 10px 15px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+}
+
+.section-tabs .active {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.faq-item {
+  background: #f9f9f9;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-left: 3px solid #007bff;
+}
+
+.complaint-box {
+  background: #f1f1f1;
+  padding: 20px;
+  border-radius: 5px;
+}

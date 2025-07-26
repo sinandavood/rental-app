@@ -55,3 +55,32 @@
   mask-image: linear-gradient(to right, black 95%, transparent);
 }
 
+.category-scroll {
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.category-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.category-card {
+  width: 120px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+}
+
+.category-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}

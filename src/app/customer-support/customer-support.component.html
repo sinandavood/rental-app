@@ -1,1 +1,34 @@
-<p>customer-support works!</p>
+<div class="support-container">
+  <h2>Customer Support</h2>
+
+  <!-- Section Tabs -->
+  <div class="section-tabs">
+    <button *ngFor="let section of sections"
+            (click)="selectSection(section)"
+            [class.active]="selectedSection === section">
+      {{ section }}
+    </button>
+  </div>
+
+  <!-- FAQs -->
+  <div class="faq-section mt-4">
+    <h4>{{ selectedSection }} FAQs</h4>
+    <div *ngFor="let faq of filteredFaqs" class="faq-item">
+      <strong>Q: {{ faq.question }}</strong>
+      <p>A: {{ faq.answer }}</p>
+    </div>
+    <div *ngIf="filteredFaqs.length === 0" class="text-muted">No FAQs available.</div>
+  </div>
+
+  <!-- Complaint Box -->
+  <div class="complaint-box mt-5">
+    <h5>Didn't find your answer?</h5>
+    <p>Submit a complaint</p>
+    <form (ngSubmit)="submitComplaint()">
+      <input type="text" class="form-control mb-2" placeholder="Subject" [(ngModel)]="complaint.subject" name="subject" required />
+      <textarea class="form-control mb-2" rows="4" placeholder="Message" [(ngModel)]="complaint.message" name="message" required></textarea>
+      <button class="btn btn-primary" type="submit">Submit Complaint</button>
+    </form>
+  </div>
+</div>
+
