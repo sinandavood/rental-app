@@ -10,17 +10,20 @@
     </div>
     
     <div class="flex-1">
-      <h5 class="text-lg font-semibold text-blue-600 mb-1">
-        {{ n.title }}
-        <span *ngIf="!n.isRead" class="text-red-500 ml-2">•</span>
-      </h5>
-      <p class="text-sm text-gray-800">
-        <strong></strong> {{ n.message }}
-      </p>
-      <p class="text-sm text-gray-600">
-        <strong></strong> {{ n.description }}
-      </p>
-    </div>
+  <h5 class="text-lg font-semibold text-blue-600 mb-1">
+    {{ n.title }}
+    <span *ngIf="!n.isRead" class="text-red-500 ml-2">•</span>
+  </h5>
+
+  <!-- Message with HTML support -->
+  <div class="text-sm text-gray-800" [innerHTML]="n.message"></div>
+
+  <!-- Optional description (plain text) -->
+  <p class="text-sm text-gray-600 mt-1">
+    {{ n.description }}
+  </p>
+</div>
+
 
     <div class="text-xs text-gray-400 text-right ml-6 whitespace-nowrap flex flex-col items-end">
       <div>{{ n.createdAt | date:'dd MMM, y h:mm a' }}</div>

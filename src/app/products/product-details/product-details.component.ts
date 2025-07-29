@@ -4,7 +4,8 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../product.service';
 import { Product } from 'src/app/models/product.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { number } from 'echarts';
+import { BookingService } from 'src/app/core/services/booking.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-details',
@@ -19,12 +20,14 @@ export class ProductDetailsComponent implements OnInit {
   isLoading = true;
   error = '';
   profilepic = '';
+  hasRequested = false;
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private bookingService: BookingService
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -32,13 +35,10 @@ export class ProductDetailsComponent implements OnInit {
       if (id) {
         this.fetchProduct(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-     if (id) {
-      console.log('Tracking view fo item',id);
-      
-  this.productService.trackView(Number(id)).subscribe();
-}
 
+        console.log('Tracking view for item', id);
+        this.productService.trackView(Number(id)).subscribe();
+      }
     });
   }
 
@@ -50,7 +50,6 @@ export class ProductDetailsComponent implements OnInit {
         this.profilepic = res.ownerProfileImage;
         this.isLoading = false;
 
-        // ✅ Fetch owner's profile image
         if (res.ownerId) {
           this.authService.getUserProfilePicById(res.ownerId).subscribe({
             next: (data) => {
@@ -60,32 +59,70 @@ export class ProductDetailsComponent implements OnInit {
               console.error('Failed to load owner profile image.');
             }
           });
-        } console.log('Product Response:', res); // Add this here
-        console.log('Product Response:', res);
-        console.log('res.categoryId:', res.categoryId);
-
-
+        }
 
         // ✅ Fetch similar products
         if (res.categoryId) {
-          const categoryId = Number(res.categoryId); // Optional cast
           this.productService.getSimilarProducts(res.id).subscribe({
             next: (similar) => {
-              console.log('Similar Products:', similar);
-
-              this.similarProducts = similar.slice(0, 4); // just to limit if needed
+              this.similarProducts = similar.slice(0, 4);
             },
             error: () => {
               console.error('Failed to load similar products');
             }
           });
+        }
 
+        // ✅ Now check booking status after product is loaded
+        const userId = this.authService.getCurrentUserData()?.nameid;
+        if (userId && res.id) {
+          this.bookingService.checkExistingBooking(res.id, userId).subscribe({
+            next: (res) => {
+              this.hasRequested = res === true;
+            },
+            error: () => {
+              console.warn('Failed to check booking status');
+            }
+          });
         }
 
       },
       error: () => {
         this.error = 'Error loading product';
         this.isLoading = false;
+      }
+    });
+  }
+
+  requestBooking(): void {
+    if (!this.product) return;
+
+    const BookingData = {
+      itemId: this.product.id,
+      renterId: this.authService.getCurrentUserData()?.nameid,
+      ownerId: this.product.ownerId,
+      startDate: new Date(),
+      endDate: new Date(new Date().setDate(new Date().getDate() + 2)),
+      totalPrice: this.product.price * 2,
+    };
+
+    this.bookingService.createBooking(BookingData).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Booking Requested!',
+          text: 'Your booking request has been sent to the owner.',
+          confirmButtonColor: '#3085d6',
+        });
+        this.hasRequested = true;
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Booking request failed. Please try again.',
+          confirmButtonColor: '#d33',
+        });
       }
     });
   }
