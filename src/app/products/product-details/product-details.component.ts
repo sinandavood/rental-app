@@ -1,15 +1,24 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../product.service';
 import { Product } from 'src/app/models/product.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { number } from 'echarts';
+
+import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css']
 })
@@ -19,6 +28,10 @@ export class ProductDetailsComponent implements OnInit {
   isLoading = true;
   error = '';
   profilepic = '';
+
+  startDate: Date | null = null;
+  endDate: Date | null = null;
+  selectingStart = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,13 +45,8 @@ export class ProductDetailsComponent implements OnInit {
       if (id) {
         this.fetchProduct(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.productService.trackView(Number(id)).subscribe();
       }
-     if (id) {
-      console.log('Tracking view fo item',id);
-      
-  this.productService.trackView(Number(id)).subscribe();
-}
-
     });
   }
 
@@ -50,38 +58,23 @@ export class ProductDetailsComponent implements OnInit {
         this.profilepic = res.ownerProfileImage;
         this.isLoading = false;
 
-        // ✅ Fetch owner's profile image
         if (res.ownerId) {
           this.authService.getUserProfilePicById(res.ownerId).subscribe({
             next: (data) => {
               this.profilepic = data.profileImage;
             },
-            error: () => {
-              console.error('Failed to load owner profile image.');
-            }
+            error: () => console.error('Failed to load owner profile image.')
           });
-        } console.log('Product Response:', res); // Add this here
-        console.log('Product Response:', res);
-        console.log('res.categoryId:', res.categoryId);
-
-
-
-        // ✅ Fetch similar products
-        if (res.categoryId) {
-          const categoryId = Number(res.categoryId); // Optional cast
-          this.productService.getSimilarProducts(res.id).subscribe({
-            next: (similar) => {
-              console.log('Similar Products:', similar);
-
-              this.similarProducts = similar.slice(0, 4); // just to limit if needed
-            },
-            error: () => {
-              console.error('Failed to load similar products');
-            }
-          });
-
         }
 
+        if (res.categoryId) {
+          this.productService.getSimilarProducts(res.id).subscribe({
+            next: (similar) => {
+              this.similarProducts = similar.slice(0, 4);
+            },
+            error: () => console.error('Failed to load similar products')
+          });
+        }
       },
       error: () => {
         this.error = 'Error loading product';
@@ -89,4 +82,39 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
   }
+
+  selectDate(date: Date | null): void {
+    if (!this.startDate || (this.startDate && this.endDate)) {
+      this.startDate = date;
+      this.endDate = null;
+      this.selectingStart = false;
+    } else if (!this.endDate && date && date > this.startDate) {
+      this.endDate = date;
+      this.selectingStart = true;
+    } else {
+      // Invalid selection: reset
+      this.startDate = date;
+      this.endDate = null;
+      this.selectingStart = false;
+    }
+  }
+
+  isInRange(date: Date): boolean {
+    if (this.startDate && this.endDate) {
+      return date > this.startDate && date < this.endDate;
+    }
+    return false;
+  }
+
+  isSelected(date: Date): boolean {
+    return !!(
+      (this.startDate && date.toDateString() === this.startDate.toDateString()) ||
+      (this.endDate && date.toDateString() === this.endDate.toDateString())
+    );
+  }
+dateClass = (date: Date): string => {
+  if (this.isSelected(date)) return 'mat-calendar-body-selected';
+  if (this.isInRange(date)) return 'range-date';
+  return '';
+};
 }
