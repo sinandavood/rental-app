@@ -8,6 +8,7 @@ import { BookingService } from 'src/app/core/services/booking.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import Swal from  'sweetalert2';
 
 @Component({
   selector: 'app-product-details',
@@ -38,7 +39,8 @@ export class ProductDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private authService: AuthService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+
   ) {}
 
   ngOnInit(): void {
@@ -119,4 +121,37 @@ export class ProductDetailsComponent implements OnInit {
     if (this.isInRange(date)) return 'range-date';
     return '';
   };
+
+    requestBooking(): void {
+    if (!this.product) return;
+
+    const BookingData = {
+      itemId: this.product.id,
+      renterId: this.authService.getCurrentUserData()?.nameid,
+      ownerId: this.product.ownerId,
+      startDate: new Date(),
+      endDate: new Date(new Date().setDate(new Date().getDate() + 2)),
+      totalPrice: this.product.price * 2,
+    };
+
+    this.bookingService.createBooking(BookingData).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Booking Requested!',
+          text: 'Your booking request has been sent to the owner.',
+          confirmButtonColor: '#3085d6',
+        });
+        this.hasRequested = true;
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Booking request failed. Please try again.',
+          confirmButtonColor: '#d33',
+        });
+      }
+    });
+  }
 }
