@@ -18,6 +18,8 @@ export class AddProductComponent implements OnInit {
   imagePreview: string | ArrayBuffer | null = null;
   selectedImage!: File;
   isSubmitting = false;
+  submissionSuccess = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -60,27 +62,35 @@ export class AddProductComponent implements OnInit {
   }
 
   submitForm() {
-    if (this.productForm.invalid || !this.selectedImage) return;
+  if (this.productForm.invalid || !this.selectedImage) return;
 
-    const formData = new FormData();
-    formData.append('name', this.productForm.get('name')?.value);
-    formData.append('description', this.productForm.get('description')?.value);
-    formData.append('price', this.productForm.get('price')?.value);
-    formData.append('location', this.productForm.get('location')?.value);
-    formData.append('categoryId', this.productForm.get('categoryId')?.value);
-    formData.append('availability', 'true');
-    formData.append('image', this.selectedImage); // ✅ Image file
+  const formData = new FormData();
+  formData.append('name', this.productForm.get('name')?.value);
+  formData.append('description', this.productForm.get('description')?.value);
+  formData.append('price', this.productForm.get('price')?.value);
+  formData.append('location', this.productForm.get('location')?.value);
+  formData.append('categoryId', this.productForm.get('categoryId')?.value);
+  formData.append('availability', 'true');
+  formData.append('image', this.selectedImage);
 
-    this.isSubmitting = true;
-    this.productService.addProduct(formData).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.router.navigate(['/products']);
-      },
-      error: (err) => {
-        console.error('Error uploading product', err);
-        this.isSubmitting = false;
-      }
-    });
-  }
+  this.isSubmitting = true;
+
+  this.productService.addProduct(formData).subscribe({
+    next: () => {
+      this.isSubmitting = false;
+      this.submissionSuccess = true;
+      this.productForm.reset();
+      this.imagePreview = null;
+
+      setTimeout(() => {
+        this.submissionSuccess = false;
+      }, 5000);
+    },
+    error: (err) => {
+      console.error('Error uploading product', err);
+      this.isSubmitting = false;
+    }
+  });
+}
+
 }

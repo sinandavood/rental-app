@@ -102,7 +102,23 @@
     </div>
             </div>
           </div>
+ 
 
+
+  <mat-card>
+  <h2>Select Your Rental Dates</h2>
+
+  <mat-calendar
+    (selectedChange)="selectDate($event)"
+    [selected]="selectingStart ? startDate : endDate"
+    [dateClass]="dateClass.bind(this)">
+  </mat-calendar>
+
+  <div *ngIf="startDate && endDate" style="margin-top: 1rem;">
+    <strong>Start Date:</strong> {{ startDate | date: 'longDate' }}<br>
+    <strong>End Date:</strong> {{ endDate | date: 'longDate' }}
+  </div>
+</mat-card>
 
           <!-- Action Buttons -->
           <div class="action-buttons">
