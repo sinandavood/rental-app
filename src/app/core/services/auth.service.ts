@@ -282,4 +282,10 @@ export class AuthService {
     this.userSubject.next(newPayload);
     localStorage.setItem('profilePic', user.photoUrl ?? '');
   }
+
+  getCurrentUserId(): string | null {
+  const token = this.getToken();
+  return token ? this.getUserIdFromToken(token) : null;
+}
+
 }

@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../product.service';
 import { Product } from 'src/app/models/product.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-
+import { BookingService } from 'src/app/core/services/booking.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -28,6 +28,7 @@ export class ProductDetailsComponent implements OnInit {
   isLoading = true;
   error = '';
   profilepic = '';
+  hasRequested = false;
 
   startDate: Date | null = null;
   endDate: Date | null = null;
@@ -36,8 +37,9 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private bookingService: BookingService
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -110,11 +112,11 @@ export class ProductDetailsComponent implements OnInit {
     return !!(
       (this.startDate && date.toDateString() === this.startDate.toDateString()) ||
       (this.endDate && date.toDateString() === this.endDate.toDateString())
-    );
-  }
-dateClass = (date: Date): string => {
-  if (this.isSelected(date)) return 'mat-calendar-body-selected';
-  if (this.isInRange(date)) return 'range-date';
-  return '';
-};
+    );
+  };
+  dateClass = (date: Date): string => {
+    if (this.isSelected(date)) return 'mat-calendar-body-selected';
+    if (this.isInRange(date)) return 'range-date';
+    return '';
+  };
 }
