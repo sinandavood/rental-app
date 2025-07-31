@@ -106,4 +106,14 @@ export const routes: Routes = [
         path: 'category/:id',
         loadComponent: () => import('./categories/subcategory/subcategory.component').then(m => m.SubcategoryComponent)
     },
+
+    {
+        path:'checkout',
+        loadComponent:()=>import('./checkout/checkout.component').then(m=>m.CheckoutComponent)
+    },
+    {
+        path:'payment-success',
+        loadComponent:()=>import('./payment-status-page/payment-status-page.component').then(m=>m.PaymentStatusPageComponent)
+
+    }
 ];
