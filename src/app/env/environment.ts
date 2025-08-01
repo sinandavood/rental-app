@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'https://localhost:7155/api',
+  apiBaseUrl: 'https://p2prental.runasp.net/api',
   
   firebaseConfig: {
     apiKey: "AIzaSyAqLIeWlyJYemUfES6XgRzlZBwopMS_33o",
