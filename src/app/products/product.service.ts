@@ -65,4 +65,7 @@ toggleAvailability(id: number) {
   return this.http.patch<{ availability: boolean }>(`${this.url}/${id}/toggle-availability`, {});
 }
 
+   getProductsByOwner(ownerId: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.url}/owner/${ownerId}`);
+  }
 }
