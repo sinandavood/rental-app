@@ -105,14 +105,22 @@ export const routes: Routes = [
     },
 
     {
-  path : 'owner/:id/products',
-  loadComponent: () => import('./products/owner-products/owner-products.component').then(m => m.OwnerProductsComponent)
-},
+        path: 'owner/:id/products',
+        loadComponent: () => import('./products/owner-products/owner-products.component').then(m => m.OwnerProductsComponent)
+    },
 
 {
   path: 'products/:id',
   loadComponent: () =>
     import('./products/product-details/product-details.component').then(m => m.ProductDetailsComponent),
 },
+{
+        path:'checkout',
+        loadComponent:()=>import('./checkout/checkout.component').then(m=>m.CheckoutComponent)
+    },
+    {
+        path:'payment-success',
+        loadComponent:()=>import('./payment-status-page/payment-status-page.component').then(m=>m.PaymentStatusPageComponent)
 
+    }
 ];

@@ -12,8 +12,13 @@ export interface Booking
   renterName: string;
   ownerName: string;
   isPaid: boolean;
+  createdAt: string;
   renterProfileImage: string;
   ownerProfileImage: string;
+  ownerPhoneNumber:string;
+  renterPhoneNumber:string;
+  renterEmail:string;
+  ownerEmail:string;
 }
 
 
