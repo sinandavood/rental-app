@@ -66,6 +66,6 @@ toggleAvailability(id: number) {
 }
 
    getProductsByOwner(ownerId: string): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.url}/owner/${ownerId}`);
+    return this.http.get<Product[]>(`${this.url}/by-owner/${ownerId}`);
   }
 }
