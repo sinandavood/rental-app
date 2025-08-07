@@ -1,0 +1,122 @@
+<!-- 
+  Modern Payment History Component using Tailwind CSS
+  This template provides a clean, responsive, and visually appealing way to display payment history.
+-->
+<div class="bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8">
+  <div class="max-w-7xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Payment History</h1>
+      <p class="mt-1 text-sm text-gray-500">A record of all your recent transactions.</p>
+    </header>
+
+    <!-- Async pipe handles the subscription and provides the 'history' variable -->
+    <ng-container *ngIf="paymentHistory$ | async as history; else loading">
+      
+      <!-- State: No payment history found -->
+      <div *ngIf="history.length === 0" class="text-center bg-white p-12 rounded-lg shadow-sm border border-gray-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No transactions</h3>
+        <p class="mt-1 text-sm text-gray-500">You have no payment history yet.</p>
+      </div>
+
+      <!-- State: History records exist, display in a styled table -->
+      <div *ngIf="history.length > 0" class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Details</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Method</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Order ID</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let item of history" class="hover:bg-gray-50">
+                
+                <!-- Date -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                  {{ item.createdAt | date:'medium' }}
+                </td>
+                
+                <!-- Item & Owner -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{{ item.itemName }}</div>
+                  <div class="text-sm text-gray-500">Owner: {{ item.ownerName }}</div>
+                </td>
+
+                <!-- Amount -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">
+                  {{ item.amount | currency:item.currency:'symbol' }}
+                </td>
+
+                <!-- Status Badge -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium" 
+                        [ngClass]="{
+                          'bg-green-100 text-green-800': item.status === 'Success', 
+                          'bg-red-100 text-red-800': item.status === 'Failed', 
+                          'bg-yellow-100 text-yellow-800': item.status === 'Pending',
+                          'bg-gray-100 text-gray-800': item.status === 'UserCancelled'
+                        }">
+                    {{ item.status }}
+                  </span>
+                </td>
+
+                <!-- Payment Method (hidden on small screens) -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden md:table-cell">
+                  {{ item.paymentMethod }}
+                </td>
+
+                <!-- Order ID (hidden on medium screens) -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400 font-mono hidden lg:table-cell">
+                  {{ item.orderId }}
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </ng-container>
+
+    <!-- Loading State Template with Skeleton Animation -->
+    <ng-template #loading>
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><div class="h-4 bg-gray-200 rounded w-20"></div></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><div class="h-4 bg-gray-200 rounded w-24"></div></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><div class="h-4 bg-gray-200 rounded w-16"></div></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><div class="h-4 bg-gray-200 rounded w-16"></div></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell"><div class="h-4 bg-gray-200 rounded w-16"></div></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell"><div class="h-4 bg-gray-200 rounded w-24"></div></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 animate-pulse">
+              <!-- Repeat skeleton row for a realistic loading effect -->
+              <tr *ngFor="let i of [1, 2, 3, 4, 5]">
+                <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-full"></div></td>
+                <td class="px-6 py-4">
+                  <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                  <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                </td>
+                <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded w-full"></div></td>
+                <td class="px-6 py-4"><div class="h-6 bg-gray-200 rounded-full w-20"></div></td>
+                <td class="px-6 py-4 hidden md:table-cell"><div class="h-4 bg-gray-200 rounded w-full"></div></td>
+                <td class="px-6 py-4 hidden lg:table-cell"><div class="h-4 bg-gray-200 rounded w-full"></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

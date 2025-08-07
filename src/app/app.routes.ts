@@ -115,5 +115,9 @@ export const routes: Routes = [
         path:'payment-success',
         loadComponent:()=>import('./payment-status-page/payment-status-page.component').then(m=>m.PaymentStatusPageComponent)
 
+    },
+    {
+        path:'payment-history',
+        loadComponent:()=>import('./payment-history/payment-history.component').then(m=>m.PaymentHistoryComponent)
     }
 ];

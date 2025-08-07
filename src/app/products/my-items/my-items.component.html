@@ -1,78 +1,103 @@
-<div class="container mx-auto my-10 px-4 modern-container">
-  <!-- 🔹 Title -->
-  <h2 class="text-3xl md:text-4xl font-bold text-center text-indigo-700 mb-8 modern-title">
-    My Posted Items
-  </h2>
+<!-- 
+  Modern "My Posted Items" Component using Tailwind CSS
+  This template provides a clean, responsive, and visually appealing way to display a user's posted items.
+-->
+<div class="bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8">
+  <div class="max-w-7xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900">My Posted Items</h1>
+      <p class="mt-1 text-sm text-gray-500">Manage the items you have listed for rent.</p>
+    </header>
 
-  <!-- 🔄 Loading Spinner -->
-  <div *ngIf="isLoading" class="flex flex-col items-center my-10">
-    <div class="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin modern-spinner"></div>
-    <p class="text-gray-500 mt-3 modern-text">Fetching your items...</p>
-  </div>
-
-  <!-- 🚫 No Items Message -->
-  <div *ngIf="!isLoading && myItems.length === 0" class="text-center py-10 bg-blue-50 rounded-lg shadow-sm modern-no-items">
-    <p class="text-gray-600 text-lg">No items posted yet. Start sharing your items now!</p>
-    <a routerLink="/post-item"
-      class="inline-block mt-4 bg-indigo-600 text-white px-5 py-2 rounded-full hover:bg-indigo-700 transition modern-btn modern-btn-primary">
-      Post an Item
-    </a>
-  </div>
-
-  <!-- ✅ Posted Items List -->
-  <div *ngIf="!isLoading && myItems.length > 0" class="space-y-6">
-    <div *ngFor="let item of myItems"
-      class="flex flex-col md:flex-row gap-6 p-6 border-none rounded-lg shadow-sm hover:shadow-md bg-white transition-all modern-card">
-      <!-- 🖼️ Image -->
-      <div class="w-full md:w-36 flex-shrink-0">
-        <img
-          [src]="item.image ? 'https://p2prental.runasp.net' + item.image : 'assets/placeholder-image.jpg'"
-          alt="{{ item.name }}"
-          class="w-full h-36 object-contain rounded-lg modern-image"
-          (error)="handleImageError($event)" />
+    <!-- Async Data Handling -->
+    <ng-container *ngIf="!isLoading; else loading">
+      
+      <!-- State: No items found -->
+      <div *ngIf="myItems.length === 0" class="text-center bg-white p-12 rounded-lg shadow-sm border border-gray-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No items posted</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by listing an item for rent.</p>
+        <a routerLink="/post-item" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Post an Item
+        </a>
       </div>
 
-      <!-- ℹ️ Info Section -->
-      <div class="flex-1">
-        <h3 class="text-lg font-semibold text-gray-800 truncate modern-card-title">{{ item.name }}</h3>
-        <p class="text-sm text-gray-500">Posted on: {{ item.createdAt | date: 'mediumDate' }}</p>
-        <p class="text-sm text-gray-500">Category: {{ item.categoryName }}</p>
-        <p class="text-sm text-gray-500">Product Status: {{ item.status }}</p>
-        <p class="text-sm text-gray-500">Views: {{ item.views }}</p>
-        <p class="text-red-600 font-bold text-lg mt-2 modern-price">
-          {{ item.price | currency: 'INR' }}
-        </p>
-        <p class="text-gray-600 text-sm mt-1">{{ item.description | truncate: 100 }}</p>
+      <!-- State: Items exist, display as a list of cards -->
+      <div *ngIf="myItems.length > 0" class="space-y-5">
+        <div *ngFor="let item of myItems" class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row gap-6 transition-shadow hover:shadow-md">
+          
+          <!-- Image -->
+          <div class="w-full sm:w-40 h-40 flex-shrink-0 bg-gray-100 rounded-lg flex items-center justify-center">
+            <img [src]="item.image ? 'https://p2prental.runasp.net' + item.image : 'assets/placeholder-image.jpg'" 
+                 alt="{{ item.name }}" 
+                 class="w-full h-full object-cover rounded-lg" 
+                 (error)="handleImageError($event)" />
+          </div>
 
-        <!-- 🟢 Availability Badge and Toggle -->
-        <div class="flex items-center gap-3 mt-3">
-          <span
-            class="inline-block px-3 py-1 text-xs rounded-full modern-badge"
-            [ngClass]="item.availability ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'">
-          {{ item.availability ? 'Available' : 'Unavailable' }}
-          </span>
-          <button
-            class="modern-btn modern-btn-sm"
-            [ngClass]="item.availability ? 'modern-btn-success' : 'modern-btn-secondary'"
-            (click)="toggleAvailability(item)">
-            {{ item.availability ? 'Available' : 'Unavailable' }}
-          </button>
-        </div>
-
-        <!-- ✏️ Action Buttons -->
-        <div class="mt-4 flex flex-wrap gap-2 action-buttons">
-          <button
-            (click)="editItem(item)"
-            class="px-4 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full hover:bg-yellow-200 transition modern-btn modern-btn-sm">
-            <i class="bi bi-pencil"></i> Edit
-          </button>
-          <button
-            (click)="deleteItem(item.id)"
-            class="px-4 py-1 bg-red-100 text-red-700 text-sm rounded-full hover:bg-red-200 transition modern-btn modern-btn-sm">
-            <i class="bi bi-trash"></i> Delete
-          </button>
+          <!-- Item Details -->
+          <div class="flex-1">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-lg font-semibold text-gray-800">{{ item.name }}</h3>
+                <p class="text-sm text-gray-500">Category: {{ item.categoryName }}</p>
+              </div>
+              <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" 
+                    [ngClass]="item.availability ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                {{ item.availability ? 'Available' : 'Unavailable' }}
+              </span>
+            </div>
+            <p class="text-lg font-bold text-blue-600 mt-2">{{ item.price | currency: 'INR' }} / day</p>
+            <p class="text-sm text-gray-600 mt-2">{{ item.description | slice:0:120 }}...</p>
+            
+            <!-- Action Buttons -->
+            <div class="mt-4 flex flex-wrap gap-3 items-center">
+              <button (click)="editItem(item)" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Edit
+              </button>
+              <button (click)="deleteItem(item.id)" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                Delete
+              </button>
+              <button (click)="toggleAvailability(item)" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm leading-4 font-medium rounded-md text-white" [ngClass]="item.availability ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-500 hover:bg-green-600'">
+                {{ item.availability ? 'Mark as Unavailable' : 'Mark as Available' }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
+
+    <!-- Loading State Template with Skeleton Animation -->
+    <ng-template #loading>
+      <div class="space-y-5">
+        <!-- Repeat skeleton card for a realistic loading effect -->
+        <div *ngFor="let i of [1, 2, 3]" class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row gap-6 animate-pulse">
+          
+          <!-- Skeleton Image -->
+          <div class="w-full sm:w-40 h-40 flex-shrink-0 bg-gray-200 rounded-lg"></div>
+
+          <!-- Skeleton Details -->
+          <div class="flex-1 space-y-3">
+            <div class="flex justify-between items-start">
+              <div class="w-3/4 space-y-2">
+                <div class="h-5 bg-gray-300 rounded w-4/5"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/5"></div>
+              </div>
+              <div class="h-6 bg-gray-200 rounded-full w-20"></div>
+            </div>
+            <div class="h-5 bg-gray-200 rounded w-1/3"></div>
+            <div class="space-y-2">
+              <div class="h-4 bg-gray-200 rounded"></div>
+              <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+            </div>
+            <div class="flex gap-3 pt-2">
+              <div class="h-8 w-20 bg-gray-200 rounded-md"></div>
+              <div class="h-8 w-20 bg-gray-200 rounded-md"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </div>

@@ -1,174 +1,160 @@
-<!-- 🏠 Default Home View -->
-<div>
+<!-- 
+  Modern Home Page Component using Tailwind CSS
+  This template provides a clean, responsive, and visually appealing layout for a product-centric home page.
+-->
+<div class="bg-gray-50 min-h-screen">
+  
+  <!-- Category List -->
   <app-category-list></app-category-list>
 
-  <!-- home.component.html -->
+  <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    
+    <!-- Recently Added Section -->
+    <section>
+      <header class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900">Recently Added</h2>
+        <a routerLink="/products" class="text-sm font-semibold text-red-600 hover:text-blue-500">View All &rarr;</a>
+      </header>
 
-  <div class="container py-5">
-
-  <!-- Recently Added Section Header -->
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold mb-0 fs-3">
-      <i class="bi bi-clock-history me-2 text-danger"></i>Recently Added
-    </h4>
-    <a routerLink="/products" class="btn btn-danger">View All</a>
-  </div>
-
-  <!-- Recently Added Horizontal Scroll -->
-  <div class="d-flex overflow-auto gap-4 pb-3">
-    <!-- Product Card -->
-    <div class="flex-shrink-0" *ngFor="let product of recentlyAddedProducts" style="width: 300px;">
-      <div class="product-card shadow rounded-4 border bg-white h-100">
-        <div class="position-relative">
-          <img [src]="'https://p2prental.runasp.net' + product.image"
-               [alt]="product.name"
-               class="rounded-top-4 w-100"
-               style="height: 220px; object-fit: cover;" />
-          <div class="position-absolute top-0 end-0 m-2 d-flex flex-column gap-2">
-            <i class="bi icon fs-5"
-               [ngClass]="isInWishlist(product.id) ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'"
-               (click)="toggleWishlist(product.id)"
-               style="cursor: pointer;" title="Add to Wishlist">
-            </i>
-          </div>
-        </div>
-        <div class="p-3">
-          <h6 class="fw-semibold text-truncate fs-6">{{ product.name }}</h6>
-          <p class="text-danger fw-bold mb-1 fs-6">{{ product.price | currency:'INR' }}/day</p>
-          <small class="text-muted d-block mb-1">
-            <i class="bi bi-geo-alt me-1"></i>{{ product.location }}
-          </small>
-          <small class="text-muted d-block mb-1">
-            <i class="bi bi-person me-1"></i>{{ product.ownerName }}
-          </small>
-          <small class="text-muted d-block mb-2">
-            <i class="bi bi-clock me-1"></i>{{ product.createdAt | date: 'mediumDate' }}
-          </small>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="badge-status"
-                  [ngClass]="product.availability ? 'available' : 'unavailable'">
-              {{ product.availability ? 'Available' : 'Unavailable' }}
-            </span>
-            <button class="btn btn-sm btn-danger" [routerLink]="['/products', product.id]">
-              Rent Now
-            </button>
+      <!-- Loading State: Skeleton Animation for Recently Added -->
+      <div *ngIf="isLoadingRecentlyAdded" class="flex overflow-x-auto gap-6 pb-4 -mx-4 px-4">
+        <div *ngFor="let i of [1, 2, 3, 4]" class="flex-shrink-0 w-72 animate-pulse">
+          <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl">
+            <div class="h-48 bg-gray-200 rounded-t-xl"></div>
+            <div class="p-4 space-y-3">
+              <div class="h-5 bg-gray-300 rounded w-3/4"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+              <div class="flex justify-between items-center pt-2">
+                <div class="h-6 w-20 bg-gray-200 rounded-full"></div>
+                <div class="h-8 w-24 bg-gray-300 rounded-md"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Top Rated Section Header -->
-  <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
-    <h4 class="fw-bold mb-0 fs-3">
-      <i class="bi bi-star-fill me-2 text-warning"></i>Top Rated
-    </h4>
-    <a routerLink="/products" class="btn btn-danger">View All</a>
-  </div>
-
-  <!-- Top Rated Horizontal Scroll -->
-  <div class="d-flex overflow-auto gap-4 pb-3">
-    <!-- Product Card -->
-    <div class="flex-shrink-0" *ngFor="let product of topRatedProducts" style="width: 300px;">
-      <div class="product-card shadow rounded-4 border bg-white h-100">
-        <div class="position-relative">
-          <img [src]="'https://p2prental.runasp.net' + product.image"
-               [alt]="product.name"
-               class="rounded-top-4 w-100"
-               style="height: 220px; object-fit: cover;" />
-          <div class="position-absolute top-0 end-0 m-2 d-flex flex-column gap-2">
-            <i class="bi icon fs-5"
-               [ngClass]="isInWishlist(product.id) ? 'bi-heart-fill text-danger' : 'bi-heart text-muted'"
-               (click)="toggleWishlist(product.id)"
-               style="cursor: pointer;" title="Add to Wishlist">
-            </i>
-          </div>
-        </div>
-        <div class="p-3">
-          <h6 class="fw-semibold text-truncate fs-6">{{ product.name }}</h6>
-          <p class="text-danger fw-bold mb-1 fs-6">{{ product.price | currency:'INR' }}/day</p>
-          <small class="text-muted d-block mb-1">
-            <i class="bi bi-geo-alt me-1"></i>{{ product.location }}
-          </small>
-          <small class="text-muted d-block mb-1">
-            <i class="bi bi-person me-1"></i>{{ product.ownerName }}
-          </small>
-          <small class="text-muted d-block mb-2">
-            <i class="bi bi-clock me-1"></i>{{ product.createdAt | date: 'mediumDate' }}
-          </small>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="badge-status"
-                  [ngClass]="product.availability ? 'available' : 'unavailable'">
-              {{ product.availability ? 'Available' : 'Unavailable' }}
-            </span>
-            <button class="btn btn-sm btn-danger" [routerLink]="['/products', product.id]">
-              Rent Now
-            </button>
+      
+      <!-- Content: Recently Added Products -->
+      <div *ngIf="!isLoadingRecentlyAdded" class="flex overflow-x-auto gap-6 pb-4 -mx-4 px-4">
+        <div *ngFor="let product of recentlyAddedProducts" class="flex-shrink-0 w-72">
+          <div class="product-card bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl h-full flex flex-col transition-shadow hover:shadow-md">
+            <div class="relative">
+              <img [src]="'https://p2prental.runasp.net' + product.image" [alt]="product.name" class="rounded-t-xl w-full h-48 object-cover" />
+              <button (click)="toggleWishlist(product.id)" class="absolute top-2 right-2 bg-white/70 backdrop-blur-sm rounded-full p-1.5 text-gray-600 hover:text-red-500 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" [class.fill-current]="isInWishlist(product.id)" [class.text-red-500]="isInWishlist(product.id)">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+                </svg>
+              </button>
+            </div>
+            <div class="p-4 flex-grow flex flex-col">
+              <h3 class="font-semibold text-gray-800 truncate">{{ product.name }}</h3>
+              <p class="text-red-600 font-bold mt-1">{{ product.price | currency:'INR' }}/day</p>
+              <div class="mt-2 space-y-1 text-sm text-gray-500 flex-grow">
+                <p class="truncate"><i class="bi bi-geo-alt mr-1.5"></i>{{ product.location }}</p>
+                <p class="truncate"><i class="bi bi-person mr-1.5"></i>{{ product.ownerName }}</p>
+              </div>
+              <div class="mt-3 flex justify-between items-center">
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium" [ngClass]="product.availability ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                  {{ product.availability ? 'Available' : 'Unavailable' }}
+                </span>
+                <a [routerLink]="['/products', product.id]" class="rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
+                  Rent Now
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Top Rated Section -->
+    <section class="mt-12">
+      <header class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900">Top Rated Items</h2>
+        <a routerLink="/products" class="text-sm font-semibold text-red-600 hover:text-blue-500">View All &rarr;</a>
+      </header>
+      
+      <!-- Loading State: Skeleton Animation for Top Rated -->
+      <div *ngIf="isLoadingTopRated" class="flex overflow-x-auto gap-6 pb-4 -mx-4 px-4">
+        <div *ngFor="let i of [1, 2, 3, 4]" class="flex-shrink-0 w-72 animate-pulse">
+            <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl">
+              <div class="h-48 bg-gray-200 rounded-t-xl"></div>
+              <div class="p-4 space-y-3">
+                <div class="h-5 bg-gray-300 rounded w-3/4"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                <div class="flex justify-between items-center pt-2">
+                  <div class="h-6 w-20 bg-gray-200 rounded-full"></div>
+                  <div class="h-8 w-24 bg-gray-300 rounded-md"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Content: Top Rated Products -->
+      <div *ngIf="!isLoadingTopRated" class="flex overflow-x-auto gap-6 pb-4 -mx-4 px-4">
+        <div *ngFor="let product of topRatedProducts" class="flex-shrink-0 w-72">
+            <div class="product-card bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl h-full flex flex-col transition-shadow hover:shadow-md">
+                <div class="relative">
+                  <img [src]="'https://p2prental.runasp.net' + product.image" [alt]="product.name" class="rounded-t-xl w-full h-48 object-cover" />
+                  <button (click)="toggleWishlist(product.id)" class="absolute top-2 right-2 bg-white/70 backdrop-blur-sm rounded-full p-1.5 text-gray-600 hover:text-red-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" [class.fill-current]="isInWishlist(product.id)" [class.text-red-500]="isInWishlist(product.id)">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="p-4 flex-grow flex flex-col">
+                  <h3 class="font-semibold text-gray-800 truncate">{{ product.name }}</h3>
+                  <p class="text-red-600 font-bold mt-1">{{ product.price | currency:'INR' }}/day</p>
+                  <div class="mt-2 space-y-1 text-sm text-gray-500 flex-grow">
+                    <p class="truncate"><i class="bi bi-geo-alt mr-1.5"></i>{{ product.location }}</p>
+                    <p class="truncate"><i class="bi bi-person mr-1.5"></i>{{ product.ownerName }}</p>
+                  </div>
+                  <div class="mt-3 flex justify-between items-center">
+                    <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium" [ngClass]="product.availability ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                      {{ product.availability ? 'Available' : 'Unavailable' }}
+                    </span>
+                    <a [routerLink]="['/products', product.id]" class="rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
+                      Rent Now
+                    </a>
+                  </div>
+                </div>
+              </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full Product List (conditionally shown) -->
+     <app-product-list *ngIf="searchResults" [products]="searchResults"></app-product-list>
+
   </div>
 
+  <!-- Features Section -->
+  <section class="py-12 bg-white mt-12 border-t border-gray-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        <div class="feature-box">
+          <img src="assets/images/support.png" alt="Customer Support" class="mx-auto mb-4 h-12" />
+          <h5 class="text-lg font-semibold text-gray-900">24/7 Support</h5>
+          <p class="mt-1 text-sm text-gray-600">We are here to help you anytime.</p>
+        </div>
+        <div class="feature-box">
+          <img src="assets/images/gaurentee.png" alt="Money-Back Guarantee" class="mx-auto mb-4 h-12" />
+          <h5 class="text-lg font-semibold text-gray-900">Money-Back Guarantee</h5>
+          <p class="mt-1 text-sm text-gray-600">Full refund within 7 days.</p>
+        </div>
+        <div class="feature-box">
+          <img src="assets/images/fast-delivery.png" alt="Fast Delivery" class="mx-auto mb-4 h-12" />
+          <h5 class="text-lg font-semibold text-gray-900">Fast Delivery</h5>
+          <p class="mt-1 text-sm text-gray-600">Quick and safe shipping to your door.</p>
+        </div>
+        <div class="feature-box">
+          <img src="assets/images/customers.png" alt="Trusted Customers" class="mx-auto mb-4 h-12" />
+          <h5 class="text-lg font-semibold text-gray-900">Trusted by 10K+ Customers</h5>
+          <p class="mt-1 text-sm text-gray-600">We care about your trust and safety.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
-
-
-
-
-
-  <!-- <app-product-list [limit]="8"></app-product-list> -->
-  <app-product-list *ngIf="searchResults" [products]="searchResults"></app-product-list>
-
-
-</div>
-
-
-
-<!-- Rent an Item Button -->
-
-
-
-
-
-<section class="features-section py-5 bg-light">
-  <div class="container">
-    <div class="row text-center">
-
-      <div class="col-md-3 mb-4">
-        <div class="feature-box p-3 border rounded bg-white h-100 shadow-sm">
-          <img src="assets/images/support.png" alt="Customer Support" class="mb-3" style="width: 48px;" />
-          <h5>24/7 Support</h5>
-          <p>We are here to help you anytime.</p>
-        </div>
-      </div>
-
-
-      <div class="col-md-3 mb-4">
-        <div class="feature-box p-3 border rounded bg-white h-100 shadow-sm">
-          <img src="assets/images/gaurentee.png" alt="Money-Back Guarantee" class="mb-3" style="width: 48px;" />
-          <h5>Money-Back Guarantee</h5>
-          <p>Full refund within 7 days.</p>
-        </div>
-      </div>
-
-
-      <div class="col-md-3 mb-4">
-        <div class="feature-box p-3 border rounded bg-white h-100 shadow-sm">
-          <img src="assets/images/fast-delivery.png" alt="Fast Delivery" class="mb-3" style="width: 48px;" />
-          <h5>Fast Delivery</h5>
-          <p>Quick and safe shipping to your door.</p>
-        </div>
-      </div>
-
-
-      <div class="col-md-3 mb-4">
-        <div class="feature-box p-3 border rounded bg-white h-100 shadow-sm">
-          <img src="assets/images/customers.png" alt="Trusted Customers" class="mb-3" style="width: 48px;" />
-          <h5>Trusted by 10K+ Customers</h5>
-          <p>We care about your trust and safety.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>

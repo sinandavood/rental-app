@@ -1,1 +1,113 @@
-<p>payment-status-page works!</p>
+<!-- 
+  Ultra Modern Payment Status Page using Tailwind CSS
+  Features dynamic backgrounds and a confetti effect for success.
+-->
+
+<!-- 
+  Note for the developer:
+  To enable the confetti effect, you need to install the canvas-confetti library:
+  npm install canvas-confetti
+  
+  Then, in your payment-status.component.ts, you'll need to import it and call it
+  when the payment is successful. See the component logic example at the bottom.
+-->
+
+<!-- Main container with dynamic background color and transition -->
+<div 
+  class="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8 transition-colors duration-500"
+  [ngClass]="{
+    'bg-green-50': status === 'success',
+    'bg-red-50': status === 'failed',
+    'bg-gray-100': status === 'pending' || !status
+  }">
+
+  <!-- Confetti Canvas (only used for success) -->
+  <canvas id="confetti-canvas" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+
+  <!-- Loading State: Skeleton UI -->
+  <ng-template #loading>
+    <div class="w-full max-w-md mx-auto animate-pulse">
+      <div class="bg-white/50 backdrop-blur-sm rounded-2xl shadow-lg p-8 space-y-6">
+        <div class="h-16 w-16 mx-auto bg-gray-200 rounded-full"></div>
+        <div class="h-6 bg-gray-300 rounded-md w-3/4 mx-auto"></div>
+        <div class="h-4 bg-gray-200 rounded-md w-full mx-auto"></div>
+        <div class="h-4 bg-gray-200 rounded-md w-5/6 mx-auto"></div>
+        <div class="h-10 bg-gray-300 rounded-lg w-1/3 mx-auto mt-4"></div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Main Content Wrapper -->
+  <div *ngIf="status; else loading" class="w-full max-w-md mx-auto">
+    
+    <!-- Status Card -->
+    <div class="status-card text-center bg-white/60 backdrop-blur-xl rounded-2xl shadow-xl p-8 animate__animated animate__fadeInUp">
+      
+      <!-- Success State -->
+      <ng-container *ngIf="status === 'success'">
+        <div class="text-6xl mb-4">🎉</div>
+        <h2 class="text-3xl font-bold text-gray-800">Payment Successful!</h2>
+        <p class="text-gray-600 mt-2">Thank you! Your booking is confirmed and you're all set to go.</p>
+        <button class="mt-6 w-full bg-green-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-green-600 transition shadow-lg hover:shadow-green-300">
+          Go to My Bookings
+        </button>
+      </ng-container>
+
+      <!-- Failed State -->
+      <ng-container *ngIf="status === 'failed'">
+        <div class="text-6xl mb-4">🚫</div>
+        <h2 class="text-3xl font-bold text-gray-800">Payment Failed</h2>
+        <p class="text-gray-600 mt-2">Unfortunately, your payment could not be completed. Please try again.</p>
+        <button (click)="retryPayment()" class="mt-6 w-full bg-red-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-red-600 transition shadow-lg hover:shadow-red-300">
+          Try Again
+        </button>
+      </ng-container>
+
+      <!-- Pending State -->
+      <ng-container *ngIf="status === 'pending'">
+        <div class="text-6xl mb-4 animate-pulse">⏳</div>
+        <h2 class="text-3xl font-bold text-gray-800">Payment Pending</h2>
+        <p class="text-gray-600 mt-2">Your payment is being processed. We'll notify you once it's confirmed.</p>
+      </ng-container>
+    </div>
+
+    <!-- Details Section -->
+    <div class="details-section mt-6 space-y-6 animate__animated animate__fadeInUp animate__delay-1s">
+      
+      <!-- Booking Details Card -->
+      <div class="bg-white/60 backdrop-blur-xl rounded-2xl shadow-xl p-6" *ngIf="booking">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Booking Details</h3>
+        <ul class="space-y-3 text-sm">
+          <li class="flex justify-between">
+            <span class="text-gray-500">Item:</span> 
+            <span class="font-medium text-gray-900">{{ booking.itemName }}</span>
+          </li>
+          <li class="flex justify-between">
+            <span class="text-gray-500">Dates:</span> 
+            <span class="font-medium text-gray-900">{{ booking.startDate | date }} to {{ booking.endDate | date }}</span>
+          </li>
+          <li class="flex justify-between">
+            <span class="text-gray-500">Total Price:</span> 
+            <span class="font-bold text-blue-600">{{ booking.totalPrice | currency:'INR' }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Payment Info Card -->
+      <div class="bg-white/60 backdrop-blur-xl rounded-2xl shadow-xl p-6" *ngIf="orderId">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Payment Info</h3>
+        <ul class="space-y-3 text-sm">
+          <li class="flex justify-between">
+            <span class="text-gray-500">Order ID:</span> 
+            <span class="font-mono text-gray-700">{{ orderId }}</span>
+          </li>
+          <li class="flex justify-between">
+            <span class="text-gray-500">Payment Time:</span> 
+            <span class="font-medium text-gray-900">{{ paymentTime | date:'short' }}</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,70 +1,94 @@
-<div class="container my-5">
-
-  <!-- Spinner while loading -->
-  <div *ngIf="loading" class="d-flex justify-content-center align-items-center min-vh-50">
-    <div class="spinner-border text-danger" style="width: 4rem; height: 4rem;" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
-
-  <!-- Profile content once loaded -->
-  <div *ngIf="!loading" class="card shadow-lg rounded-4 p-4 min-vh-50">
-    <div class="row align-items-center g-4">
-
-      <!-- Profile Picture -->
-      <div class="col-md-auto text-center">
-        <img [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
-             alt="Profile"
-             class="rounded-circle border border-3 border-secondary shadow"
-             style="width: 160px; height: 160px; object-fit: cover;" />
-      </div>
-
-      <!-- User Info -->
-      <div class="col">
-        <!-- Name -->
-        <h2 class="h3 fw-bold d-flex align-items-center gap-2 text-dark mb-3">
-          <i class="bi bi-person-circle text-danger fs-4"></i> {{ user?.fullName }}
-        </h2>
-
-        <!-- Email -->
-        <p class="lead d-flex align-items-center gap-2 text-muted mb-3">
-          <i class="bi bi-envelope-fill text-primary fs-5"></i> {{ user?.email }}
-        </p>
-
-        <!-- Phone -->
-        <p class="lead d-flex align-items-center gap-2 text-muted mb-3">
-          <i class="bi bi-phone text-primary fs-5"></i> {{ isPhoneNumberempty() }}
-        </p>
-
-        <!-- KYC -->
-        <div class="d-flex align-items-center gap-2 mb-3">
-          <i class="bi bi-shield-check fs-5"
-             [ngClass]="user?.isKycVerified ? 'text-success' : 'text-danger'"></i>
-          <span class="badge rounded-pill px-3 py-2"
-             [ngClass]="user?.isKycVerified ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
-            {{ user?.isKycVerified ? 'KYC Verified' : 'KYC Not Verified' }}
-          </span>
-        </div>
-
-        <!-- Member Since -->
-        <div class="text-secondary fst-italic d-flex align-items-center gap-2 mb-4">
-          <i class="bi bi-calendar-check text-purple fs-5"></i> Member since {{ memberSince }}
-        </div>
-
-        <!-- Actions -->
-        <div class="d-flex flex-wrap gap-3">
-          <a routerLink="/edit-profile" class="btn btn-danger d-flex align-items-center gap-2 shadow-sm">
-            <i class="bi bi-pencil-square"></i> Edit Profile
-          </a>
-
-          <a *ngIf="!user?.isKycVerified" routerLink="/kyc"
-             class="btn btn-warning d-flex align-items-center gap-2 shadow-sm">
-            <i class="bi bi-shield-exclamation"></i> Complete KYC
-          </a>
+<!-- 
+  Modern User Profile Component using Tailwind CSS
+  This template provides a clean, responsive, and visually appealing way to display user profile information.
+-->
+<div class="bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Loading State with Skeleton Animation -->
+    <ng-container *ngIf="loading">
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6 sm:p-8 animate-pulse">
+        <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+          <!-- Skeleton Profile Picture -->
+          <div class="w-40 h-40 bg-gray-200 rounded-full flex-shrink-0"></div>
+          
+          <!-- Skeleton User Info -->
+          <div class="w-full space-y-4">
+            <div class="h-6 bg-gray-300 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="flex items-center gap-3 pt-2">
+              <div class="h-8 w-28 bg-gray-200 rounded-full"></div>
+            </div>
+            <div class="h-4 bg-gray-200 rounded w-1/3 mt-2"></div>
+            <div class="flex flex-wrap gap-3 pt-3">
+              <div class="h-10 w-32 bg-gray-200 rounded-md"></div>
+              <div class="h-10 w-36 bg-gray-200 rounded-md"></div>
+            </div>
+          </div>
         </div>
       </div>
+    </ng-container>
 
-    </div>
+    <!-- Profile content once loaded -->
+    <ng-container *ngIf="!loading">
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+
+          <!-- Profile Picture -->
+          <div class="flex-shrink-0">
+            <img [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
+                 alt="Profile Picture"
+                 class="w-40 h-40 rounded-full object-cover ring-4 ring-white shadow-md"/>
+          </div>
+
+          <!-- User Info -->
+          <div class="w-full">
+            <!-- Name -->
+            <h2 class="text-2xl font-bold text-gray-900">{{ user?.fullName }}</h2>
+            
+            <!-- Member Since -->
+            <p class="text-sm text-gray-500 mt-1">Member since {{ memberSince }}</p>
+
+            <div class="mt-4 space-y-3">
+              <!-- Email -->
+              <div class="flex items-center gap-3 text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                </svg>
+                <span>{{ user?.email }}</span>
+              </div>
+
+              <!-- Phone -->
+              <div class="flex items-center gap-3 text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+                <span>{{ isPhoneNumberempty() }}</span>
+              </div>
+            </div>
+
+            <!-- KYC Status -->
+            <div class="mt-4 flex items-center gap-2">
+              <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium" 
+                    [ngClass]="user?.isKycVerified ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                {{ user?.isKycVerified ? 'KYC Verified' : 'KYC Not Verified' }}
+              </span>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a routerLink="/edit-profile" class="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                Edit Profile
+              </a>
+              <a *ngIf="!user?.isKycVerified" routerLink="/kyc" class="inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-500">
+                Complete KYC
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </div>
-
 </div>

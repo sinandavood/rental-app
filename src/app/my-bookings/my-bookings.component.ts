@@ -103,7 +103,9 @@ export class MyBookingsComponent implements OnInit {
       userId: booking.renterId,
       email: booking.renterEmail,
       phone: booking.renterPhoneNumber,
-      bookingId: booking.id
+      bookingId: booking.id,
+      itemName: booking.itemName,
+      itemImage: booking.itemImage
     };
 
     this.paymentService.startPayment(order);

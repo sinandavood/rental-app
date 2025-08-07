@@ -2,19 +2,15 @@
   <!-- Navigation -->
   <div class="mb-8">
     <div class="flex space-x-4 border-b border-gray-200">
-      <button 
-        (click)="activeTab = 'bookingRequests'" 
-        class="px-4 py-2 text-lg font-medium transition-colors duration-200"
-        [ngClass]="{
+      <button (click)="activeTab = 'bookingRequests'"
+        class="px-4 py-2 text-lg font-medium transition-colors duration-200" [ngClass]="{
           'text-indigo-600 border-b-2 border-indigo-600': activeTab === 'bookingRequests',
           'text-gray-500 hover:text-gray-700': activeTab !== 'bookingRequests'
         }">
         Booking Requests
       </button>
-      <button 
-        (click)="activeTab = 'myBookingRequests'" 
-        class="px-4 py-2 text-lg font-medium transition-colors duration-200"
-        [ngClass]="{
+      <button (click)="activeTab = 'myBookingRequests'"
+        class="px-4 py-2 text-lg font-medium transition-colors duration-200" [ngClass]="{
           'text-indigo-600 border-b-2 border-indigo-600': activeTab === 'myBookingRequests',
           'text-gray-500 hover:text-gray-700': activeTab !== 'myBookingRequests'
         }">
@@ -26,8 +22,11 @@
   <!-- Section 1: Booking Requests -->
   <div *ngIf="activeTab === 'bookingRequests'">
     <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-      <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+      <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+        </path>
       </svg>
       Booking Requests
     </h2>
@@ -40,12 +39,12 @@
 
     <!-- Bookings List -->
     <div class="space-y-4">
-      <div *ngFor="let booking of bookings" class="bg-white shadow-lg rounded-xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300 flex flex-col md:flex-row gap-6 items-start md:items-center">
+      <div *ngFor="let booking of bookings"
+        class="bg-white shadow-lg rounded-xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300 flex flex-col md:flex-row gap-6 items-start md:items-center">
         <!-- Item Image -->
         <div class="w-full md:w-32 flex-shrink-0">
-          <img [src]="'https://p2prental.runasp.net' + booking.itemImage" 
-               [alt]="booking.itemName" 
-               class="w-full h-24 object-contain rounded-lg bg-gray-100 p-2">
+          <img [src]="'https://p2prental.runasp.net' + booking.itemImage" [alt]="booking.itemName"
+            class="w-full h-24 object-contain rounded-lg bg-gray-100 p-2">
         </div>
 
         <!-- Booking Details -->
@@ -59,8 +58,7 @@
             <div class="flex items-center gap-2">
               <img
                 [src]="booking.renterProfileImage ? 'https://p2prental.runasp.net' + booking.renterProfileImage : 'assets/constant/empty-user-profilepic.webp'"
-                alt="Renter Profile" 
-                class="w-8 h-8 rounded-full object-cover border border-gray-300 shadow-sm">
+                alt="Renter Profile" class="w-8 h-8 rounded-full object-cover border border-gray-300 shadow-sm">
               <span class="text-gray-900">{{ booking.renterName || 'N/A' }}</span>
             </div>
           </div>
@@ -74,9 +72,11 @@
           </div>
           <div class="flex items-center gap-2">
             <span class="font-semibold text-gray-700 min-w-[80px]">Status:</span>
-            <span class="text-indigo-600 font-medium px-2 py-1 bg-indigo-50 rounded-full">
-              {{ booking.status }}
-            </span>
+            <div>
+              <span class="text-indigo-600 font-medium px-2 py-1 bg-indigo-50 rounded-full">
+                {{ booking.status }}
+              </span>
+            </div>
           </div>
           <div class="flex items-center gap-2">
             <span class="font-semibold text-gray-700 min-w-[80px]">Is Paid:</span>
@@ -92,14 +92,12 @@
 
         <!-- Action Buttons -->
         <div class="flex flex-row md:flex-col gap-3 w-full md:w-36">
-          <button 
-            (click)="approve(booking.id)" 
+          <button (click)="approve(booking.id)"
             class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
             <i class="bi bi-check-lg"></i>
             Approve
           </button>
-          <button 
-            (click)="reject(booking.id)" 
+          <button (click)="reject(booking.id)"
             class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
             <i class="bi bi-x-lg"></i>
             Reject
@@ -112,8 +110,11 @@
   <!-- Section 2: My Booking Requests -->
   <div *ngIf="activeTab === 'myBookingRequests'">
     <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-      <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+      <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+        </path>
       </svg>
       My Booking Requests
     </h2>
@@ -126,12 +127,12 @@
 
     <!-- My Booking Requests List -->
     <div class="space-y-4">
-      <div *ngFor="let booking of myRequests" class="bg-white shadow-lg rounded-xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300 flex flex-col md:flex-row gap-6 items-start md:items-center">
+      <div *ngFor="let booking of myRequests"
+        class="bg-white shadow-lg rounded-xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300 flex flex-col md:flex-row gap-6 items-start md:items-center">
         <!-- Item Image -->
         <div class="w-full md:w-32 flex-shrink-0">
-          <img [src]="'https://p2prental.runasp.net' + booking.itemImage" 
-               [alt]="booking.itemName" 
-               class="w-full h-24 object-contain rounded-lg bg-gray-100 p-2">
+          <img [src]="'https://p2prental.runasp.net' + booking.itemImage" [alt]="booking.itemName"
+            class="w-full h-24 object-contain rounded-lg bg-gray-100 p-2">
         </div>
 
         <!-- Booking Details -->
@@ -145,8 +146,7 @@
             <div class="flex items-center gap-2">
               <img
                 [src]="booking.ownerProfileImage ? 'https://p2prental.runasp.net' + booking.ownerProfileImage : 'assets/constant/empty-user-profilepic.webp'"
-                alt="Owner Profile" 
-                class="w-8 h-8 rounded-full object-cover border border-gray-300 shadow-sm">
+                alt="Owner Profile" class="w-8 h-8 rounded-full object-cover border border-gray-300 shadow-sm">
               <span class="text-gray-900">{{ booking.ownerName || 'N/A' }}</span>
             </div>
           </div>
@@ -186,15 +186,14 @@
 
         <!-- Action Buttons -->
         <div class="flex flex-row md:flex-col gap-3 w-full md:w-36">
-          <button *ngIf="booking.status === 'Pending'" 
-                  (click)="cancel(booking.id)" 
-                  class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
+
+          <button *ngIf="booking.status === 'Pending'" (click)="cancel(booking.id)"
+            class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
             <i class="bi bi-x-lg"></i>
             Cancel
           </button>
-          <button *ngIf="booking.status === 'Approved' && !booking.isPaid" 
-                  (click)="payNow(booking)" 
-                  class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
+          <button *ngIf="booking.status === 'Approved' && !booking.isPaid" (click)="payNow(booking)"
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
             <i class="bi bi-wallet2"></i>
             Pay Now
           </button>

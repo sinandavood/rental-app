@@ -5,5 +5,7 @@
     email:string;
     phone:string;
     bookingId:number;
+    itemName:string;
+    itemImage:string;
 
 }
