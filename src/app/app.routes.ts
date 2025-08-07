@@ -4,6 +4,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 import { AddProductComponent } from './products/add-product/add-product.component';
 import { ProductListComponent } from './products/product-list/product-list.component';
+import { OwnerProductsComponent } from './products/owner-products/owner-products.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -15,11 +16,7 @@ export const routes: Routes = [
         path: 'products',
         loadChildren: () => import('./products/products.module').then(m => m.ProductsModule),
     },
-    {
-        path: 'products/:id',
-        loadComponent: () =>
-            import('./products/product-details/product-details.component').then(m => m.ProductDetailsComponent),
-    },
+    
     {
         path: 'user',
         loadChildren: () => import('./user/user.module').then(m => m.UserModule),
@@ -108,6 +105,16 @@ export const routes: Routes = [
     },
 
     {
+        path: 'owner/:id/products',
+        loadComponent: () => import('./products/owner-products/owner-products.component').then(m => m.OwnerProductsComponent)
+    },
+
+{
+  path: 'products/:id',
+  loadComponent: () =>
+    import('./products/product-details/product-details.component').then(m => m.ProductDetailsComponent),
+},
+{
         path:'checkout',
         loadComponent:()=>import('./checkout/checkout.component').then(m=>m.CheckoutComponent)
     },

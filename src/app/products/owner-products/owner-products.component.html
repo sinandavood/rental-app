@@ -1,0 +1,19 @@
+<div class="owner-products-container">
+  <h2>Owner's Products</h2>
+
+  <div *ngIf="loading">Loading products...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && products.length === 0">
+    No products listed by this owner.
+  </div>
+
+  <div class="product-list" *ngIf="!loading && products.length > 0">
+    <div *ngFor="let product of products" class="product-card">
+      <img [src]="product.image" alt="{{ product.name }}" />
+      <h3>{{ product.name }}</h3>
+      <p>Price: ₹{{ product.price }}</p>
+      <p>Category: {{ product.categoryName }}</p>
+    </div>
+  </div>
+</div>

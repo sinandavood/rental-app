@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule,Router } from '@angular/router';
 import { ProductService } from '../product.service';
 import { Product } from 'src/app/models/product.model';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { BookingService } from 'src/app/core/services/booking.service';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import Swal from  'sweetalert2';
+import { BookingService } from 'src/app/core/services/booking.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-product-details',
@@ -40,7 +42,7 @@ export class ProductDetailsComponent implements OnInit {
     private productService: ProductService,
     private authService: AuthService,
     private bookingService: BookingService,
-
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +51,8 @@ export class ProductDetailsComponent implements OnInit {
       if (id) {
         this.fetchProduct(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        console.log('Tracking view for item', id);
         this.productService.trackView(Number(id)).subscribe();
       }
     });
@@ -68,6 +72,31 @@ export class ProductDetailsComponent implements OnInit {
               this.profilepic = data.profileImage;
             },
             error: () => console.error('Failed to load owner profile image.')
+          });
+        }
+
+        // ✅ Fetch similar products
+        if (res.categoryId) {
+          this.productService.getSimilarProducts(res.id).subscribe({
+            next: (similar) => {
+              this.similarProducts = similar.slice(0, 4);
+            },
+            error: () => {
+              console.error('Failed to load similar products');
+            }
+          });
+        }
+
+        // ✅ Now check booking status after product is loaded
+        const userId = this.authService.getCurrentUserData()?.nameid;
+        if (userId && res.id) {
+          this.bookingService.checkExistingBooking(res.id, userId).subscribe({
+            next: (res) => {
+              this.hasRequested = res === true;
+            },
+            error: () => {
+              console.warn('Failed to check booking status');
+            }
           });
         }
 
@@ -114,15 +143,14 @@ export class ProductDetailsComponent implements OnInit {
     return !!(
       (this.startDate && date.toDateString() === this.startDate.toDateString()) ||
       (this.endDate && date.toDateString() === this.endDate.toDateString())
-    );
-  };
-  dateClass = (date: Date): string => {
-    if (this.isSelected(date)) return 'mat-calendar-body-selected';
-    if (this.isInRange(date)) return 'range-date';
-    return '';
-  };
-
-    requestBooking(): void {
+    );
+  }
+dateClass = (date: Date): string => {
+  if (this.isSelected(date)) return 'mat-calendar-body-selected';
+  if (this.isInRange(date)) return 'range-date';
+  return '';
+};
+  requestBooking(): void {
     if (!this.product) return;
 
     const BookingData = {
@@ -154,4 +182,17 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
   }
+
+  goToOwnerProducts(ownerId: string | undefined): void {
+  if (ownerId) {
+    this.router.navigate(['/owner', ownerId, 'products']);
+  }
+}
+
+// Prevent button click from triggering card click
+chatWithOwner(event: MouseEvent): void {
+  event.stopPropagation();
+  // You can add chat logic here
+  console.log("Chat initiated with owner");
+}
 }
