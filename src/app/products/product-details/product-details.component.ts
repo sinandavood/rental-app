@@ -195,4 +195,7 @@ chatWithOwner(event: MouseEvent): void {
   // You can add chat logic here
   console.log("Chat initiated with owner");
 }
+
+clearDates()
+{}
 }
