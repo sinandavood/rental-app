@@ -164,7 +164,7 @@ export class MyBookingsComponent implements OnInit {
     // 1. Define rates and calculate costs
     const basePrice = booking.totalPrice;
     const platformFeeRate = 0.05; // 5%
-    const taxRate = 0.18;         // 18% GST (as a standard example for India)
+    const taxRate = 0.10;         // 18% GST (as a standard example for India)
 
     const platformFee = basePrice * platformFeeRate;
     const taxableAmount = basePrice + platformFee;
@@ -189,7 +189,7 @@ export class MyBookingsComponent implements OnInit {
           <strong class="text-gray-800">+ ${formatCurrency(platformFee)}</strong>
         </div>
         <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-          <span class="text-gray-600">Taxes (GST @ 18%):</span>
+          <span class="text-gray-600">Taxes (TDS @ 10%):</span>
           <strong class="text-gray-800">+ ${formatCurrency(taxes)}</strong>
         </div>
         <div class="flex justify-between items-center text-lg font-bold pt-2">

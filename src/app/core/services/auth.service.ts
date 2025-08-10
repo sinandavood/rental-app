@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { environment } from 'src/app/env/environment-development';
 import { jwtDecode } from 'jwt-decode';
 import { User } from 'src/app/models/user.model';
-import { NotificationService } from './notification.service';
 
 export interface JwtPayload {
   nameid: string;
@@ -29,7 +28,6 @@ export class AuthService {
   constructor(
     private http: HttpClient, 
     private router: Router, 
-    private notificationService: NotificationService
   ) {
     this.initializeUserData();
   }
@@ -135,7 +133,7 @@ export class AuthService {
     console.log('🔄 Initializing notifications for user:', userId);
     
     // Start SignalR connection
-    this.notificationService.startConnection(userId);
+    // this.notificationService.startConnection(userId);
     
     // Load past notifications
     const token = this.getToken();
@@ -151,7 +149,7 @@ export class AuthService {
         })
         .then(data => {
           console.log('📊 Loading notifications:', data);
-          this.notificationService.addInitialNotifications(data);
+          // this.notificationService.addInitialNotifications(data);
         })
         .catch(err => {
           console.error('❌ Error loading notifications:', err);
@@ -228,8 +226,7 @@ export class AuthService {
 
   logout(): void {
     // ✅ Clean up notifications on logout
-    this.notificationService.stopConnection();
-    this.notificationService.resetUnreadCount();
+    // this.notificationService.resetUnreadCount();
     
     this.clearUserData();
     this.router.navigate(['/auth/login']);

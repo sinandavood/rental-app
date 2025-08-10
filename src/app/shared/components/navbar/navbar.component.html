@@ -1,130 +1,100 @@
-<nav class="bg-white shadow-sm border-b">
-  <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+<nav class="bg-white border-b border-slate-200 sticky top-0 z-30">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
 
-    <!-- Logo -->
-    <a class="text-xl font-bold text-red-600 text-decoration-none" routerLink="/">Rental App</a>
-
-    <!-- Mobile Toggler (optional for future) -->
-    <button class="lg:hidden text-gray-600 focus:outline-none" data-bs-toggle="collapse"
-      data-bs-target="#navbarContent">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-
-    <!-- 🔍 Search Bar (visible only on large screens) -->
-    <!-- Centered Search Bar Aligned with Flex -->
-    <div class="hidden lg:flex items-center flex-grow justify-center">
-      <div class="w-full max-w-xl">
-        <app-search-bar (search)="onSearch($event)" *ngIf="showSearchBar"></app-search-bar>
+    <div class="flex items-center justify-start flex-shrink-0">
+      <a class="text-2xl font-bold text-slate-900 tracking-tight no-underline" routerLink="/">
+        <span class="text-red-600">Rental</span>App
+      </a>
+      <div *ngIf="showSearchBar" class="lg:hidden ml-2">
+        <button (click)="openMobileSearch()" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100">
+          <i class="bi bi-search text-slate-600"></i>
+        </button>
       </div>
     </div>
 
+    <div class="hidden lg:flex justify-center px-4">
+        <div *ngIf="showSearchBar" class="w-full max-w-2xl">
+            <app-search-bar></app-search-bar>
+        </div>
+    </div>
 
-    <!-- 🔐 Auth & Actions -->
-    <div class="flex items-center gap-3">
-
-      <!-- 🔔 Notifications -->
-     <div class="relative">
-  <a routerLink="/notifications" class="hover:text-red-600 transition text-black text-lg">
-    <i class="bi bi-bell text-2xl"></i>
-
-    <!-- 🔴 Notification Badge -->
-    <span *ngIf="unreadCount > 0"
-      class="absolute -top-1 -right-1 transform translate-x-1/2 -translate-y-1/2 
-             bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center 
-             rounded-full font-bold shadow ring-2 ring-white">
-      {{ unreadCount }}
-    </span>
-  </a>
-</div>
-
-
-      <!-- ❤️ Wishlist -->
-      <a routerLink="/my-wishlist" class="hover:text-red-600 transition text-black text-lg">
-        <i class="bi bi-heart text-2xl"></i>
-      </a>
-
-      <!-- ➕ List Item -->
-      <div>
-        <button class="btn btn-danger border-end border-4 shadow rounded-5" (click)="handleListItemClick()">
-          <i class="bi bi-plus-circle me-2"></i> List an item
+    <div class="flex items-center justify-end gap-3 flex-shrink-0">
+      <div class="hidden md:block">
+        <button class="flex items-center gap-2 bg-red-600 text-white font-semibold px-5 py-2.5 rounded-full hover:bg-red-700 transition-colors shadow-sm" (click)="handleListItemClick()">
+          <i class="bi bi-plus-circle"></i>
+          <span>List an item</span>
         </button>
       </div>
 
-      <!-- 👤 Auth Options -->
-      <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
-        <button class="text-sm px-4 py-2 rounded border border-gray-500 text-gray-700 hover:bg-gray-100 transition"
-          routerLink="/auth/login">
-          Login or Register
+      <a routerLink="/my-wishlist" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-colors no-underline" title="Wishlist">
+        <i class="bi bi-heart text-xl text-slate-600"></i>
+      </a>
+
+      <div class="relative notification-container">
+        <button (click)="toggleNotificationPopover($event)" class="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-colors no-underline" title="Notifications">
+          <i class="bi bi-bell text-xl text-slate-600"></i>
+          <span *ngIf="(notificationService.unreadCount$ | async)! > 0" class="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+          </span>
         </button>
-      </ng-container>
-
-      <!-- 👤 Logged In Dropdown -->
-      <ng-template #loggedInBlock>
-        <div class="relative group">
-          <div class="flex items-center gap-1 cursor-pointer">
-            <img
-              [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
-              alt="Profile" class="w-10 h-10 rounded-full object-cover border border-gray-300 shadow" />
-            <i class="bi bi-caret-down-fill text-gray-600 text-lg group-hover:text-red-500"></i>
-          </div>
-
-          <!-- Dropdown -->
-          <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg p-2 z-50 hidden group-hover:block">
-            <div class="text-lg font-semibold text-gray-800 px-4 py-2">
-              {{ userfullname }}
-            </div>
-            <hr class="my-1" />
-
-            <a routerLink="/my-items"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-card-list text-gray-600"></i> My Items
-            </a>
-
-            <a routerLink="/profile"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-person-circle text-gray-600"></i> My Profile
-            </a>
-             <a routerLink="/user-dashboard"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-speedometer2 text-gray-600"></i> Dashboard
-            </a>
-
-            <a routerLink="/my-bookings"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-calendar-check text-gray-600"></i> My Bookings
-            </a>
-
-            <a routerLink="/banks"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-bank2 text-gray-600"></i> Bank Accounts
-            </a>
-
-            <a routerLink="/wallet"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-wallet text-gray-600"></i> Wallet
-            </a>
-
-             <a routerLink="/payment-history"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-receipt text-gray-600"></i> Payment History
-            </a>
-
-            <a routerLink="/customer-support"
-              class="flex items-center gap-2 px-4 py-2 text-lg text-gray-700 hover:bg-gray-100 rounded no-underline">
-              <i class="bi bi-person-fill-check text-gray-600"></i> Customer Support
-            </a>
-
-            <hr class="my-1" />
-
-            <button (click)="logout()"
-              class="flex items-center gap-2 w-full text-left px-4 py-2 text-lg text-red-500 hover:bg-red-100 rounded no-underline">
-              <i class="bi bi-box-arrow-right text-red-500"></i> Logout
-            </button>
-          </div>
+        <div *ngIf="isNotificationPopoverOpen" class="animate-fade-in">
+          <app-notification-popover (close)="isNotificationPopoverOpen = false"></app-notification-popover>
         </div>
-      </ng-template>
+      </div>
+
+      <div class="ml-2">
+        <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
+          <button class="px-5 py-2.5 rounded-full bg-slate-100 text-slate-800 font-semibold text-sm hover:bg-slate-200 transition-colors" routerLink="/auth/login">
+            Login
+          </button>
+        </ng-container>
+        <ng-template #loggedInBlock>
+          <div class="relative group">
+            <button class="flex items-center justify-center w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+              <img [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
+                   alt="Profile" class="w-full h-full rounded-full object-cover" />
+            </button>
+            <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-slate-200 p-2 z-50 hidden group-hover:block animate-fade-in">
+              <div class="px-3 py-2">
+                <p class="text-sm font-semibold text-slate-900 truncate">{{ userfullname }}</p>
+                <p class="text-xs text-slate-500">Welcome back!</p>
+              </div>
+              <hr class="border-slate-200 my-1" />
+              <div class="space-y-1">
+                <a routerLink="/user-dashboard" class="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-red-600 rounded-lg no-underline transition-colors">
+                  <i class="bi bi-speedometer2 w-5 text-center"></i> Dashboard
+                </a>
+                <a routerLink="/profile" class="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-red-600 rounded-lg no-underline transition-colors">
+                  <i class="bi bi-person-circle w-5 text-center"></i> My Profile
+                </a>
+                <a routerLink="/my-bookings" class="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-red-600 rounded-lg no-underline transition-colors">
+                  <i class="bi bi-calendar-check w-5 text-center"></i> My Bookings
+                </a>
+                <a routerLink="/my-items" class="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-red-600 rounded-lg no-underline transition-colors">
+                  <i class="bi bi-card-list w-5 text-center"></i> My Items
+                </a>
+                <a routerLink="/wallet" class="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-red-600 rounded-lg no-underline transition-colors">
+                  <i class="bi bi-currency-dollar w-5 text-center"></i> My Wallet
+                </a>
+                <a routerLink="/payment-history" class="flex items-center gap-3 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-red-600 rounded-lg no-underline transition-colors">
+                  <i class="bi bi-receipt w-5 text-center"></i> Payment History
+                </a>
+              </div>
+              <hr class="border-slate-200 my-1" />
+              <button (click)="logout()" class="flex items-center gap-3 w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg no-underline transition-colors">
+                <i class="bi bi-box-arrow-right w-5 text-center"></i> Logout
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
 </nav>
+
+<app-search-bar
+  *ngIf="isMobileSearchVisible"
+  [isMobileSearchActive]="true"
+  (closeMobileSearch)="closeMobileSearch()">
+</app-search-bar>

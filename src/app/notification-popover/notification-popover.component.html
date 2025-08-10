@@ -1,0 +1,43 @@
+<div class="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 animate-fade-in-down">
+  <div class="flex justify-between items-center px-4 py-3 border-b border-gray-200">
+    <h4 class="text-lg font-semibold text-gray-800">Notifications</h4>
+    <button (click)="notificationService.markAllAsRead()"
+            *ngIf="(notificationService.unreadCount$ | async)! > 0"
+            class="text-xs font-medium text-blue-600 hover:underline focus:outline-none">
+      Mark all as read
+    </button>
+  </div>
+
+  <div class="max-h-[60vh] overflow-y-auto">
+    <div *ngIf="isLoading" class="p-6 text-center text-sm text-gray-500">Loading...</div>
+
+    <div *ngIf="!isLoading && notifications.length === 0" class="p-8 text-center">
+      <i class="bi bi-bell-slash text-4xl text-gray-300"></i>
+      <p class="mt-2 text-sm text-gray-500">You're all caught up!</p>
+    </div>
+
+    <div *ngIf="!isLoading && notifications.length > 0">
+      <div *ngFor="let n of notifications; trackBy: trackById">
+        <a [routerLink]="n.link || null" class="block p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors no-underline"
+           [class.bg-blue-50]="!n.isRead">
+          <div class="flex items-start gap-3">
+            <div class="mt-1.5 w-2.5 h-2.5 rounded-full flex-shrink-0"
+                 [ngClass]="n.isRead ? 'bg-gray-300' : 'bg-blue-500'">
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-gray-800 leading-tight" [innerHTML]="n.title"></p>
+              <p class="text-xs text-gray-600 mt-1" [innerHTML]="n.message"></p>
+              <div class="text-xs text-gray-400 mt-1.5">{{ n.createdAt | date:'short' }}</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 px-4 py-2 text-center rounded-b-xl border-t">
+    <a routerLink="/notifications" class="text-sm font-medium text-blue-600 hover:text-blue-800 no-underline">
+      View All Notifications
+    </a>
+  </div>
+</div>

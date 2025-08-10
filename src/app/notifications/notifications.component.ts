@@ -27,7 +27,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         .then(res => res.json())
         .then(data => {
           console.log('RAW notification objects:', data);
-          this.notificationService.addInitialNotifications(data);
+          this.notificationService.loadInitialNotifications(data);
         });
 
       // 🔁 Subscribe to live updates
