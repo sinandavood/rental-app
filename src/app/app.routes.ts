@@ -126,5 +126,9 @@ export const routes: Routes = [
     {
         path:'payment-history',
         loadComponent:()=>import('./payment-history/payment-history.component').then(m=>m.PaymentHistoryComponent)
+    },
+    {
+        path:'user-dashboard',
+        loadComponent:()=>import('./user/user-dashboard/user-dashboard.component').then(m=>m.UserDashboardComponent)
     }
 ];

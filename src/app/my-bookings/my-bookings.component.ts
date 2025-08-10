@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; // Import RouterModule for routerLink
 import { Booking } from '../models/booking.model';
 import { BookingService } from '../core/services/booking.service';
 import { AuthService } from '../core/services/auth.service';
 import { PaymentService } from '../payment.service';
 import { OrderDto } from '../models/OrderDto';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-my-bookings',
   standalone: true,
-  imports: [CommonModule],
+  // Make sure RouterModule is imported if you use routerLink in the template
+  imports: [CommonModule, RouterModule], 
   templateUrl: './my-bookings.component.html',
   styleUrls: ['./my-bookings.component.css']
 })
@@ -44,33 +46,33 @@ export class MyBookingsComponent implements OnInit {
   }
 
   loadBookings(): void {
-    this.isLoadingBookings = true; // Start loading
+    this.isLoadingBookings = true;
     this.bookingService.getPendingBookingsByOwner(this.ownerId).subscribe({
       next: (data) => {
         this.bookings = data.sort((a, b) => 
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-        this.isLoadingBookings = false; // Stop loading on success
+        this.isLoadingBookings = false;
       },
       error: (err) => {
         console.error('Failed to load bookings for owner:', err);
-        this.isLoadingBookings = false; // Stop loading on error
+        this.isLoadingBookings = false;
       }
     });
   }
 
   loadMyRequests(): void {
-    this.isLoadingMyRequests = true; // Start loading
+    this.isLoadingMyRequests = true;
     this.bookingService.getMyRequests().subscribe({
       next: (res) => {
         this.myRequests = res.sort((a, b) => 
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-        this.isLoadingMyRequests = false; // Stop loading on success
+        this.isLoadingMyRequests = false;
       },
       error: (err) => {
         console.error('Error loading my booking requests', err);
-        this.isLoadingMyRequests = false; // Stop loading on error
+        this.isLoadingMyRequests = false;
       }
     });
   }
@@ -90,6 +92,7 @@ export class MyBookingsComponent implements OnInit {
           next: () => {
             Swal.fire('Approved!', 'The booking has been approved.', 'success');
             this.loadBookings();
+            this.loadMyRequests(); // Also refresh my requests in case status changes are shown there
           },
           error: (err) => {
             Swal.fire('Error', 'Failed to approve the booking.', 'error');
@@ -128,11 +131,11 @@ export class MyBookingsComponent implements OnInit {
   cancel(id: number): void {
     Swal.fire({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: "You want to cancel this booking request.",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
       confirmButtonText: 'Yes, cancel it!'
     }).then((result) => {
       if (result.isConfirmed) {
@@ -150,26 +153,78 @@ export class MyBookingsComponent implements OnInit {
     });
   }
 
-   payNow(booking: Booking): void {
-    // --- ✅ FINAL FIX: Make the check less strict ---
-    // We only absolutely need the renter's ID and Email to process a payment.
-    // The phone number can be optional.
+  // --- MODIFIED METHOD ---
+  payNow(booking: Booking): void {
     if (!booking.renterId || !booking.renterEmail) {
       console.error('CRITICAL: Missing renter ID or Email. Cannot proceed with payment.');
       Swal.fire('Error', 'Could not initiate payment due to missing user details.', 'error');
       return;
     }
 
-    const order: OrderDto = {
-      amount: booking.totalPrice,
-      userId: booking.renterId,
-      email: booking.renterEmail,
-      phone: booking.renterPhoneNumber, 
-      bookingId: booking.id,
-      itemName: booking.itemName,
-      itemImage: booking.itemImage
-    };
+    // 1. Define rates and calculate costs
+    const basePrice = booking.totalPrice;
+    const platformFeeRate = 0.05; // 5%
+    const taxRate = 0.18;         // 18% GST (as a standard example for India)
 
-    this.paymentService.startPayment(order);
+    const platformFee = basePrice * platformFeeRate;
+    const taxableAmount = basePrice + platformFee;
+    const taxes = taxableAmount * taxRate;
+    const finalAmount = basePrice + platformFee + taxes;
+
+    // Helper to format currency for display
+    const formatCurrency = (value: number) => new Intl.NumberFormat('en-IN', { 
+      style: 'currency', 
+      currency: 'INR' 
+    }).format(value);
+
+    // 2. Create the HTML content for the modal
+    const confirmationHtml = `
+      <div class="text-left p-2 sm:p-4 space-y-3">
+        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+          <span class="text-gray-600">Base Price:</span>
+          <strong class="text-gray-800">${formatCurrency(basePrice)}</strong>
+        </div>
+        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+          <span class="text-gray-600">Platform Fee (5%):</span>
+          <strong class="text-gray-800">+ ${formatCurrency(platformFee)}</strong>
+        </div>
+        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+          <span class="text-gray-600">Taxes (GST @ 18%):</span>
+          <strong class="text-gray-800">+ ${formatCurrency(taxes)}</strong>
+        </div>
+        <div class="flex justify-between items-center text-lg font-bold pt-2">
+          <span>Total Payable:</span>
+          <span class="text-blue-600">${formatCurrency(finalAmount)}</span>
+        </div>
+      </div>
+    `;
+
+    // 3. Show the SweetAlert2 confirmation modal
+    Swal.fire({
+      title: 'Payment Summary',
+      html: confirmationHtml,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: `Confirm & Pay`,
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#16a34a', // A nice green color
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      // 4. If confirmed, proceed to payment
+      if (result.isConfirmed) {
+        const order: OrderDto = {
+          // IMPORTANT: Use the final calculated amount for the payment
+          amount: Math.round(finalAmount), // Send a rounded integer amount to payment gateway
+          userId: booking.renterId,
+          email: booking.renterEmail,
+          phone: booking.renterPhoneNumber,
+          bookingId: booking.id,
+          itemName: booking.itemName,
+          itemImage: booking.itemImage
+        };
+
+        this.paymentService.startPayment(order);
+      }
+    });
   }
 }

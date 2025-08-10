@@ -16,4 +16,9 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/User/update-profile`,profileData);
 
   }
+
+  getUserDashboardData(userId:string)
+  {
+    return this.http.get(`${this.apiUrl}/User/dashboard/${userId}`);
+  }
 }
