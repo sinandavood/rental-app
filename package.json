@@ -40,6 +40,7 @@
     "ng2-charts": "^4.1.1",
     "ngx-daterangepicker-material": "^6.0.4",
     "ngx-echarts": "^16.2.0",
+    "ngx-pagination": "^6.0.3",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.22.2",
     "tslib": "^2.3.0",

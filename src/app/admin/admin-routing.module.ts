@@ -17,7 +17,10 @@ const routes: Routes = [
       { path: 'categories', loadComponent: () => import('./categories/categories.component').then(m => m.CategoriesComponent) },
       { path: 'kyc-requests', loadComponent: () => import('./kyc-requests/kyc-requests.component').then(m => m.KycRequestsComponent) },
       { path: 'pending-items', component:PendingItemsComponent },
-      { path: 'broadcast-message', loadComponent: () => import('./broadcast-message/broadcast-message.component').then(m => m.BroadcastComponent) }
+      { path: 'broadcast-message', loadComponent: () => import('./broadcast-message/broadcast-message.component').then(m => m.BroadcastComponent) },
+      {path:'all-bookings',loadComponent:()=>import('./all-bookings/all-bookings.component').then(m=>m.AllBookingsComponent)},
+      {path:'all-payments',loadComponent:()=>import('./all-payments/all-payments.component').then(m=>m.AllPaymentsComponent)},
+
 
 
     ]

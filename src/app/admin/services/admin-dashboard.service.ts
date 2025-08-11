@@ -6,6 +6,9 @@ import { DashboardSummary } from 'src/app/models/Dashboard-summary.model';
 import { environment } from 'src/app/env/environment-development';
 import { User_admin } from '../Admin_models/Users_Admin.model';
 import { ListedItemAdmin } from '../Admin_models/ListedItemAdmin.model';
+import { PaymentsDTO } from '../Admin_models/PaymentsDTO';
+import { BookingsDTO } from '../Admin_models/BookingsDTO';
+
 
 // export interface DashboardSummary {
 //   totalUsers: number;
@@ -95,7 +98,13 @@ getAllItems(): Observable<ListedItemAdmin[]> {
   return this.http.get<ListedItemAdmin[]>(`${this.baseUrl}/admin/GetAllitems`);
 }
 
+getAllBookings(): Observable<BookingsDTO[]> {
+  return this.http.get<BookingsDTO[]>(`${this.baseUrl}/admin/AllBookings`);
+}
 
+getAllPayments(): Observable<PaymentsDTO[]> {
+  return this.http.get<PaymentsDTO[]>(`${this.baseUrl}/admin/allpayments`);
+}
 
 }
 
