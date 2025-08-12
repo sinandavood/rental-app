@@ -3,105 +3,145 @@
 
 <div [ngClass]="{
   'fixed inset-x-0 bottom-0 top-auto bg-white rounded-t-2xl shadow-2xl z-50 animate-slide-in-up': isMobileSearchActive,
-  'hidden lg:flex': !isMobileSearchActive
-}" class="w-full">
+  'hidden lg:block w-full': !isMobileSearchActive
+}">
 
-  <div *ngIf="isMobileSearchActive" class="p-4 flex flex-col h-full">
-      <div class="flex items-center justify-between w-full pb-4 border-b border-slate-200">
-        <h3 class="font-bold text-lg text-slate-800">Search & Filter</h3>
-        <button type="button" (click)="closeMobileSearch.emit()" class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100">
-          <i class="bi bi-x text-2xl"></i>
+  <div *ngIf="isMobileSearchActive" class="p-4 flex flex-col h-full max-h-[80vh]">
+    <div class="flex items-center justify-between w-full pb-4 border-b border-slate-200 flex-shrink-0">
+      <h3 class="font-bold text-lg text-slate-800">Search & Filter</h3>
+      <button type="button" (click)="closeMobileSearch.emit()" class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100">
+        <i class="bi bi-x text-2xl"></i>
+      </button>
+    </div>
+
+    <form (ngSubmit)="onSearch($event)" class="flex flex-col gap-4 pt-4 flex-grow overflow-y-auto">
+      <div class="relative w-full">
+        <i class="bi bi-search absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"></i>
+        <input type="text" [formControl]="searchControl"
+          class="form-input w-full rounded-full border-slate-300 bg-slate-100 pl-11 pr-4 py-3.5 focus:ring-red-500 focus:border-red-500 text-base"
+          placeholder="Search for items..." (focus)="showSuggestions = true" (blur)="hideSuggestionsWithDelay()" (keydown)="onKeyDown($event)" />
+        
+        <div *ngIf="showSuggestions" class="absolute bottom-full mb-2 w-full bg-white rounded-xl shadow-xl border border-slate-200 z-20 overflow-hidden animate-fade-in-fast">
+          <ul class="max-h-60 overflow-y-auto">
+            <li *ngFor="let suggestion of suggestions; let i = index" (click)="onSuggestionClick(suggestion)" [class.bg-slate-100]="selectedSuggestionIndex === i" class="flex items-center gap-3 px-5 py-3 text-slate-700 text-base cursor-pointer hover:bg-slate-100">
+              <i class="bi bi-search text-slate-400"></i><span>{{ suggestion }}</span>
+            </li>
+            <ng-container *ngIf="suggestions.length === 0 && recentSearches.length > 0">
+              <li class="px-5 pt-4 pb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Recent Searches</li>
+              <li *ngFor="let recent of recentSearches; let i = index" (click)="onSuggestionClick(recent)" [class.bg-slate-100]="selectedSuggestionIndex === i" class="flex items-center gap-3 px-5 py-3 text-slate-700 text-base cursor-pointer hover:bg-slate-100">
+                  <i class="bi bi-clock-history text-slate-400"></i><span>{{ recent }}</span>
+              </li>
+              <li class="text-center px-5 py-2 border-t border-slate-100">
+                <button type="button" class="text-red-500 hover:text-red-700 text-sm font-semibold p-2" (click)="clearRecentSearches()">Clear History</button>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <h4 class="font-semibold text-slate-600">Location</h4>
+        <select class="form-select w-full rounded-lg py-3" [(ngModel)]="selectedLocation" [ngModelOptions]="{standalone: true}">
+          <option value="All Locations">All Locations</option>
+          <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+        </select>
+        <h4 class="font-semibold text-slate-600 pt-2">Category</h4>
+        <select class="form-select w-full rounded-lg py-3" [(ngModel)]="selectedCategoryId" [ngModelOptions]="{standalone: true}">
+          <option [value]="0">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+        </select>
+      </div>
+      <div class="mt-auto pt-4 flex-shrink-0">
+        <button type="submit" class="w-full flex items-center justify-center h-14 rounded-full bg-red-600 text-white text-lg font-bold shadow-lg hover:bg-red-700 transition-all">
+          <i class="bi bi-search mr-2"></i>
+          Show Results
         </button>
       </div>
-
-      <form (ngSubmit)="onSearch($event)" class="flex flex-col gap-4 pt-4 flex-grow">
-        <div class="relative w-full">
-            <i class="bi bi-search absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" [formControl]="searchControl"
-              class="form-input w-full rounded-full border-slate-300 bg-slate-100 pl-11 pr-4 py-3.5 focus:ring-red-500 focus:border-red-500 text-lg"
-              placeholder="Search for items..." (focus)="showSuggestions = true" (blur)="hideSuggestionsWithDelay()" (keydown)="onKeyDown($event)" />
-            
-            <div *ngIf="showSuggestions" class="absolute bottom-full mb-2 w-full bg-white rounded-xl shadow-xl border border-slate-200 z-20 overflow-hidden animate-fade-in-fast">
-              <ul class="max-h-80 overflow-y-auto">
-                <li *ngFor="let suggestion of suggestions; let i = index" (click)="onSuggestionClick(suggestion)" [class.bg-slate-100]="selectedSuggestionIndex === i" class="flex items-center gap-3 px-5 py-3 text-slate-700 text-base cursor-pointer hover:bg-slate-100">
-                  <i class="bi bi-search text-slate-400"></i><span>{{ suggestion }}</span>
-                </li>
-                <ng-container *ngIf="suggestions.length === 0 && recentSearches.length > 0">
-                  <li class="px-5 pt-4 pb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Recent Searches</li>
-                  <li *ngFor="let recent of recentSearches; let i = index" (click)="onSuggestionClick(recent)" [class.bg-slate-100]="selectedSuggestionIndex === i" class="flex items-center gap-3 px-5 py-3 text-slate-700 text-base cursor-pointer hover:bg-slate-100">
-                      <i class="bi bi-clock-history text-slate-400"></i><span>{{ recent }}</span>
-                  </li>
-                  <li class="text-center px-5 py-2 border-t border-slate-100">
-                    <button type="button" class="text-red-500 hover:text-red-700 text-sm font-semibold p-2" (click)="clearRecentSearches()">Clear History</button>
-                  </li>
-                </ng-container>
-              </ul>
-            </div>
-        </div>
-
-        <div class="space-y-3">
-            <h4 class="font-semibold text-slate-600">Location</h4>
-            <select class="form-select w-full rounded-lg py-3" [(ngModel)]="selectedLocation" [ngModelOptions]="{standalone: true}">
-                <option value="All Locations">All Locations</option>
-                <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
-            </select>
-
-            <h4 class="font-semibold text-slate-600 pt-2">Category</h4>
-            <select class="form-select w-full rounded-lg py-3" [(ngModel)]="selectedCategoryId" [ngModelOptions]="{standalone: true}">
-                <option [value]="0">All Categories</option>
-                <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-            </select>
-        </div>
-
-        <div class="mt-auto pt-4">
-          <button type="submit" class="w-full flex items-center justify-center h-14 rounded-full bg-red-600 text-white text-lg font-bold shadow-lg hover:bg-red-700 transition-all">
-            <i class="bi bi-search mr-2"></i>
-            Show Results
-          </button>
-        </div>
-      </form>
+    </form>
   </div>
 
 
-  <form *ngIf="!isMobileSearchActive" (ngSubmit)="onSearch($event)" class="relative flex items-center w-full h-12 rounded-full border-2 border-gray-200 focus-within:border-red-500 bg-gray-100/75 transition-colors duration-200">
-    <div class="relative flex-grow h-full">
-      <i class="bi bi-search absolute top-1/2 left-5 -translate-y-1/2 text-gray-400"></i>
-      <input type="text" [formControl]="searchControl" class="h-full w-full pl-12 bg-transparent focus:outline-none text-slate-800" placeholder="Search for items..." (focus)="showSuggestions = true" (blur)="hideSuggestionsWithDelay()" (keydown)="onKeyDown($event)">
-    </div>
-    <div class="h-6 w-px bg-gray-300"></div>
-    <div class="relative">
-      <button type="button" (click)="toggleDropdown('location', $event)" class="flex items-center gap-2 px-4 h-full text-slate-700 hover:bg-gray-200/50">
-        <i class="bi bi-geo-alt text-red-500"></i>
-        <span class="font-medium whitespace-nowrap hidden md:inline">{{ selectedLocation }}</span>
-        <i class="bi bi-chevron-down text-xs text-slate-500"></i>
-      </button>
-      <div *ngIf="openDropdown === 'location'" class="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-slate-200 z-20 overflow-hidden animate-fade-in-fast">
-        <ul class="max-h-56 overflow-y-auto">
-          <li (click)="selectLocation('All Locations')" class="px-4 py-2.5 cursor-pointer hover:bg-slate-100 text-slate-700">All Locations</li>
-          <li *ngFor="let loc of locations" (click)="selectLocation(loc)" class="px-4 py-2.5 cursor-pointer hover:bg-slate-100 text-slate-700">{{ loc }}</li>
-        </ul>
+  <div *ngIf="!isMobileSearchActive" class="relative w-full">
+    <form (ngSubmit)="onSearch($event)"
+      class="flex items-center w-full h-14 rounded-full border-2 border-slate-200 bg-white focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20 shadow-sm transition-all duration-200">
+      
+      <div class="flex-grow h-full">
+        <i class="bi bi-search absolute top-1/2 left-5 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+        <input type="text" [formControl]="searchControl"
+          class="h-full w-full pl-12 pr-4 bg-transparent focus:outline-none text-slate-800"
+          placeholder="Search for items, brands, and more..." (focus)="showSuggestions = true"
+          (blur)="hideSuggestionsWithDelay()" (keydown)="onKeyDown($event)">
       </div>
-    </div>
-    <div class="h-6 w-px bg-gray-300"></div>
-    <div class="relative">
-      <button type="button" (click)="toggleDropdown('category', $event)" class="flex items-center gap-2 pl-4 pr-2 h-full text-slate-700 hover:bg-gray-200/50">
-        <i class="bi bi-tag text-red-500"></i>
-        <span class="font-medium whitespace-nowrap hidden md:inline">{{ getCategoryName(selectedCategoryId) }}</span>
-        <i class="bi bi-chevron-down text-xs text-slate-500"></i>
-      </button>
-       <div *ngIf="openDropdown === 'category'" class="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-slate-200 z-20 overflow-hidden animate-fade-in-fast">
-        <ul class="max-h-56 overflow-y-auto">
-          <li (click)="selectCategory(0)" class="px-4 py-2.5 cursor-pointer hover:bg-slate-100 text-slate-700">All Categories</li>
-          <li *ngFor="let cat of categories" (click)="selectCategory(cat.id)" class="px-4 py-2.5 cursor-pointer hover:bg-slate-100 text-slate-700">{{ cat.name }}</li>
-        </ul>
-      </div>
-    </div>
-    <button type="button" (click)="onClear()" [ngClass]="{ 'opacity-100 scale-100 pointer-events-auto': showClearButton, 'opacity-0 scale-75 pointer-events-none': !showClearButton }" class="flex items-center justify-center w-10 h-full text-slate-500 hover:bg-gray-200/50 transition-all duration-200 ease-in-out">
-      <i class="bi bi-x-lg"></i>
-    </button>
-    <button type="submit" class="w-16 h-full flex items-center justify-center rounded-r-full bg-red-600 hover:bg-red-700">
-      <i class="bi bi-search text-xl text-white"></i>
-    </button>
-  </form>
 
+      <div class="flex items-center h-full flex-shrink-0 dropdown-container">
+        <div class="h-8 w-px bg-slate-200"></div>
+        <div class="relative">
+          <button type="button" (click)="toggleDropdown('location', $event)" class="flex items-center gap-2 px-4 h-full text-slate-700 hover:bg-slate-100 transition-colors">
+            <i class="bi bi-geo-alt text-red-500"></i>
+            <span class="font-medium whitespace-nowrap hidden xl:inline">{{ selectedLocation }}</span>
+            <i class="bi bi-chevron-down text-xs text-slate-500"></i>
+          </button>
+          <div *ngIf="openDropdown === 'location'" class="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-slate-200 z-20 overflow-hidden animate-fade-in-fast">
+            <ul class="max-h-56 overflow-y-auto">
+              <li (click)="selectLocation('All Locations')" class="px-4 py-2.5 cursor-pointer hover:bg-slate-100 text-slate-700">All Locations</li>
+              <li *ngFor="let loc of locations" (click)="selectLocation(loc)" class="px-4 py-2.5 cursor-pointer hover:bg-slate-100 text-slate-700">{{ loc }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="h-8 w-px bg-slate-200"></div>
+        <div class="relative">
+          <button type="button" (click)="toggleDropdown('category', $event)" class="flex items-center gap-2 pl-4 pr-3 h-full text-slate-700 hover:bg-slate-100 transition-colors">
+            <i class="bi bi-tag text-red-500"></i>
+            <span class="font-medium whitespace-nowrap hidden xl:inline">{{ getCategoryName(selectedCategoryId) }}</span>
+            <i class="bi bi-chevron-down text-xs text-slate-500"></i>
+          </button>
+          <div *ngIf="openDropdown === 'category'" class="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-slate-200 z-20 overflow-hidden animate-fade-in-fast">
+            <ul class="max-h-56 overflow-y-auto">
+              <li (click)="selectCategory(0)" class="px-4 py-2.5 cursor-pointer hover:bg-slate-100 text-slate-700">All Categories</li>
+              <li *ngFor="let cat of categories" (click)="selectCategory(cat.id)" class="px-4 py-2.5 cursor-pointer hover:bg-slate-100 text-slate-700">{{ cat.name }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" *ngIf="showClearButton" (click)="onClear()" class="flex-shrink-0 flex items-center justify-center w-12 h-full text-slate-500 hover:text-red-500 hover:bg-red-50 transition-all">
+        <i class="bi bi-x text-lg"></i>
+      </button>
+      <button type="submit" class="flex-shrink-0 w-16 h-full flex items-center justify-center rounded-r-full bg-red-600 hover:bg-red-700 transition-colors">
+        <i class="bi bi-search text-xl text-white"></i>
+      </button>
+    </form>
+
+    <div *ngIf="showSuggestions && !isMobileSearchActive" 
+      class="absolute top-full mt-2 left-0 w-full z-50 animate-fade-in-fast">
+      <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+        <ul class="max-h-80 overflow-y-auto">
+          <li *ngIf="errorMessage" class="px-5 py-4 text-center text-sm text-red-600 bg-red-50">{{ errorMessage }}</li>
+          <li *ngIf="isSearching" class="px-5 py-4 text-center text-sm text-slate-500">
+            <div class="spinner-border spinner-border-sm text-slate-400" role="status"></div>
+            <span class="ml-2">Searching...</span>
+          </li>
+
+          <li *ngFor="let suggestion of suggestions; let i = index" (click)="onSuggestionClick(suggestion)" [class.bg-red-50]="selectedSuggestionIndex === i" class="flex items-center gap-3 px-5 py-3 text-slate-700 text-base cursor-pointer hover:bg-red-50 transition-colors">
+            <i class="bi bi-search text-slate-400"></i>
+            <span>{{ suggestion }}</span>
+          </li>
+
+          <ng-container *ngIf="suggestions.length === 0 && recentSearches.length > 0">
+            <li class="px-5 pt-4 pb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Recent Searches</li>
+            <li *ngFor="let recent of recentSearches; let i = index" (click)="onSuggestionClick(recent)" [class.bg-red-50]="selectedSuggestionIndex === (suggestions.length + i)" class="flex items-center gap-3 px-5 py-3 text-slate-700 text-base cursor-pointer hover:bg-red-50 transition-colors">
+              <i class="bi bi-clock-history text-slate-400"></i>
+              <span>{{ recent }}</span>
+            </li>
+            <li class="text-center px-5 py-2 border-t border-slate-100">
+              <button type="button" class="text-red-500 hover:text-red-700 text-sm font-semibold p-2" (click)="clearRecentSearches()">Clear History</button>
+            </li>
+          </ng-container>
+
+          <li *ngIf="!isSearching && suggestions.length === 0 && recentSearches.length === 0 && !errorMessage" class="px-5 py-4 text-center text-sm text-slate-500">
+              Keep typing to see suggestions...
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>

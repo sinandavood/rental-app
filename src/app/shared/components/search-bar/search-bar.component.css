@@ -1,6 +1,3 @@
-/* src/app/shared/components/search-bar/search-bar.component.css */
-/* This file can be mostly empty if you add animations to global styles, but this is fine too. */
-
 @keyframes fadeInFast {
   from { opacity: 0; }
   to { opacity: 1; }
