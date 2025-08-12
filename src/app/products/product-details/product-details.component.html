@@ -2,33 +2,42 @@
   Modern Product Details Page using Tailwind CSS
   This template provides a clean, responsive, and visually appealing layout for a single product.
 -->
+
+<style>
+  :host ::ng-deep .mat-calendar-body-label,
+  :host ::ng-deep .mat-calendar-table-header th {
+    color: #4b5563; /* gray-600 */
+    font-weight: 600;
+  }
+
+  :host ::ng-deep .mat-calendar-body-cell-content {
+    color: #1f2937; /* gray-800 */
+    font-weight: 500;
+  }
+
+  :host ::ng-deep .mat-calendar-body-disabled > .mat-calendar-body-cell-content {
+    color: #d1d5db !important; /* gray-300, make sure it's faded */
+  }
+
+  :host ::ng-deep .mat-calendar-body-selected {
+      background-color: #2563eb !important; /* blue-600 */
+      color: #fff !important;
+  }
+
+  :host ::ng-deep .range-date .mat-calendar-body-cell-content {
+    background-color: #dbeafe; /* blue-100 */
+    border-radius: 4px;
+  }
+</style>
+
+
 <div class="bg-gray-50 min-h-screen">
   
   <!-- Loading State: Skeleton Animation -->
   <div *ngIf="isLoading" class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 animate-pulse">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <!-- Left Column: Image Skeleton -->
-      <div class="lg:col-span-7">
-        <div class="h-96 bg-gray-200 rounded-xl"></div>
-        <div class="mt-4 grid grid-cols-5 gap-4">
-          <div class="h-20 bg-gray-200 rounded-lg"></div>
-          <div class="h-20 bg-gray-200 rounded-lg"></div>
-        </div>
-      </div>
-      <!-- Right Column: Details Skeleton -->
-      <div class="lg:col-span-5">
-        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6 space-y-6">
-          <div class="h-10 bg-gray-300 rounded w-1/2"></div>
-          <div class="h-6 bg-gray-300 rounded w-3/4"></div>
-          <div class="space-y-3">
-            <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-          </div>
-          <div class="h-10 bg-gray-200 rounded-full w-40"></div>
-          <div class="h-40 bg-gray-200 rounded-xl"></div>
-          <div class="h-12 bg-gray-300 rounded-lg w-full"></div>
-        </div>
-      </div>
+      <div class="lg:col-span-7"><div class="h-96 bg-gray-200 rounded-xl"></div><div class="mt-4 grid grid-cols-5 gap-4"><div class="h-20 bg-gray-200 rounded-lg"></div><div class="h-20 bg-gray-200 rounded-lg"></div></div></div>
+      <div class="lg:col-span-5"><div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6 space-y-6"><div class="h-10 bg-gray-300 rounded w-1/2"></div><div class="h-6 bg-gray-300 rounded w-3/4"></div><div class="space-y-3"><div class="h-4 bg-gray-200 rounded w-5/6"></div><div class="h-4 bg-gray-200 rounded w-1/2"></div></div><div class="h-10 bg-gray-200 rounded-full w-40"></div><div class="h-40 bg-gray-200 rounded-xl"></div><div class="h-12 bg-gray-300 rounded-lg w-full"></div></div></div>
     </div>
   </div>
 
@@ -44,12 +53,8 @@
             <span class="absolute top-4 left-4 inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800">FEATURED</span>
           </div>
           <div class="mt-4 grid grid-cols-5 gap-4">
-            <div class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden ring-2 ring-blue-500">
-              <img [src]="'https://p2prental.runasp.net' + product.image" alt="Thumbnail 1" class="w-full h-full object-cover">
-            </div>
-             <div class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden opacity-60 hover:opacity-100 cursor-pointer">
-              <img [src]="'https://p2prental.runasp.net' + product.image" alt="Thumbnail 2" class="w-full h-full object-cover">
-            </div>
+            <div class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden ring-2 ring-blue-500"><img [src]="'https://p2prental.runasp.net' + product.image" alt="Thumbnail 1" class="w-full h-full object-cover"></div>
+            <div class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden opacity-60 hover:opacity-100 cursor-pointer"><img [src]="'https://p2prental.runasp.net' + product.image" alt="Thumbnail 2" class="w-full h-full object-cover"></div>
           </div>
         </div>
 
@@ -105,21 +110,29 @@
                 </div>
               </div>
 
-              <!-- Angular Material Calendar -->
-              <mat-calendar (selectedChange)="selectDate($event)" [selected]="selectingStart ? startDate : endDate" [dateClass]="dateClass.bind(this)" class="mt-4 w-full"></mat-calendar>
+              <!-- ✅ FIX: Angular Material Calendar with [selected] binding removed -->
+              <mat-calendar 
+                (selectedChange)="selectDate($event)" 
+                [dateClass]="dateClass.bind(this)" 
+                [minDate]="minDate"
+                class="mt-4 w-full">
+              </mat-calendar>
 
-              <!-- Clear Button -->
-              <div *ngIf="startDate || endDate" class="mt-2">
-                <!-- Note: You'll need to add the clearDates() method to your component's .ts file. -->
+              <div *ngIf="startDate || endDate" class="mt-2 flex justify-between items-center">
                 <button (click)="clearDates()" class="text-sm font-semibold text-blue-600 hover:text-blue-500">Clear Selection</button>
               </div>
             </div>
 
+            <!-- Dynamic Total Price Display -->
+            <div *ngIf="totalPrice" class="p-4 bg-blue-50 border border-blue-200 rounded-lg text-center transition-all duration-300">
+              <p class="text-sm font-medium text-blue-700">Total Estimated Price</p>
+              <p class="text-2xl font-bold text-blue-600">{{ totalPrice | currency:'INR' }}</p>
+            </div>
 
             <!-- Action Button -->
             <div class="border-t border-gray-200 pt-6">
-              <button (click)="requestBooking()" [disabled]="!product.availability || hasRequested" class="w-full inline-flex justify-center items-center rounded-md bg-blue-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                {{ hasRequested ? 'Request Sent' : 'Request Rental' }}
+              <button (click)="requestBooking()" [disabled]="!product.availability || !endDate" class="w-full inline-flex justify-center items-center rounded-md bg-blue-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                Request Rental
               </button>
             </div>
           </div>
@@ -128,28 +141,8 @@
 
       <!-- Description & Similar Products -->
       <div class="mt-8 space-y-8">
-        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6">
-          <h2 class="text-xl font-semibold text-gray-900">Description</h2>
-          <p class="mt-4 text-gray-600 leading-relaxed">{{ product.description }}</p>
-        </div>
-
-        <div *ngIf="similarProducts.length > 0">
-          <h2 class="text-xl font-semibold text-gray-900">Similar Products</h2>
-          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Similar Product Card (Loop) -->
-            <div *ngFor="let sim of similarProducts | slice:0:4" class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl flex flex-col">
-              <img [src]="'https://p2prental.runasp.net' + sim.image" alt="{{ sim.name }}" class="rounded-t-xl w-full h-40 object-contain p-2">
-              <div class="p-4 flex-grow flex flex-col">
-                <h3 class="font-semibold text-gray-800 truncate">{{ sim.name }}</h3>
-                <p class="text-sm text-gray-500 flex-grow"><i class="bi bi-geo-alt mr-1.5"></i>{{ sim.location }}</p>
-                <div class="mt-3 flex justify-between items-center">
-                  <p class="font-bold text-blue-600">{{ sim.price | currency:'INR' }}/day</p>
-                  <a [routerLink]="['/products', sim.id]" class="rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">View</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6"><h2 class="text-xl font-semibold text-gray-900">Description</h2><p class="mt-4 text-gray-600 leading-relaxed">{{ product.description }}</p></div>
+        <div *ngIf="similarProducts.length > 0"><h2 class="text-xl font-semibold text-gray-900">Similar Products</h2><div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"><div *ngFor="let sim of similarProducts | slice:0:4" class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl flex flex-col"><img [src]="'https://p2prental.runasp.net' + sim.image" alt="{{ sim.name }}" class="rounded-t-xl w-full h-40 object-contain p-2"><div class="p-4 flex-grow flex flex-col"><h3 class="font-semibold text-gray-800 truncate">{{ sim.name }}</h3><p class="text-sm text-gray-500 flex-grow"><i class="bi bi-geo-alt mr-1.5"></i>{{ sim.location }}</p><div class="mt-3 flex justify-between items-center"><p class="font-bold text-blue-600">{{ sim.price | currency:'INR' }}/day</p><a [routerLink]="['/products', sim.id]" class="rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">View</a></div></div></div></div></div>
       </div>
     </div>
   </div>

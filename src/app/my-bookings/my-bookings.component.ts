@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; // Import RouterModule for routerLink
+import { RouterModule } from '@angular/router';
 import { Booking } from '../models/booking.model';
 import { BookingService } from '../core/services/booking.service';
 import { AuthService } from '../core/services/auth.service';
@@ -11,19 +11,22 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-my-bookings',
   standalone: true,
-  // Make sure RouterModule is imported if you use routerLink in the template
-  imports: [CommonModule, RouterModule], 
+  imports: [CommonModule, RouterModule],
   templateUrl: './my-bookings.component.html',
   styleUrls: ['./my-bookings.component.css']
 })
 export class MyBookingsComponent implements OnInit {
-  bookings: Booking[] = [];
+  // State for each category
+  bookingRequests: Booking[] = [];
   myRequests: Booking[] = [];
-  ownerId: string = '';
+  bookingHistory: Booking[] = [];
+  
   userId: string = '';
-  activeTab: 'bookingRequests' | 'myBookingRequests' = 'bookingRequests';
-  isLoadingMyRequests: boolean = true;
-  isLoadingBookings: boolean = true;
+  
+  activeTab: 'bookingRequests' | 'myBookingRequests' | 'bookingHistory' = 'bookingRequests';
+  
+  // ✅ REFACTOR: Simplified to a single loading state.
+  isLoading: boolean = true;
 
   constructor(
     private bookingService: BookingService,
@@ -34,48 +37,50 @@ export class MyBookingsComponent implements OnInit {
   ngOnInit(): void {
     const user = this.authService.getCurrentUserData();
     if (user?.nameid) {
-      this.ownerId = user.nameid;
       this.userId = user.nameid;
-      this.loadBookings();
-      this.loadMyRequests();
+      // ✅ REFACTOR: Call the single new data loading method.
+      this.loadAllData();
     } else {
       console.error('User not logged in or token invalid');
-      this.isLoadingBookings = false;
-      this.isLoadingMyRequests = false;
+      this.isLoading = false;
     }
   }
 
-  loadBookings(): void {
-    this.isLoadingBookings = true;
-    this.bookingService.getPendingBookingsByOwner(this.ownerId).subscribe({
-      next: (data) => {
-        this.bookings = data.sort((a, b) => 
+  // ✅ REFACTOR: New single method to fetch and process all data.
+  loadAllData(): void {
+    this.isLoading = true;
+    // Call the new consolidated service method. No status is passed to get ALL bookings.
+    this.bookingService.getMyBookings().subscribe({
+      next: (allBookings) => {
+        // Sort all bookings by creation date once.
+        const sortedBookings = allBookings.sort((a, b) => 
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
-        this.isLoadingBookings = false;
+
+        // Filter the single list into the three categories needed by the template.
+        this.bookingRequests = sortedBookings.filter(
+          b => b.ownerId === this.userId && b.status === 'Pending'
+        );
+
+        this.myRequests = sortedBookings.filter(
+          b => b.renterId === this.userId && (b.status === 'Pending' || b.status === 'Approved')
+        );
+
+        this.bookingHistory = sortedBookings.filter(
+          b => b.status === 'Completed' || b.status === 'Rejected' || b.status === 'Cancelled'
+        );
+        
+        this.isLoading = false;
       },
       error: (err) => {
-        console.error('Failed to load bookings for owner:', err);
-        this.isLoadingBookings = false;
+        console.error('Failed to load bookings data:', err);
+        Swal.fire('Error', 'Could not load your booking information.', 'error');
+        this.isLoading = false;
       }
     });
   }
 
-  loadMyRequests(): void {
-    this.isLoadingMyRequests = true;
-    this.bookingService.getMyRequests().subscribe({
-      next: (res) => {
-        this.myRequests = res.sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        this.isLoadingMyRequests = false;
-      },
-      error: (err) => {
-        console.error('Error loading my booking requests', err);
-        this.isLoadingMyRequests = false;
-      }
-    });
-  }
+  // --- The old loadBookings(), loadMyRequests(), and loadBookingHistory() methods are now removed. ---
 
   approve(id: number): void {
     Swal.fire({
@@ -91,8 +96,8 @@ export class MyBookingsComponent implements OnInit {
         this.bookingService.approveBooking(id).subscribe({
           next: () => {
             Swal.fire('Approved!', 'The booking has been approved.', 'success');
-            this.loadBookings();
-            this.loadMyRequests(); // Also refresh my requests in case status changes are shown there
+            // ✅ REFACTOR: Refresh all data consistently.
+            this.loadAllData();
           },
           error: (err) => {
             Swal.fire('Error', 'Failed to approve the booking.', 'error');
@@ -117,7 +122,8 @@ export class MyBookingsComponent implements OnInit {
         this.bookingService.rejectBooking(id).subscribe({
           next: () => {
             Swal.fire('Rejected!', 'The booking has been rejected.', 'success');
-            this.loadBookings();
+            // ✅ REFACTOR: Refresh all data consistently.
+            this.loadAllData();
           },
           error: (err) => {
             Swal.fire('Error', 'Failed to reject the booking.', 'error');
@@ -142,7 +148,8 @@ export class MyBookingsComponent implements OnInit {
         this.bookingService.cancelBooking(id).subscribe({
           next: () => {
             Swal.fire('Cancelled!', 'The booking has been cancelled.', 'success');
-            this.loadMyRequests(); // Refresh the list
+            // ✅ REFACTOR: Refresh all data consistently.
+            this.loadAllData();
           },
           error: (err) => {
             Swal.fire('Error', 'Failed to cancel the booking.', 'error');
@@ -152,8 +159,7 @@ export class MyBookingsComponent implements OnInit {
       }
     });
   }
-
-  // --- MODIFIED METHOD ---
+  
   payNow(booking: Booking): void {
     if (!booking.renterId || !booking.renterEmail) {
       console.error('CRITICAL: Missing renter ID or Email. Cannot proceed with payment.');
@@ -161,23 +167,19 @@ export class MyBookingsComponent implements OnInit {
       return;
     }
 
-    // 1. Define rates and calculate costs
     const basePrice = booking.totalPrice;
     const platformFeeRate = 0.05; // 5%
-    const taxRate = 0.10;         // 18% GST (as a standard example for India)
-
+    const taxRate = 0.10;         // 10% TDS (Tax Deducted at Source)
     const platformFee = basePrice * platformFeeRate;
     const taxableAmount = basePrice + platformFee;
     const taxes = taxableAmount * taxRate;
     const finalAmount = basePrice + platformFee + taxes;
 
-    // Helper to format currency for display
     const formatCurrency = (value: number) => new Intl.NumberFormat('en-IN', { 
       style: 'currency', 
       currency: 'INR' 
     }).format(value);
 
-    // 2. Create the HTML content for the modal
     const confirmationHtml = `
       <div class="text-left p-2 sm:p-4 space-y-3">
         <div class="flex justify-between items-center border-b border-gray-200 pb-2">
@@ -199,7 +201,6 @@ export class MyBookingsComponent implements OnInit {
       </div>
     `;
 
-    // 3. Show the SweetAlert2 confirmation modal
     Swal.fire({
       title: 'Payment Summary',
       html: confirmationHtml,
@@ -207,14 +208,12 @@ export class MyBookingsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: `Confirm & Pay`,
       cancelButtonText: 'Cancel',
-      confirmButtonColor: '#16a34a', // A nice green color
+      confirmButtonColor: '#16a34a',
       cancelButtonColor: '#d33'
     }).then((result) => {
-      // 4. If confirmed, proceed to payment
       if (result.isConfirmed) {
         const order: OrderDto = {
-          // IMPORTANT: Use the final calculated amount for the payment
-          amount: Math.round(finalAmount), // Send a rounded integer amount to payment gateway
+          amount: Math.round(finalAmount),
           userId: booking.renterId,
           email: booking.renterEmail,
           phone: booking.renterPhoneNumber,
@@ -222,7 +221,6 @@ export class MyBookingsComponent implements OnInit {
           itemName: booking.itemName,
           itemImage: booking.itemImage
         };
-
         this.paymentService.startPayment(order);
       }
     });

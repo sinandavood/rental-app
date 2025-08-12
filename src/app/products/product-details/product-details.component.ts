@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule,Router } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { ProductService } from '../product.service';
 import { Product } from 'src/app/models/product.model';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -10,7 +10,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { BookingService } from 'src/app/core/services/booking.service';
 import Swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-product-details',
@@ -31,11 +30,12 @@ export class ProductDetailsComponent implements OnInit {
   isLoading = true;
   error = '';
   profilepic = '';
-  hasRequested = false;
 
   startDate: Date | null = null;
   endDate: Date | null = null;
-  selectingStart = true;
+  
+  minDate: Date;
+  totalPrice: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,7 +43,9 @@ export class ProductDetailsComponent implements OnInit {
     private authService: AuthService,
     private bookingService: BookingService,
     private router: Router
-  ) {}
+  ) {
+    this.minDate = new Date();
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -51,8 +53,6 @@ export class ProductDetailsComponent implements OnInit {
       if (id) {
         this.fetchProduct(id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        console.log('Tracking view for item', id);
         this.productService.trackView(Number(id)).subscribe();
       }
     });
@@ -68,43 +68,14 @@ export class ProductDetailsComponent implements OnInit {
 
         if (res.ownerId) {
           this.authService.getUserProfilePicById(res.ownerId).subscribe({
-            next: (data) => {
-              this.profilepic = data.profileImage;
-            },
+            next: (data) => { this.profilepic = data.profileImage; },
             error: () => console.error('Failed to load owner profile image.')
           });
         }
 
-        // ✅ Fetch similar products
         if (res.categoryId) {
           this.productService.getSimilarProducts(res.id).subscribe({
-            next: (similar) => {
-              this.similarProducts = similar.slice(0, 4);
-            },
-            error: () => {
-              console.error('Failed to load similar products');
-            }
-          });
-        }
-
-        // ✅ Now check booking status after product is loaded
-        const userId = this.authService.getCurrentUserData()?.nameid;
-        if (userId && res.id) {
-          this.bookingService.checkExistingBooking(res.id, userId).subscribe({
-            next: (res) => {
-              this.hasRequested = res === true;
-            },
-            error: () => {
-              console.warn('Failed to check booking status');
-            }
-          });
-        }
-
-        if (res.categoryId) {
-          this.productService.getSimilarProducts(res.id).subscribe({
-            next: (similar) => {
-              this.similarProducts = similar.slice(0, 4);
-            },
+            next: (similar) => { this.similarProducts = similar.slice(0, 4); },
             error: () => console.error('Failed to load similar products')
           });
         }
@@ -117,85 +88,94 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   selectDate(date: Date | null): void {
+    if (!date) return;
+
     if (!this.startDate || (this.startDate && this.endDate)) {
+      this.clearDates();
       this.startDate = date;
-      this.endDate = null;
-      this.selectingStart = false;
-    } else if (!this.endDate && date && date > this.startDate) {
+    } else if (!this.endDate && date > this.startDate) {
       this.endDate = date;
-      this.selectingStart = true;
+      this.calculateTotalPrice();
     } else {
-      // Invalid selection: reset
+      this.clearDates();
       this.startDate = date;
-      this.endDate = null;
-      this.selectingStart = false;
+    }
+  }
+  
+  calculateTotalPrice(): void {
+    if (this.startDate && this.endDate && this.product) {
+      const oneDay = 24 * 60 * 60 * 1000;
+      const durationDays = Math.round(Math.abs((this.endDate.getTime() - this.startDate.getTime()) / oneDay)) + 1;
+      this.totalPrice = this.product.price * durationDays;
     }
   }
 
-  isInRange(date: Date): boolean {
-    if (this.startDate && this.endDate) {
-      return date > this.startDate && date < this.endDate;
-    }
-    return false;
-  }
+  // ✅ FIX: Updated dateClass function for more specific styling hooks
+  dateClass = (d: Date): string => {
+    if (this.startDate && d) {
+      const date = d.getTime();
+      const start = this.startDate.getTime();
 
-  isSelected(date: Date): boolean {
-    return !!(
-      (this.startDate && date.toDateString() === this.startDate.toDateString()) ||
-      (this.endDate && date.toDateString() === this.endDate.toDateString())
-    );
-  }
-dateClass = (date: Date): string => {
-  if (this.isSelected(date)) return 'mat-calendar-body-selected';
-  if (this.isInRange(date)) return 'range-date';
-  return '';
-};
+      if (this.endDate) {
+        const end = this.endDate.getTime();
+        if (date === start && date === end) return 'range-start range-end';
+        if (date === start) return 'range-start';
+        if (date === end) return 'range-end';
+        if (date > start && date < end) return 'in-range';
+      } else if (date === start) {
+        return 'range-start range-end'; // Style a single selected date
+      }
+    }
+    return '';
+  };
+
   requestBooking(): void {
-    if (!this.product) return;
+    if (!this.product || !this.startDate || !this.endDate || !this.totalPrice) {
+      Swal.fire('Incomplete Selection', 'Please select both a start and end date.', 'warning');
+      return;
+    }
 
-    const BookingData = {
+    const bookingData = {
       itemId: this.product.id,
-      renterId: this.authService.getCurrentUserData()?.nameid,
-      ownerId: this.product.ownerId,
-      startDate: new Date(),
-      endDate: new Date(new Date().setDate(new Date().getDate() + 2)),
-      totalPrice: this.product.price * 2,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      totalPrice: this.totalPrice,
     };
 
-    this.bookingService.createBooking(BookingData).subscribe({
+    this.bookingService.createBooking(bookingData).subscribe({
       next: () => {
         Swal.fire({
           icon: 'success',
           title: 'Booking Requested!',
-          text: 'Your booking request has been sent to the owner.',
+          text: 'Your request has been sent to the owner.',
           confirmButtonColor: '#3085d6',
         });
-        this.hasRequested = true;
+        this.router.navigate(['/my-bookings']);
       },
-      error: () => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Booking request failed. Please try again.',
-          confirmButtonColor: '#d33',
-        });
+      error: (err) => {
+        if (err.status === 409) {
+          Swal.fire({ icon: 'warning', title: 'Already Booked', text: err.error });
+        } else {
+          Swal.fire({ icon: 'error', title: 'Oops...', text: 'Booking request failed. Please try again later.' });
+        }
       }
     });
   }
 
   goToOwnerProducts(ownerId: string | undefined): void {
-  if (ownerId) {
-    this.router.navigate(['/owner', ownerId, 'products']);
+    if (ownerId) {
+      this.router.navigate(['/owner', ownerId, 'products']);
+    }
   }
-}
 
-// Prevent button click from triggering card click
-chatWithOwner(event: MouseEvent): void {
-  event.stopPropagation();
-  // You can add chat logic here
-  console.log("Chat initiated with owner");
-}
-
-clearDates()
-{}
+  chatWithOwner(event: MouseEvent): void {
+    event.stopPropagation();
+    console.log("Chat initiated with owner");
+  }
+  
+  clearDates(): void {
+    this.startDate = null;
+    this.endDate = null;
+    this.totalPrice = null;
+  }
 }
