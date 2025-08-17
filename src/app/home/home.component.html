@@ -37,6 +37,7 @@
       <!-- Content: Recently Added Products -->
       <div *ngIf="!isLoadingRecentlyAdded" class="flex overflow-x-auto gap-6 pb-4 -mx-4 px-4">
         <div *ngFor="let product of recentlyAddedProducts" class="flex-shrink-0 w-72">
+          <a [routerLink]="['/products', product.id]" class="product-card-link">
           <div class="product-card bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl h-full flex flex-col transition-shadow hover:shadow-md">
             <div class="relative">
               <img [src]="'https://p2prental.runasp.net' + product.image" [alt]="product.name" class="rounded-t-xl w-full h-48 object-cover" />
@@ -63,6 +64,7 @@
               </div>
             </div>
           </div>
+          </a>
         </div>
       </div>
     </section>
@@ -95,6 +97,7 @@
       <!-- Content: Top Rated Products -->
       <div *ngIf="!isLoadingTopRated" class="flex overflow-x-auto gap-6 pb-4 -mx-4 px-4">
         <div *ngFor="let product of topRatedProducts" class="flex-shrink-0 w-72">
+          <a [routerLink]="['/products', product.id]" class="product-card-link">
             <div class="product-card bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl h-full flex flex-col transition-shadow hover:shadow-md">
                 <div class="relative">
                   <img [src]="'https://p2prental.runasp.net' + product.image" [alt]="product.name" class="rounded-t-xl w-full h-48 object-cover" />
@@ -121,6 +124,7 @@
                   </div>
                 </div>
               </div>
+              </a>
         </div>
       </div>
     </section>

@@ -23,6 +23,7 @@
   <!-- Products grid -->
   <div class="row" *ngIf="!isLoading && visibleProducts.length > 0">
     <div class="col-md-6 col-lg-4 col-xl-3 mb-4" *ngFor="let product of visibleProducts">
+      <a [routerLink]="['/products', product.id]" class="product-card-link">
       <div class="product-card h-100 shadow rounded-4 border bg-white">
 
         <!-- Image and icons -->
@@ -58,6 +59,7 @@
           </div>
         </div>
       </div>
+      </a>
     </div>
   </div>
 
