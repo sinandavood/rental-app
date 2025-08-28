@@ -162,3 +162,7 @@
     background-position: -100% 0;
   }
 }
+a {
+  text-decoration: none;
+  color: inherit;
+}
