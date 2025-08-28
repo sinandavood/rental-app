@@ -4,6 +4,7 @@ import { CategoryService } from '../category.service';
 import { Category } from 'src/app/models/category.model';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-category-list',
@@ -14,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class CategoryListComponent implements OnInit {
   categories$!: Observable<Category[]>;
+  public imageurl:string=environment.imageurl;
 
   constructor(public categoryService: CategoryService, private router: Router) {}
 

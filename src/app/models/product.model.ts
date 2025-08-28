@@ -4,7 +4,9 @@ export interface Product {
   description: string;
   price: number;
   image: string;
-  location: string;
+  locationName: string;
+  longitude:number;
+  latitude:number;
   categoryName: string;
   ownerName: string;
   availability: boolean;

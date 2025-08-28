@@ -10,80 +10,61 @@
   </div>
 
   <!-- ➕ Create Form -->
-  <div class="card modern-card mb-4">
-    <div class="card-body modern-card-body">
-      <h5 class="card-title modern-card-title">Create Category</h5>
-      <div class="row g-3 align-items-center">
-        <div class="col-md-3">
-          <input [(ngModel)]="newCategory.name" class="form-control modern-input" placeholder="Name" />
-        </div>
-        <div class="col-md-4">
-          <input [(ngModel)]="newCategory.description" class="form-control modern-input" placeholder="Description" />
-        </div>
-        <div class="col-md-3">
-          <input [(ngModel)]="newCategory.icon" class="form-control modern-input"
-            placeholder="Icon (e.g., bi-camera)" />
-        </div>
-        <div class="col-md-2">
-          <button class="btn modern-btn modern-btn-primary w-100" (click)="createCategory()">
-            Create
-          </button>
-        </div>
-        <!-- ⬇️ Insert into your Create Form row -->
-
+<div class="card modern-card mb-4">
+  <div class="card-body modern-card-body">
+    <h5 class="card-title modern-card-title">Create Category</h5>
+    <div class="row g-3 align-items-center">
+      <div class="col-md-3">
+        <input [(ngModel)]="newCategory.name" class="form-control modern-input" placeholder="Name" />
+      </div>
+      <div class="col-md-4">
+        <input [(ngModel)]="newCategory.description" class="form-control modern-input" placeholder="Description" />
+      </div>
+      <!-- ✅ UPDATED: Changed text input to file input -->
+      <div class="col-md-3">
+        <input type="file" (change)="onFileSelected($event)" class="form-control modern-input" accept="image/png, image/jpeg, image/svg+xml" />
+      </div>
+      <div class="col-md-2">
+        <button class="btn modern-btn modern-btn-primary w-100" (click)="createCategory()">
+          Create
+        </button>
       </div>
     </div>
   </div>
+</div>
 
-  <!----------------------------------------------------------------------------------------------------------------------->
-
-  <!-- ➕ Create Subcategory Form -->
-  <div class="card modern-card mb-4">
-    <div class="card-body modern-card-body">
-      <h5 class="card-title modern-card-title">Create Subcategory</h5>
-      <form (ngSubmit)="createSubCategory()" #subcategoryForm="ngForm">
-        <div class="row g-3 align-items-center">
-
-          <!-- Name -->
-          <div class="col-md-3">
-            <input [(ngModel)]="subForm.name" name="name" required class="form-control modern-input"
-              placeholder="Name" />
-          </div>
-
-          <!-- Description -->
-          <div class="col-md-4">
-            <input [(ngModel)]="subForm.description" name="description" required class="form-control modern-input"
-              placeholder="Description" />
-          </div>
-
-          <!-- Icon -->
-          <div class="col-md-3">
-            <input [(ngModel)]="subForm.icon" name="icon" required class="form-control modern-input"
-              placeholder="Icon (e.g., bi-camera)" />
-          </div>
-
-          <!-- Parent Category -->
-          <div class="col-md-3">
-            <select [(ngModel)]="subForm.parentCategoryId" name="parentCategoryId" required
-              class="form-select modern-input">
-              <option [ngValue]="null" disabled selected>Select Category</option>
-              <option *ngFor="let cat of filteredCategories" [ngValue]="cat.id">
-                {{ cat.name }}
-              </option>
-            </select>
-          </div>
-
-          <!-- Submit Button -->
-          <div class="col-md-2">
-            <button type="submit" class="btn modern-btn modern-btn-primary w-100" [disabled]="subcategoryForm.invalid">
-              Create
-            </button>
-          </div>
-
-        </div>
-      </form>
+<!-- Create Subcategory Form -->
+<div class="card modern-card mb-4">
+  <div class="card-body modern-card-body">
+    <h5 class="card-title modern-card-title">Create Subcategory</h5>
+    <!-- Note: Removed the form tag for simplicity, can be added back if needed -->
+    <div class="row g-3 align-items-center">
+      <div class="col-md-3">
+        <input [(ngModel)]="subForm.name" name="name" required class="form-control modern-input" placeholder="Name" />
+      </div>
+      <div class="col-md-3">
+        <input [(ngModel)]="subForm.description" name="description" required class="form-control modern-input" placeholder="Description" />
+      </div>
+      <!-- ✅ UPDATED: Changed text input to file input -->
+      <div class="col-md-3">
+        <input type="file" (change)="onSubCategoryFileSelected($event)" class="form-control modern-input" accept="image/png, image/jpeg, image/svg+xml" />
+      </div>
+      <div class="col-md-3">
+        <select [(ngModel)]="subForm.parentCategoryId" name="parentCategoryId" required class="form-select modern-input">
+          <option [ngValue]="null" disabled selected>Select Parent Category</option>
+          <option *ngFor="let cat of categories" [ngValue]="cat.id">
+            {{ cat.name }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-12 text-end">
+        <button (click)="createSubCategory()" class="btn modern-btn modern-btn-primary">
+          Create Subcategory
+        </button>
+      </div>
     </div>
   </div>
+</div>
 
 
   <!---------------------------------------------------------------------------->
@@ -119,8 +100,8 @@
             <span *ngIf="!cat.parentCategory" class="text-muted">—</span>
           </td>
           <td>
-            <i [class]="'bi ' + cat.icon" class="modern-icon"></i>
-            <small class="text-muted ms-1"><img src="{{cat.icon}}" height="35px" width="35px"></small>
+            <i [class]="'bi ' + cat.iconImage" class="modern-icon"></i>
+            <small class="text-muted ms-1"><img [src]="imageurl + cat.iconImage" height="35px" width="35px"></small>
           </td>
           <td>
             <div class="action-buttons d-flex align-items-center">

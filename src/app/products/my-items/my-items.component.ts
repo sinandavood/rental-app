@@ -7,6 +7,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TruncatePipe } from 'src/app/Pipes/truncate.pipe';
 import { trigger, style, animate, transition, stagger, query } from '@angular/animations';
 import Swal from 'sweetalert2';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-my-items',
@@ -30,6 +31,7 @@ import Swal from 'sweetalert2';
 export class MyItemsComponent implements OnInit {
   myItems: Product[] = [];
   isLoading = false;
+   public imageurl=environment.imageurl;
 
   constructor(private productService: ProductService, private router: Router) {}
 

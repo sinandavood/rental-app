@@ -90,7 +90,7 @@ export class AuthService {
 
   loginWithGoogle(idToken: string): Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post(`${this.apiUrl}/Auth/google-login`, JSON.stringify(idToken), { headers });
+    return this.http.post(`${this.apiUrl}/Auth/google-login`,{idToken}, { headers });
   }
   saveUserData(token: string): void {
     localStorage.setItem('token', token);

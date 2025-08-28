@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   apiBaseUrl: 'https://p2prental.runasp.net/api',
+  imageurl: 'https://p2prental.runasp.net',
   
   firebaseConfig: {
     apiKey: "AIzaSyAqLIeWlyJYemUfES6XgRzlZBwopMS_33o",

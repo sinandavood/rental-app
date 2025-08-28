@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../product.service';
 import { Product } from 'src/app/models/product.model';
 import { CommonModule } from '@angular/common';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-owner-products',
@@ -16,6 +17,7 @@ export class OwnerProductsComponent implements OnInit {
   products: Product[] = [];
   loading = true;
   error: string | null = null;
+   public imageurl=environment.imageurl;
 
   constructor(
     private route: ActivatedRoute,

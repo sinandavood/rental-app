@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { WishListService } from 'src/app/core/services/wishlist.service';
 import Swal from 'sweetalert2';
 import { Product } from '../models/product.model';
+import { environment } from '../env/environment-development';
 
 @Component({
   selector: 'app-my-wishlist',
@@ -15,6 +16,7 @@ import { Product } from '../models/product.model';
 export class MyWishlistComponent implements OnInit {
   wishlistItems: any[] = [];
   isLoading = false;
+   public imageurl=environment.imageurl;
  
   private wishlistservice = inject(WishListService);
 

@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
 
 
   private apiBaseUrl = environment.apiBaseUrl + '/item';
+  public imageurl=environment.imageurl;
 
 
   constructor(

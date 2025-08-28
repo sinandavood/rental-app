@@ -12,32 +12,28 @@ export class CategoryService {
 
   constructor(private http: HttpClient) {}
 
-  // Get all categories
+  // Get all categories (no change needed)
   getAll(): Observable<Category[]> {
     return this.http.get<Category[]>(`${this.baseUrl}`);
   }
 
-  // Get category by ID
-  getById(id: number): Observable<Category> {
-    return this.http.get<Category>(`${this.baseUrl}/${id}`);
+  // ✅ UPDATED: create method now accepts FormData
+  create(formData: FormData): Observable<Category> {
+    // When sending FormData, you don't need to set the Content-Type header.
+    // The browser will handle it automatically.
+    return this.http.post<Category>(`${this.baseUrl}`, formData);
   }
 
-  // Create category
-  create(category: Partial<Category>): Observable<Category> {
-    return this.http.post<Category>(`${this.baseUrl}`, category);
+  // ✅ UPDATED: createSubCategory method now accepts FormData
+  createSubCategory(formData: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/subcategory`, formData);
   }
 
-  // Update category
-  update(id: number, category: Partial<Category>): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${id}`, category);
-  }
-
-  // Delete category
+  // Delete category (no change needed)
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-  createSubCategory(data: any) {
-  return this.http.post(`${this.baseUrl}/subcategory`, data);
-}
+  // Note: An update method would also need to be changed to accept FormData
+  // if you want to allow changing the image.
 }
