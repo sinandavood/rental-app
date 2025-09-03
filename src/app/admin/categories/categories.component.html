@@ -10,7 +10,7 @@
   </div>
 
   <!-- ➕ Create Form -->
-<div class="card modern-card mb-4">
+<div *ngIf="!editingCategory" class="card modern-card mb-4">
   <div class="card-body modern-card-body">
     <h5 class="card-title modern-card-title">Create Category</h5>
     <div class="row g-3 align-items-center">
@@ -33,8 +33,34 @@
   </div>
 </div>
 
+<div *ngIf="editingCategory" class="card modern-card mb-4 border-primary">
+    <div class="card-body modern-card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-title modern-card-title">Edit: {{ editingCategory.name }}</h5>
+        <button class="btn-close" (click)="cancelEdit()"></button>
+      </div>
+      <div class="row g-3 align-items-center mt-2">
+        <div class="col-md-3">
+          <input [(ngModel)]="editingCategory.name" class="form-control modern-input" placeholder="Name" />
+        </div>
+        <div class="col-md-4">
+          <input [(ngModel)]="editingCategory.description" class="form-control modern-input" placeholder="Description" />
+        </div>
+        <div class="col-md-3">
+          <input type="file" (change)="onEditFileSelected($event)" class="form-control modern-input" accept="image/*" />
+          <small class="form-text text-muted">Leave blank to keep current icon.</small>
+        </div>
+        <div class="col-md-2">
+          <button class="btn modern-btn modern-btn-success w-100" (click)="updateCategory()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!-- Create Subcategory Form -->
-<div class="card modern-card mb-4">
+<div *ngIf="!editingCategory" class="card modern-card mb-4">
   <div class="card-body modern-card-body">
     <h5 class="card-title modern-card-title">Create Subcategory</h5>
     <!-- Note: Removed the form tag for simplicity, can be added back if needed -->
@@ -77,34 +103,31 @@
   </div>
 
   <!-- 📋 Category Table -->
-  <div class="table-responsive">
+ <div class="table-responsive">
     <table class="table modern-table">
-      <thead class="table-light">
+      <thead>
         <tr>
           <th>#</th>
           <th>Name</th>
           <th>Description</th>
-          <th>Parent Category</th>
           <th>Icon</th>
-          <th>Action</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cat of filteredCategories | slice:(page-1)*pageSize:page*pageSize; let i = index"
-          class="modern-table-row">
-          <td>{{ i + 1 + ((page - 1) * pageSize) }}</td>
+        <tr *ngFor="let cat of filteredCategories; let i = index" class="modern-table-row">
+          <td>{{ i + 1 }}</td>
           <td>{{ cat.name }}</td>
           <td>{{ cat.description }}</td>
           <td>
-            <span *ngIf="cat.parentCategory">{{ cat.parentCategory.name }}</span>
-            <span *ngIf="!cat.parentCategory" class="text-muted">—</span>
+            <img [src]="imageurl + cat.iconImage" height="35px" width="35px" *ngIf="cat.iconImage">
           </td>
           <td>
-            <i [class]="'bi ' + cat.iconImage" class="modern-icon"></i>
-            <small class="text-muted ms-1"><img [src]="imageurl + cat.iconImage" height="35px" width="35px"></small>
-          </td>
-          <td>
-            <div class="action-buttons d-flex align-items-center">
+            <div class="action-buttons d-flex align-items-center gap-2">
+              <!-- ✅ NEW: Edit Button -->
+              <button class="btn modern-btn modern-btn-sm modern-btn-secondary" (click)="startEdit(cat)">
+                <i class="bi bi-pencil"></i>
+              </button>
               <button class="btn modern-btn modern-btn-sm modern-btn-danger" (click)="deleteCategory(cat.id)">
                 <i class="bi bi-trash"></i>
               </button>

@@ -29,6 +29,10 @@ export class CategoryService {
     return this.http.post(`${this.baseUrl}/subcategory`, formData);
   }
 
+  update(id: number, formData: FormData): Observable<Category> {
+    return this.http.put<Category>(`${this.baseUrl}/${id}`, formData);
+  }
+
   // Delete category (no change needed)
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);

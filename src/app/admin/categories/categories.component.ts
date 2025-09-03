@@ -26,6 +26,9 @@ export class CategoriesComponent implements OnInit {
   pageSize = 50;
   searchTerm = '';
 
+  editingCategory: Category | null = null;
+  private selectedEditFile: File | null = null;
+
   subForm: {
   name: string;
   description: string;
@@ -159,6 +162,51 @@ export class CategoriesComponent implements OnInit {
       (c.description && c.description.toLowerCase().includes(term))
     );
   }
+  startEdit(category: Category): void {
+    // Create a copy of the category to avoid modifying the original object in the list
+    this.editingCategory = { ...category };
+    this.selectedEditFile = null; // Reset file selection
+  }
+
+  cancelEdit(): void {
+    this.editingCategory = null;
+  }
+
+  updateCategory(): void {
+    if (!this.editingCategory) return;
+
+    const formData = new FormData();
+    formData.append('Name', this.editingCategory.name);
+    formData.append('Description', this.editingCategory.description || '');
+    
+    // Only include the image file if a new one was selected
+    if (this.selectedEditFile) {
+      formData.append('IconFile', this.selectedEditFile, this.selectedEditFile.name);
+    }
+
+    this.categoryService.update(this.editingCategory.id, formData).subscribe({
+      next: (updatedCategory) => {
+        const index = this.categories.findIndex(c => c.id === updatedCategory.id);
+        if (index !== -1) {
+          this.categories[index] = updatedCategory;
+          this.applyFilters(); // Refresh the view
+        }
+        this.cancelEdit(); // Close the edit form
+        alert('Category updated successfully!');
+      },
+      error: (err) => {
+        console.error('Update failed:', err);
+        alert('Failed to update category.');
+      }
+    });
+  }
+
+  onEditFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.selectedEditFile = file;
+  }
+
+
 
 
   // Fixed: Added proper pagination logic
