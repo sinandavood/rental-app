@@ -11,6 +11,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { BookingService } from 'src/app/core/services/booking.service';
 import Swal from 'sweetalert2';
 
+import { MatDialog } from '@angular/material/dialog';
+import { MakeOfferComponent } from '../make-offer/make-offer.component';
+
 @Component({
   selector: 'app-product-details',
   standalone: true,
@@ -42,7 +45,8 @@ export class ProductDetailsComponent implements OnInit {
     private productService: ProductService,
     private authService: AuthService,
     private bookingService: BookingService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
     this.minDate = new Date();
   }
@@ -178,4 +182,17 @@ export class ProductDetailsComponent implements OnInit {
     this.endDate = null;
     this.totalPrice = null;
   }
+
+  openMakeOffer(product: any) {
+  this.dialog.open(MakeOfferComponent, {
+    data: {
+      productId: product.id,
+      productName: product.name,
+      price: product.price,
+      imageUrl: product.imageUrl // 👈 make sure your product model has this
+    },
+    width: '350px'
+  });
+}
+
 }

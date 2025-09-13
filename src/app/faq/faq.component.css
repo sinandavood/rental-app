@@ -1,0 +1,6 @@
+.faq-item button {
+  transition: background 0.2s ease-in-out;
+}
+.faq-item button:hover {
+  background: #f3f4f6;
+}

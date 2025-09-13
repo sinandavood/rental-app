@@ -8,6 +8,7 @@ import { CategoryListComponent } from '../categories/category-list/category-list
 import { ProductListComponent } from '../products/product-list/product-list.component';
 import { SearchService } from '../core/services/search.service';
 import { WishListService } from '../core/services/wishlist.service';
+import { FaqComponent } from '../faq/faq.component';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ import { WishListService } from '../core/services/wishlist.service';
     HttpClientModule,
     RouterModule,
     CategoryListComponent,
-    ProductListComponent
+    ProductListComponent,
+    FaqComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']

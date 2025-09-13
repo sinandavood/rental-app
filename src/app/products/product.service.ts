@@ -68,4 +68,11 @@ toggleAvailability(id: number) {
    getProductsByOwner(ownerId: string): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.url}/by-owner/${ownerId}`);
   }
+
+  
+
+makeOffer(productId: number, offerPrice: number) {
+  return this.http.post(`${this.url}/${productId}/make-offer`, { offerPrice });
+}
+
 }

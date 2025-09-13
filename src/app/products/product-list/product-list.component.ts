@@ -1,17 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute,  } from '@angular/router';
 import { ProductService } from '../product.service';
 
 import { Product } from '../../models/product.model'; // <- optional interface
 import { WishListService } from 'src/app/core/services/wishlist.service';
 import { SearchService } from 'src/app/core/services/search.service';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
@@ -28,7 +29,8 @@ export class ProductListComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private wishlistservice:WishListService,
-    private searchservice:SearchService
+    private searchservice:SearchService,
+    private router: Router
   ) {}
 
  ngOnInit(): void {
@@ -102,5 +104,9 @@ fetchFilteredProducts(keyword: string, location: string, categoryId: number) {
   get visibleProducts(): Product[] {
     return this.limit ? this.products.slice(0, this.limit) : this.products;
   }
+
+  goToProduct(productId: number) {
+  this.router.navigate(['/products', productId]);
+}
 }
 

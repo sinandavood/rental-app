@@ -88,9 +88,10 @@
                   <p class="text-xs text-gray-500">Member since {{ product.createdAt | date: 'MMM yyyy' }}</p>
                 </div>
               </div>
-              <button (click)="chatWithOwner($event)" class="mt-3 w-full inline-flex justify-center items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                <i class="bi bi-chat-dots mr-2"></i>Chat with owner
-              </button>
+              <button (click)="openMakeOffer(product)" class="mt-4 w-full inline-flex justify-center items-center rounded-md bg-green-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-500">
+                Make an Offer</button>
+
+
             </div>
 
             <!-- Date Picker -->
