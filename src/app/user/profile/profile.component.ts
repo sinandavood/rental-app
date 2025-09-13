@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { environment } from 'src/app/env/environment-development';
 import { User } from 'src/app/models/user.model';
 
 @Component({
@@ -16,6 +17,7 @@ export class ProfileComponent implements OnInit {
   profilePic: string = '';
   memberSince: string = '';
   loading: boolean = true; // ✅ Add this
+   public imageurl=environment.imageurl;
 
   constructor(private authService: AuthService) {}
 

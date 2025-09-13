@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/core/services/user.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-edit-profile',
@@ -21,6 +22,7 @@ export class EditProfileComponent implements OnInit {
   successMessage = '';
   removeExistingImage = false;
   profilePic: string | null = null;
+   public imageurl=environment.imageurl;
 
   constructor(
     private fb: FormBuilder,

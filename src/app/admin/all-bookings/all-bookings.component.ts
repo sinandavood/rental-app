@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DashboardService } from '../services/admin-dashboard.service';
 import { BookingsDTO } from '../Admin_models/BookingsDTO';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-all-bookings',
@@ -21,6 +22,7 @@ export class AllBookingsComponent implements OnInit {
   error: string | null = null;
 
   // Filtering, Sorting, and Pagination
+  public imageurl:string=environment.imageurl;
   searchTerm = '';
   page = 1;
   pageSize = 10;

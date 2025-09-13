@@ -39,7 +39,7 @@
           <tr *ngFor="let item of filteredItems | slice:(page-1)*pageSize:page*pageSize" class="modern-table-row">
             <td>
               <img
-                [src]="'https://p2prental.runasp.net' + item.image"
+                [src]="imageurl + item.image"
                 alt="Image"
                 class="modern-image"
                 width="50"

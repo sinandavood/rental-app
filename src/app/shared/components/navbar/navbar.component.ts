@@ -7,6 +7,7 @@ import { Subscription, filter } from 'rxjs';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { NotificationPopoverComponent } from 'src/app/notification-popover/notification-popover.component';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-navbar',
@@ -21,6 +22,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | null = null;
   unreadCount = 0;
   isNotificationPopoverOpen = false;
+  public imagerurl:string=environment.imageurl;
 
   // --- REFACTORED STATE ---
   // Flag to show/hide any search UI based on route

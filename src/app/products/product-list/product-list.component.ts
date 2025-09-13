@@ -6,6 +6,7 @@ import { ProductService } from '../product.service';
 import { Product } from '../../models/product.model'; // <- optional interface
 import { WishListService } from 'src/app/core/services/wishlist.service';
 import { SearchService } from 'src/app/core/services/search.service';
+import { environment } from 'src/app/env/environment-development';
 import { Router } from '@angular/router';
 
 
@@ -24,6 +25,7 @@ export class ProductListComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
   wishlist:Set<number>= new Set();
+   public imageurl=environment.imageurl;
 
   constructor(
     private route: ActivatedRoute,

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardService } from '../services/admin-dashboard.service';
 import { ListedItemAdmin } from '../Admin_models/ListedItemAdmin.model';
 import { FormsModule } from '@angular/forms';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-products',
@@ -18,6 +19,7 @@ export class ProductsComponent implements OnInit {
   page = 1;
   pageSize = 50;
   isloading=false;
+  public imageurl:string=environment.imageurl;
 
   constructor(private dashboardService: DashboardService) {}
 

@@ -59,14 +59,14 @@
           <div *ngIf="bookingRequests.length > 0" class="space-y-5">
              <div *ngFor="let booking of bookingRequests" class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-4 sm:p-6">
               <div class="flex flex-col sm:flex-row gap-6">
-                <img [src]="'https://p2prental.runasp.net' + booking.itemImage" [alt]="booking.itemName" class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg object-cover bg-gray-100">
+                <img [src]=" imageurl + booking.itemImage" [alt]="booking.itemName" class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg object-cover bg-gray-100">
                 <div class="flex-1">
                   <div class="flex justify-between items-start">
                     <div>
                       <p class="font-semibold text-lg text-gray-900">{{ booking.itemName }}</p>
                       <div class="mt-1 flex items-center gap-2 text-sm text-gray-500">
                         <span>Requested by:</span>
-                        <img [src]="booking.renterProfileImage ? 'https://p2prental.runasp.net' + booking.renterProfileImage : 'assets/constant/empty-user-profilepic.webp'" alt="Renter" class="h-6 w-6 rounded-full object-cover">
+                        <img [src]="booking.renterProfileImage ? imageurl + booking.renterProfileImage : 'assets/constant/empty-user-profilepic.webp'" alt="Renter" class="h-6 w-6 rounded-full object-cover">
                         <span>{{ booking.renterName || 'N/A' }}</span>
                       </div>
                     </div>
@@ -113,10 +113,10 @@
           <div *ngIf="myRequests.length > 0" class="space-y-5">
             <div *ngFor="let booking of myRequests" class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-4 sm:p-6">
               <div class="flex flex-col sm:flex-row gap-6">
-                <img [src]="'https://p2prental.runasp.net' + booking.itemImage" [alt]="booking.itemName" class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg object-cover bg-gray-100">
+                <img [src]="imageurl+ booking.itemImage" [alt]="booking.itemName" class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg object-cover bg-gray-100">
                 <div class="flex-1">
                   <div class="flex justify-between items-start">
-                    <div><p class="font-semibold text-lg text-gray-900">{{ booking.itemName }}</p><div class="mt-1 flex items-center gap-2 text-sm text-gray-500"><span>Owner:</span><img [src]="booking.ownerProfileImage ? 'https://p2prental.runasp.net' + booking.ownerProfileImage : 'assets/constant/empty-user-profilepic.webp'" alt="Owner" class="h-6 w-6 rounded-full object-cover"><span>{{ booking.ownerName || 'N/A' }}</span></div></div>
+                    <div><p class="font-semibold text-lg text-gray-900">{{ booking.itemName }}</p><div class="mt-1 flex items-center gap-2 text-sm text-gray-500"><span>Owner:</span><img [src]="booking.ownerProfileImage ? imageurl + booking.ownerProfileImage : 'assets/constant/empty-user-profilepic.webp'" alt="Owner" class="h-6 w-6 rounded-full object-cover"><span>{{ booking.ownerName || 'N/A' }}</span></div></div>
                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" [ngClass]="{'bg-yellow-100 text-yellow-800': booking.status === 'Pending', 'bg-green-100 text-green-800': booking.status === 'Approved', 'bg-red-100 text-red-800': booking.status === 'Rejected' || booking.status === 'Cancelled', 'bg-blue-100 text-blue-800': booking.status === 'Completed'}">{{ booking.status }}</span>
                   </div>
                   <div class="mt-3 grid grid-cols-2 gap-4 text-sm border-t border-gray-200 pt-3">
@@ -160,13 +160,13 @@
           <div *ngIf="bookingHistory.length > 0" class="space-y-5">
             <div *ngFor="let booking of bookingHistory" class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-4 sm:p-6">
               <div class="flex flex-col sm:flex-row gap-6">
-                <img [src]="'https://p2prental.runasp.net' + booking.itemImage" [alt]="booking.itemName" class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg object-cover bg-gray-100">
+                <img [src]="imageurl + booking.itemImage" [alt]="booking.itemName" class="w-full sm:w-32 h-32 flex-shrink-0 rounded-lg object-cover bg-gray-100">
                 <div class="flex-1">
                   <div class="flex justify-between items-start">
                     <div>
                       <p class="font-semibold text-lg text-gray-900">{{ booking.itemName }}</p>
-                      <div *ngIf="booking.renterId === userId" class="mt-1 flex items-center gap-2 text-sm text-gray-500"><span>Rented from:</span><img [src]="booking.ownerProfileImage ? 'https://p2prental.runasp.net' + booking.ownerProfileImage : 'assets/constant/empty-user-profilepic.webp'" alt="Owner" class="h-6 w-6 rounded-full object-cover"><span>{{ booking.ownerName || 'N/A' }}</span></div>
-                      <div *ngIf="booking.ownerId === userId" class="mt-1 flex items-center gap-2 text-sm text-gray-500"><span>Rented by:</span><img [src]="booking.renterProfileImage ? 'https://p2prental.runasp.net' + booking.renterProfileImage : 'assets/constant/empty-user-profilepic.webp'" alt="Renter" class="h-6 w-6 rounded-full object-cover"><span>{{ booking.renterName || 'N/A' }}</span></div>
+                      <div *ngIf="booking.renterId === userId" class="mt-1 flex items-center gap-2 text-sm text-gray-500"><span>Rented from:</span><img [src]="booking.ownerProfileImage ? imageurl + booking.ownerProfileImage : 'assets/constant/empty-user-profilepic.webp'" alt="Owner" class="h-6 w-6 rounded-full object-cover"><span>{{ booking.ownerName || 'N/A' }}</span></div>
+                      <div *ngIf="booking.ownerId === userId" class="mt-1 flex items-center gap-2 text-sm text-gray-500"><span>Rented by:</span><img [src]="booking.renterProfileImage ? imageurl + booking.renterProfileImage : 'assets/constant/empty-user-profilepic.webp'" alt="Renter" class="h-6 w-6 rounded-full object-cover"><span>{{ booking.renterName || 'N/A' }}</span></div>
                     </div>
                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" [ngClass]="{'bg-blue-100 text-blue-800': booking.status === 'Completed', 'bg-gray-100 text-gray-800': booking.status === 'Cancelled', 'bg-red-100 text-red-800': booking.status === 'Rejected', 'bg-yellow-100 text-yellow-800': booking.status === 'Pending', 'bg-green-100 text-green-800': booking.status === 'Approved'}">{{ booking.status }}</span>
                   </div>

@@ -6,7 +6,7 @@
         *ngFor="let cat of categories"
         style="width: 120px;"
         (click)="onCategoryClick(cat)">
-        <img [src]="cat.icon" [alt]="cat.name" class="category-icon mb-2" loading="lazy" />
+        <img [src]=" imageurl+cat.iconImage" [alt]="cat.name" class="category-icon mb-2" loading="lazy" />
         <div class="category-name fw-medium">{{ cat.name }}</div>
       </div>
     </div>

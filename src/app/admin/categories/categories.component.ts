@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from 'src/app/categories/category.service';
 import { Category } from 'src/app/models/category.model';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-categories',
@@ -12,27 +13,34 @@ import { Category } from 'src/app/models/category.model';
   styleUrls: ['./categories.component.css']
 })
 export class CategoriesComponent implements OnInit {
+  public imageurl: string = environment.imageurl;
 
   categories: Category[] = [];
   filteredCategories: Category[] = [];
   newCategory: Partial<Category> = {
     name: '',
     description: '',
-    icon: '',
-    parentCategoryId: null
   };
   loading = false;
   page = 1;
   pageSize = 50;
   searchTerm = '';
 
-  subForm = {
-    name: '',
-    description: '',
-    icon: '',
-    parentCategoryId: null
-  };
-  subcategories: any[] = [];
+  editingCategory: Category | null = null;
+  private selectedEditFile: File | null = null;
+
+  subForm: {
+  name: string;
+  description: string;
+  parentCategoryId: number | null; // Explicitly define the type here
+} = {
+  name: '',
+  description: '',
+  parentCategoryId: null
+};
+  
+  private selectedFile: File | null = null;
+  private selectedSubCategoryFile: File | null = null;
 
   constructor(private categoryService: CategoryService) { }
 
@@ -55,27 +63,78 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
+  onFileSelected(event: Event): void {
+    const element = event.currentTarget as HTMLInputElement;
+    let fileList: FileList | null = element.files;
+    if (fileList) {
+      this.selectedFile = fileList[0];
+    }
+  }
+
+  onSubCategoryFileSelected(event: Event): void {
+    const element = event.currentTarget as HTMLInputElement;
+    let fileList: FileList | null = element.files;
+    if (fileList) {
+      this.selectedSubCategoryFile = fileList[0];
+    }
+  }
+
   createCategory() {
     if (!this.newCategory.name?.trim()) {
       alert("Name is required");
       return;
     }
+    if (!this.selectedFile) {
+      alert("An icon image is required.");
+      return;
+    }
 
-    this.categoryService.create(this.newCategory).subscribe({
+    const formData = new FormData();
+    formData.append('Name', this.newCategory.name);
+    formData.append('Description', this.newCategory.description || '');
+    formData.append('IconFile', this.selectedFile, this.selectedFile.name);
+
+    this.categoryService.create(formData).subscribe({
       next: (created) => {
         this.categories.unshift(created);
         this.applyFilters();
-        // Fixed: Reset newCategory with all required properties
-        this.newCategory = {
-          name: '',
-          description: '',
-          icon: '',
-          parentCategoryId: null
-        };
+        this.newCategory = { name: '', description: '' };
+        this.selectedFile = null;
+        // Consider resetting the file input element visually if needed
       },
       error: (err) => {
         console.error('Create failed:', err);
         alert('Category creation failed.');
+      }
+    });
+  }
+  
+  createSubCategory() {
+    if (!this.subForm.name?.trim() || !this.subForm.parentCategoryId) {
+      alert("Name and a parent category are required.");
+      return;
+    }
+     if (!this.selectedSubCategoryFile) {
+      alert("An icon image is required for the subcategory.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('Name', this.subForm.name);
+    formData.append('Description', this.subForm.description ?? '');
+    formData.append('ParentCategoryId', this.subForm.parentCategoryId?.toString() ?? '');
+    formData.append('IconFile', this.selectedSubCategoryFile, this.selectedSubCategoryFile.name);
+
+    this.categoryService.createSubCategory(formData).subscribe({
+      next: () => {
+        alert('Subcategory created!');
+        this.fetchCategories(); // Refresh the list to see the new subcategory
+        this.subForm = { name: '', description: '', parentCategoryId: null };
+        this.selectedSubCategoryFile = null;
+      },
+      error: (err) => {
+        console.error('Subcategory creation failed:', err);
+        alert('Subcategory creation failed.');
       }
     });
   }
@@ -103,6 +162,52 @@ export class CategoriesComponent implements OnInit {
       (c.description && c.description.toLowerCase().includes(term))
     );
   }
+  startEdit(category: Category): void {
+    // Create a copy of the category to avoid modifying the original object in the list
+    this.editingCategory = { ...category };
+    this.selectedEditFile = null; // Reset file selection
+  }
+
+  cancelEdit(): void {
+    this.editingCategory = null;
+  }
+
+  updateCategory(): void {
+    if (!this.editingCategory) return;
+
+    const formData = new FormData();
+    formData.append('Name', this.editingCategory.name);
+    formData.append('Description', this.editingCategory.description || '');
+    
+    // Only include the image file if a new one was selected
+    if (this.selectedEditFile) {
+      formData.append('IconFile', this.selectedEditFile, this.selectedEditFile.name);
+    }
+
+    this.categoryService.update(this.editingCategory.id, formData).subscribe({
+      next: (updatedCategory) => {
+        const index = this.categories.findIndex(c => c.id === updatedCategory.id);
+        if (index !== -1) {
+          this.categories[index] = updatedCategory;
+          this.applyFilters(); // Refresh the view
+        }
+        this.cancelEdit(); // Close the edit form
+        alert('Category updated successfully!');
+      },
+      error: (err) => {
+        console.error('Update failed:', err);
+        alert('Failed to update category.');
+      }
+    });
+  }
+
+  onEditFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.selectedEditFile = file;
+  }
+
+
+
 
   // Fixed: Added proper pagination logic
   get paginatedCategories(): Category[] {
@@ -141,12 +246,5 @@ export class CategoriesComponent implements OnInit {
     this.applyFilters();
   }
 
-  createSubCategory() {
-    const payload = { ...this.subForm };
-    this.categoryService.createSubCategory(payload).subscribe(() => {
-      alert('Subcategory created!');
-      this.subForm = { name: '', description: '', icon: '', parentCategoryId: null }; // Refresh category list if you display them
-    });
-  }
 
 }

@@ -52,7 +52,7 @@
         <ng-template #loggedInBlock>
           <div class="relative group">
             <button class="flex items-center justify-center w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-              <img [src]="profilePic ? 'https://p2prental.runasp.net' + profilePic : 'assets/constant/empty-user-profilepic.webp'"
+              <img [src]="profilePic ? imagerurl + profilePic : 'assets/constant/empty-user-profilepic.webp'"
                    alt="Profile" class="w-full h-full rounded-full object-cover" />
             </button>
             <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-slate-200 p-2 z-50 hidden group-hover:block animate-fade-in">

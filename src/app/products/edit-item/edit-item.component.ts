@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ProductService } from '../product.service';
 import { CommonModule } from '@angular/common';
 import { CategoryService } from 'src/app/categories/category.service';
+import { environment } from 'src/app/env/environment-development';
 
 @Component({
   selector: 'app-edit-item',
@@ -19,6 +20,7 @@ export class EditItemComponent implements OnInit {
   selectedImage!: File;
   imagePreview: string | ArrayBuffer | null = null;
   isSubmitting = false;
+   public imageurl=environment.imageurl;
 
   constructor(
     private route: ActivatedRoute,
@@ -59,7 +61,7 @@ export class EditItemComponent implements OnInit {
         name: item.name,
         description: item.description,
         price: item.price,
-        location: item.location,
+        location: item.locationName,
         categoryId: item.categoryName,
         availability: item.availability
       });

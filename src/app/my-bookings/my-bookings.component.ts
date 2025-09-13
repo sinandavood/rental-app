@@ -7,6 +7,7 @@ import { AuthService } from '../core/services/auth.service';
 import { PaymentService } from '../payment.service';
 import { OrderDto } from '../models/OrderDto';
 import Swal from 'sweetalert2';
+import { environment } from '../env/environment-development';
 
 @Component({
   selector: 'app-my-bookings',
@@ -20,6 +21,7 @@ export class MyBookingsComponent implements OnInit {
   bookingRequests: Booking[] = [];
   myRequests: Booking[] = [];
   bookingHistory: Booking[] = [];
+   public imageurl=environment.imageurl;
   
   userId: string = '';
   
