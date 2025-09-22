@@ -162,68 +162,94 @@ export class MyBookingsComponent implements OnInit {
     });
   }
   
-  payNow(booking: Booking): void {
+payNow(booking: Booking): void {
     if (!booking.renterId || !booking.renterEmail) {
       console.error('CRITICAL: Missing renter ID or Email. Cannot proceed with payment.');
       Swal.fire('Error', 'Could not initiate payment due to missing user details.', 'error');
       return;
     }
 
-    const basePrice = booking.totalPrice;
-    const platformFeeRate = 0.05; // 5%
-    const taxRate = 0.10;         // 10% TDS (Tax Deducted at Source)
-    const platformFee = basePrice * platformFeeRate;
-    const taxableAmount = basePrice + platformFee;
-    const taxes = taxableAmount * taxRate;
-    const finalAmount = basePrice + platformFee + taxes;
-
-    const formatCurrency = (value: number) => new Intl.NumberFormat('en-IN', { 
-      style: 'currency', 
-      currency: 'INR' 
-    }).format(value);
-
-    const confirmationHtml = `
-      <div class="text-left p-2 sm:p-4 space-y-3">
-        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-          <span class="text-gray-600">Base Price:</span>
-          <strong class="text-gray-800">${formatCurrency(basePrice)}</strong>
-        </div>
-        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-          <span class="text-gray-600">Platform Fee (5%):</span>
-          <strong class="text-gray-800">+ ${formatCurrency(platformFee)}</strong>
-        </div>
-        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-          <span class="text-gray-600">Taxes (TDS @ 10%):</span>
-          <strong class="text-gray-800">+ ${formatCurrency(taxes)}</strong>
-        </div>
-        <div class="flex justify-between items-center text-lg font-bold pt-2">
-          <span>Total Payable:</span>
-          <span class="text-blue-600">${formatCurrency(finalAmount)}</span>
-        </div>
-      </div>
-    `;
-
+    // Step 1: Create the initial request DTO.
+    // IMPORTANT: We send the BASE PRICE from the booking, not a client-calculated total.
+    const orderRequest: OrderDto = {
+      amount: booking.totalPrice, // Send the authoritative base price
+      userId: booking.renterId,
+      email: booking.renterEmail,
+      phone: booking.renterPhoneNumber,
+      bookingId: booking.id,
+      itemName: booking.itemName,
+      itemImage: booking.itemImage
+    };
+    
+    // Show a loading indicator while we talk to the backend
     Swal.fire({
-      title: 'Payment Summary',
-      html: confirmationHtml,
-      icon: 'info',
-      showCancelButton: true,
-      confirmButtonText: `Confirm & Pay`,
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#16a34a',
-      cancelButtonColor: '#d33'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const order: OrderDto = {
-          amount: Math.round(finalAmount),
-          userId: booking.renterId,
-          email: booking.renterEmail,
-          phone: booking.renterPhoneNumber,
-          bookingId: booking.id,
-          itemName: booking.itemName,
-          itemImage: booking.itemImage
-        };
-        this.paymentService.startPayment(order);
+      title: 'Creating Secure Order...',
+      text: 'Please wait while we prepare your payment details.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Step 2: Call the service to get the final breakdown and order details from the server.
+    this.paymentService.createRazorpayOrder(orderRequest).subscribe({
+      next: (response) => {
+        // Step 3: We now have the authoritative data from the backend.
+        const { baseAmount, platformFee, tds, totalAmount, razorpayOrderId, razorpayKeyId } = response;
+
+        const formatCurrency = (value: number) => new Intl.NumberFormat('en-IN', { 
+          style: 'currency', 
+          currency: 'INR' 
+        }).format(value);
+
+        const confirmationHtml = `
+          <div class="text-left p-2 sm:p-4 space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-gray-600">Base Price:</span>
+              <strong class="text-gray-800">${formatCurrency(baseAmount)}</strong>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-gray-600">Platform Fee (5%):</span>
+              <strong class="text-gray-800">+ ${formatCurrency(platformFee)}</strong>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+              <span class="text-gray-600">Taxes (TDS @ 10%):</span>
+              <strong class="text-gray-800">+ ${formatCurrency(tds)}</strong>
+            </div>
+            <div class="flex justify-between items-center text-lg font-bold pt-2">
+              <span>Total Payable:</span>
+              <span class="text-blue-600">${formatCurrency(totalAmount)}</span>
+            </div>
+          </div>
+        `;
+
+        // Step 4: Show the confirmation dialog with the SERVER-VERIFIED numbers.
+        Swal.fire({
+          title: 'Confirm Your Payment',
+          html: confirmationHtml,
+          icon: 'info',
+          showCancelButton: true,
+          confirmButtonText: `Confirm & Pay`,
+          cancelButtonText: 'Cancel',
+          confirmButtonColor: '#16a34a',
+          cancelButtonColor: '#d33'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Step 5: Proceed to launch Razorpay checkout.
+            this.paymentService.launchRazorpayCheckout({
+              keyId: razorpayKeyId,
+              orderId: razorpayOrderId,
+              amount: totalAmount,
+              userName: booking.renterName,
+              userEmail: booking.renterEmail,
+              userPhone: booking.renterPhoneNumber
+            });
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Failed to create Razorpay order:', err);
+        Swal.fire('Error', 'Could not create a secure payment order. Please try again later.', 'error');
       }
     });
   }

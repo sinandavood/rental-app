@@ -4,131 +4,162 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 import { AddProductComponent } from './products/add-product/add-product.component';
 import { ProductListComponent } from './products/product-list/product-list.component';
-import { OwnerProductsComponent } from './products/owner-products/owner-products.component';
+import { PaymentStatusPageComponent } from './payment-status-page/payment-status-page.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    {
-        path: 'auth',
-        loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-    },
-    {
-        path: 'products',
-        loadChildren: () => import('./products/products.module').then(m => m.ProductsModule),
-    },
-    
-    {
-        path: 'user',
-        loadChildren: () => import('./user/user.module').then(m => m.UserModule),
-        canActivate: [AuthGuard],
-    },
-    {
-        path: 'admin',
-        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
-        canActivate: [AdminGuard],
-    },
-    {
-        path: 'my-wishlist',
-        loadComponent: () =>
-            import('./mywishlist-list/mywishlist-list.component').then(m => m.MyWishlistComponent),
-        canActivate: [AuthGuard],
-    },
-    {
-        path: 'add-product', component: AddProductComponent
-    },
-    {
-        path: 'my-items',
-        loadComponent: () => import('./products/my-items/my-items.component').then(m => m.MyItemsComponent)
-    },
+  { path: '', component: HomeComponent },
 
-    {
-        path:'notifications',
-        loadComponent:()=> import('./notifications/notifications.component').then(m=>m.NotificationsComponent),
-        canActivate:[AuthGuard],
+  // Auth Module
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+  },
 
-    },
+  // Products Module
+  {
+    path: 'products',
+    loadChildren: () =>
+      import('./products/products.module').then((m) => m.ProductsModule),
+  },
 
-     {
-        path:'my-bookings',
-        loadComponent:()=> import('./my-bookings/my-bookings.component').then(m=>m.MyBookingsComponent),
-        canActivate:[AuthGuard],
+  // User Module
+  {
+    path: 'user',
+    loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
+    canActivate: [AuthGuard],
+  },
 
-    },
+  // Admin Module
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./admin/admin.module').then((m) => m.AdminModule),
+    canActivate: [AdminGuard],
+  },
 
+  {
+    path: 'my-wishlist',
+    loadComponent: () =>
+      import('./mywishlist-list/mywishlist-list.component').then(
+        (m) => m.MyWishlistComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  { path: 'add-product', component: AddProductComponent },
+  {
+    path: 'my-items',
+    loadComponent: () =>
+      import('./products/my-items/my-items.component').then(
+        (m) => m.MyItemsComponent
+      ),
+  },
+  {
+    path: 'notifications',
+    loadComponent: () =>
+      import('./notifications/notifications.component').then(
+        (m) => m.NotificationsComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'my-bookings',
+    loadComponent: () =>
+      import('./my-bookings/my-bookings.component').then(
+        (m) => m.MyBookingsComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'edit-item/:id',
+    loadComponent: () =>
+      import('./products/edit-item/edit-item.component').then(
+        (m) => m.EditItemComponent
+      ),
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./user/profile/profile.component').then(
+        (m) => m.ProfileComponent
+      ),
+  },
+  { path: 'search', component: ProductListComponent },
+  {
+    path: 'edit-profile',
+    loadComponent: () =>
+      import('./user/edit-profile/edit-profile.component').then(
+        (m) => m.EditProfileComponent
+      ),
+  },
+  {
+    path: 'customer-support',
+    loadComponent: () =>
+      import('./customer-support/customer-support.component').then(
+        (m) => m.CustomerSupportComponent
+      ),
+  },
+  {
+    path: 'wallet',
+    loadComponent: () =>
+      import('./wallet/wallet.component').then((m) => m.WalletComponent),
+  },
+  {
+    path: 'banks',
+    loadComponent: () =>
+      import('./banks/banks.component').then((m) => m.BanksComponent),
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./auth/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'category/:id',
+    loadComponent: () =>
+      import('./categories/subcategory/subcategory.component').then(
+        (m) => m.SubcategoryComponent
+      ),
+  },
+  {
+    path: 'owner/:id/products',
+    loadComponent: () =>
+      import('./products/owner-products/owner-products.component').then(
+        (m) => m.OwnerProductsComponent
+      ),
+  },
+  {
+    path: 'products/:id',
+    loadComponent: () =>
+      import('./products/product-details/product-details.component').then(
+        (m) => m.ProductDetailsComponent
+      ),
+  },
+  {
+    path: 'checkout',
+    loadComponent: () =>
+      import('./checkout/checkout.component').then((m) => m.CheckoutComponent),
+  },
+  {
+    path: 'payment-history',
+    loadComponent: () =>
+      import('./payment-history/payment-history.component').then(
+        (m) => m.PaymentHistoryComponent
+      ),
+  },
+  {
+    path: 'user-dashboard',
+    loadComponent: () =>
+      import('./user/user-dashboard/user-dashboard.component').then(
+        (m) => m.UserDashboardComponent
+      ),
+  },
 
-    {
-        path: 'edit-item/:id',
-        loadComponent: () => import('./products/edit-item/edit-item.component').then(m => m.EditItemComponent)
-    },
-
-    {
-        path:'profile',
-        loadComponent:()=>import('./user/profile/profile.component').then(m=>m.ProfileComponent)
-
-
-    },
-
-    {
-        path:'search',
-        component:ProductListComponent
-    },
-    {
-        path:'edit-profile',
-        loadComponent:()=>import('./user/edit-profile/edit-profile.component').then(m=>m.EditProfileComponent)
-    },
-    {
-        path:'customer-support',
-        loadComponent:()=>import('./customer-support/customer-support.component').then(m=>m.CustomerSupportComponent)
-    },
-    {
-        path:'wallet',
-        loadComponent:()=>import('./wallet/wallet.component').then(m=>m.WalletComponent)
-    },
-    {
-        path:'banks',
-        loadComponent:()=>import('./banks/banks.component').then(m=>m.BanksComponent)
-    },
-
-
-    // {
-    //     path:'pending-items',
-    //     loadComponent:()=>import('./admin/pending-items/pending-items.component').then(m=>m.PendingItemsComponent)
-
-    // },
-
-
-    { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
-
-    {
-        path: 'category/:id',
-        loadComponent: () => import('./categories/subcategory/subcategory.component').then(m => m.SubcategoryComponent)
-    },
-
-    {
-        path: 'owner/:id/products',
-        loadComponent: () => import('./products/owner-products/owner-products.component').then(m => m.OwnerProductsComponent)
-    },
-
-{
-  path: 'products/:id',
-  loadComponent: () =>
-    import('./products/product-details/product-details.component').then(m => m.ProductDetailsComponent),
-},
-{
-        path:'checkout',
-        loadComponent:()=>import('./checkout/checkout.component').then(m=>m.CheckoutComponent)
-    },
-    {
-        path:'payment-success',
-        loadComponent:()=>import('./payment-status-page/payment-status-page.component').then(m=>m.PaymentStatusPageComponent)
-
-    },
-    {
-        path:'payment-history',
-        loadComponent:()=>import('./payment-history/payment-history.component').then(m=>m.PaymentHistoryComponent)
-    },
-    {
-        path:'user-dashboard',
-        loadComponent:()=>import('./user/user-dashboard/user-dashboard.component').then(m=>m.UserDashboardComponent)
-    }
+  // ✅ Unified payment status page
+  {
+    path: 'payment-tracker',
+    loadComponent: () =>
+      import('./payment-status-page/payment-status-page.component').then(
+        (m) => m.PaymentStatusPageComponent
+      ),
+  },
 ];

@@ -1,6 +1,6 @@
  export interface OrderDto 
 {
-    amount:number;
+    amount?:number;
     userId:string;
     email:string;
     phone:string;

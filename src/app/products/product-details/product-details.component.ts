@@ -11,7 +11,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { BookingService } from 'src/app/core/services/booking.service';
 import Swal from 'sweetalert2';
 
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MakeOfferComponent } from '../make-offer/make-offer.component';
 
 @Component({
@@ -22,7 +22,8 @@ import { MakeOfferComponent } from '../make-offer/make-offer.component';
     RouterModule,
     MatCardModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatDialogModule
   ],
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css']

@@ -24,6 +24,7 @@
       <table class="table modern-table">
         <thead>
           <tr>
+            <th>Item id</th>
             <th>Image</th>
             <th>Name</th>
             <th>Category</th>
@@ -37,6 +38,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of filteredItems | slice:(page-1)*pageSize:page*pageSize" class="modern-table-row">
+            <td>{{ item.id }}</td>
             <td>
               <img
                 [src]="imageurl + item.image"
