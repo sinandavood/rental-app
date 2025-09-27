@@ -1,11 +1,11 @@
 export interface Notification {
-  id: number;           // Recommended: A unique identifier for each notification.
+  id: number;
   title: string;
   description: string;
   message: string;
-  isRead: boolean;      // Recommended: Changed to boolean for type safety.
-  createdAt: Date;      // Recommended: Changed to Date for easier manipulation.
-  type: string;
+  isRead: boolean;
+  createdAt: Date;
+  type: 'ITEM_LISTING' | 'BOOKING' | 'PAYMENT_HISTORY' | 'GENERIC'; 
   userId: string;
-  link:string;
+  link?: string; // still optional fallback
 }

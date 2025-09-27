@@ -1,8 +1,13 @@
 <div class="px-4 py-4 w-full max-w-7xl mx-auto space-y-4">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Notifications</h2>
+  
   <div *ngFor="let n of notifications"
-       class="bg-white shadow-lg rounded-xl px-6 py-3 border-l-4 border-blue-500 flex justify-between items-start min-h-[70px] relative"
+       class="bg-white shadow-lg rounded-xl px-6 py-3 border-l-4 border-blue-500 flex justify-between items-start min-h-[70px] relative cursor-pointer hover:bg-gray-50 transition-colors"
        [class.border-red-500]="!n.isRead"
-       [class.bg-red-50]="!n.isRead">
+       [class.bg-red-50]="!n.isRead"
+       (click)="goToNotification(n, $event)"
+       role="button"
+       tabindex="0">
     
     <!-- Red dot indicator for unread notifications -->
     <div *ngIf="!n.isRead" 
@@ -10,25 +15,29 @@
     </div>
     
     <div class="flex-1">
-  <h5 class="text-lg font-semibold text-blue-600 mb-1">
-    {{ n.title }}
-    <span *ngIf="!n.isRead" class="text-red-500 ml-2">•</span>
-  </h5>
+      <h5 class="text-lg font-semibold text-blue-600 mb-1">
+        {{ n.title }}
+        <span *ngIf="!n.isRead" class="text-red-500 ml-2">•</span>
+      </h5>
 
-  <!-- Message with HTML support -->
-  <div class="text-sm text-gray-800" [innerHTML]="n.message"></div>
+      <!-- Message with HTML support -->
+      <div class="text-sm text-gray-800" [innerHTML]="n.message"></div>
 
-  <!-- Optional description (plain text) -->
-  <p class="text-sm text-gray-600 mt-1">
-    {{ n.description }}
-  </p>
-</div>
-
+      <!-- Optional description (plain text) -->
+      <p class="text-sm text-gray-600 mt-1" *ngIf="n.description">
+        {{ n.description }}
+      </p>
+      
+      <!-- Debug info - remove in production -->
+      <small class="text-xs text-gray-400 mt-2 block">
+        Type: {{ n.type }} | Link: {{ n.link || 'None' }}
+      </small>
+    </div>
 
     <div class="text-xs text-gray-400 text-right ml-6 whitespace-nowrap flex flex-col items-end">
       <div>{{ n.createdAt | date:'dd MMM, y h:mm a' }}</div>
       <button *ngIf="!n.isRead" 
-              (click)="markAsRead(n.id)"
+              (click)="markAsRead(n.id, $event)"
               class="mt-2 text-blue-500 hover:text-blue-700 text-xs underline">
         Mark as read
       </button>
@@ -36,6 +45,7 @@
   </div>
 
   <div *ngIf="notifications.length === 0" class="text-center text-gray-500 mt-10">
-    No notifications found.
+    <i class="bi bi-bell-slash text-4xl text-gray-300 mb-4"></i>
+    <p>No notifications found.</p>
   </div>
 </div>

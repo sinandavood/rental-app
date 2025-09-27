@@ -17,27 +17,34 @@
     </div>
 
     <div *ngIf="!isLoading && notifications.length > 0">
-      <div *ngFor="let n of notifications; trackBy: trackById">
-        <a [routerLink]="n.link || null" class="block p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors no-underline"
-           [class.bg-blue-50]="!n.isRead">
-          <div class="flex items-start gap-3">
-            <div class="mt-1.5 w-2.5 h-2.5 rounded-full flex-shrink-0"
-                 [ngClass]="n.isRead ? 'bg-gray-300' : 'bg-blue-500'">
-            </div>
-            <div class="flex-1">
-              <p class="text-sm font-semibold text-gray-800 leading-tight" [innerHTML]="n.title"></p>
-              <p class="text-xs text-gray-600 mt-1" [innerHTML]="n.message"></p>
-              <div class="text-xs text-gray-400 mt-1.5">{{ n.createdAt | date:'short' }}</div>
-            </div>
+      <div *ngFor="let n of notifications; trackBy: trackById"
+           (click)="goToNotification(n, $event)"
+           class="cursor-pointer block p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors"
+           [class.bg-blue-50]="!n.isRead"
+           role="button"
+           tabindex="0">
+
+        <div class="flex items-start gap-3">
+          <div class="mt-1.5 w-2.5 h-2.5 rounded-full flex-shrink-0"
+               [ngClass]="n.isRead ? 'bg-gray-300' : 'bg-blue-500'">
           </div>
-        </a>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-gray-800 leading-tight" [innerHTML]="n.title"></p>
+            <p class="text-xs text-gray-600 mt-1" [innerHTML]="n.message"></p>
+            <div class="text-xs text-gray-400 mt-1.5">{{ n.createdAt | date:'short' }}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- View All button -->
   <div class="bg-gray-50 px-4 py-2 text-center rounded-b-xl border-t">
-    <a routerLink="/notifications" class="text-sm font-medium text-blue-600 hover:text-blue-800 no-underline">
+    <button (click)="router.navigate(['/notifications'])"
+            class="text-sm font-medium text-blue-600 hover:text-blue-800 no-underline focus:outline-none">
       View All Notifications
-    </a>
+    </button>
   </div>
 </div>
+
+

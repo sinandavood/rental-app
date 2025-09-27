@@ -1,25 +1,78 @@
-<nav class="navbar navbar-dark bg-dark px-4">
-  <a class="navbar-brand" routerLink="/admin/dashboard">Admin Panel</a>
-  <ul class="navbar-nav flex-row gap-4 ms-auto">
-     <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/dashboard">Dashboard</a></li>
-    <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/products">Listed items</a></li>
-    <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/pending-items">Approve listed items</a></li>
-    <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/users">Users</a></li>
-    <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/all-bookings">All bookings</a></li>
-    <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/all-payments">All payments</a></li>
-    <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/broadcast-message">broadcast-message</a></li>
-    <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/categories">Categories</a></li>
-    <li class="nav-item"><a class="nav-link text-white" routerLink="/admin/kyc-requests">KYC</a></li>
-      <button class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
+<!-- Mobile toggle button -->
+<button class="mobile-toggle d-md-none" (click)="toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- Left Sidebar -->
+<nav class="sidebar" [class.show]="sidebarOpen">
+  <a class="brand" routerLink="/admin/dashboard">
+    <i class="fas fa-user-shield me-2"></i>Admin Panel
+  </a>
+  
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active">
+        <i class="fas fa-tachometer-alt"></i>Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/products" routerLinkActive="active">
+        <i class="fas fa-boxes"></i>Listed items
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/pending-items" routerLinkActive="active">
+        <i class="fas fa-clock"></i>Approve listed items
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/users" routerLinkActive="active">
+        <i class="fas fa-users"></i>Users
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/all-bookings" routerLinkActive="active">
+        <i class="fas fa-calendar-check"></i>All bookings
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/all-payments" routerLinkActive="active">
+        <i class="fas fa-credit-card"></i>All payments
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/broadcast-message" routerLinkActive="active">
+        <i class="fas fa-broadcast-tower"></i>Broadcast Message
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/categories" routerLinkActive="active">
+        <i class="fas fa-tags"></i>Categories
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/admin/kyc-requests" routerLinkActive="active">
+        <i class="fas fa-id-card"></i>KYC Requests
+      </a>
+    </li>
   </ul>
+  
+  <button class="btn btn-outline-light btn-sm logout-btn" (click)="logout()">
+    <i class="fas fa-sign-out-alt me-2"></i>Logout
+  </button>
 </nav>
 
-<div class="container mt-4">
-  <router-outlet></router-outlet>
-</div>
-
-<footer class="bg-dark text-white py-3 mt-4">
-  <div class="container text-center">
-    <span>&copy; 2025 YourAppName. All rights reserved.</span>
+<!-- Main Content Area -->
+<div class="main-content">
+  <div class="content-wrapper">
+    <div class="container-fluid mt-4">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-</footer>
+  
+  <footer class="footer bg-dark text-white py-3 mt-4">
+    <div class="container text-center">
+      <span>&copy; 2025 YourAppName. All rights reserved.</span>
+    </div>
+  </footer>
+</div>
