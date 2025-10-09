@@ -1,7 +1,7 @@
 <section class="product-section container my-5">
   <h2 class="section-title text-center mb-4">Available Products for Rent</h2>
 
-  <!-- Skeleton cards (while loading) -->
+  <!-- 🦴 Skeleton Loader -->
   <div class="row" *ngIf="isLoading">
     <div
       class="col-md-6 col-lg-4 col-xl-3 mb-4"
@@ -17,60 +17,60 @@
     </div>
   </div>
 
-  <!-- Show 'not found' message -->
+  <!-- 🚫 No Products -->
   <div *ngIf="!isLoading && products.length === 0" class="text-center my-5">
-    <p class="no-products text-muted">
-      No products found. Check back later!
-    </p>
+    <p class="text-muted">No products found. Check back later!</p>
   </div>
 
-  <!-- Products grid -->
-  <div class="row" *ngIf="!isLoading && visibleProducts.length > 0">
+  <!-- 🛍️ Product Grid -->
+  <div class="row" *ngIf="!isLoading && paginatedProducts.length > 0">
     <div
       class="col-md-6 col-lg-4 col-xl-3 mb-4"
-      *ngFor="let product of visibleProducts"
+      *ngFor="let product of paginatedProducts"
     >
       <div
         class="product-card h-100 shadow rounded-4 border bg-white"
         (click)="goToProduct(product.id)"
         style="cursor: pointer;"
       >
-        <!-- Image and icons -->
         <div class="position-relative product-image-container">
-          <img [src]="imageurl+product.image" alt="{{ product.name }}"
-            class="product-image rounded-top-4 w-100" />
+          <img
+            [src]="imageurl + product.image"
+            alt="{{ product.name }}"
+            class="product-image rounded-top-4 w-100"
+          />
 
-          <!-- Wishlist Icon -->
+          <!-- ❤️ Wishlist -->
           <div
             class="top-icons position-absolute top-0 end-0 m-2 d-flex flex-column gap-2"
           >
             <i
-              class="bi icon"
+              class="bi"
               [ngClass]="
                 isInWishlist(product.id)
                   ? 'bi-heart-fill text-danger'
                   : 'bi-heart text-muted'
               "
-              (click)="toggleWishlist(product.id); $event.stopPropagation()"
+              (click)="toggleWishlist(product.id, $event)"
               style="cursor: pointer;"
               title="Add to Wishlist"
             ></i>
           </div>
         </div>
 
-        <!-- Product Info -->
         <div class="product-info p-3">
-          <h5 class="product-name fw-semibold mb-2 text-truncate">
-            {{ product.name }}
-          </h5>
-          <p class="product-price text-danger fw-bold mb-2">
+          <h5 class="fw-semibold mb-2 text-truncate">{{ product.name }}</h5>
+          <p class="text-danger fw-bold mb-2">
             {{ product.price | currency: 'INR' }}/day
           </p>
 
-          <div class="product-meta small text-muted mb-3">
-            <div><i class="bi bi-geo-alt me-1"></i>location : {{ product.locationName }}</div>
-            <div><i class="bi bi-person me-1"></i>owner : {{ product.ownerName }}</div>
-            <div><i class="bi bi-clock me-1"></i>posted at : {{ product.createdAt | date: 'mediumDate' }}</div>
+          <div class="small text-muted mb-3">
+            <div><i class="bi bi-geo-alt me-1"></i> {{ product.locationName }}</div>
+            <div><i class="bi bi-person me-1"></i> {{ product.ownerName }}</div>
+            <div>
+              <i class="bi bi-clock me-1"></i>
+              {{ product.createdAt | date: 'mediumDate' }}
+            </div>
           </div>
 
           <div class="d-flex justify-content-between align-items-center">
@@ -86,7 +86,7 @@
             </span>
             <button
               class="btn btn-danger btn-sm"
-              (click)="goToProduct(product.id); $event.stopPropagation()"
+              (click)="goToProduct(product.id, $event)"
             >
               Rent Now
             </button>
@@ -96,10 +96,36 @@
     </div>
   </div>
 
-  <!-- View All Button -->
-  <div *ngIf="limit" class="text-center mt-4">
-    <a routerLink="/products" class="btn btn-danger btn-lg px-3"
-      >View All Products</a
+  <!-- 📄 Pagination Controls -->
+  <div *ngIf="totalPages > 1" class="pagination-container text-center mt-4">
+    <button
+      class="btn btn-outline-danger me-3"
+      [disabled]="currentPage === 1"
+      (click)="changePage(currentPage - 1)"
     >
+      Previous
+    </button>
+
+    <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+      <button
+        class="btn mx-1"
+        [ngClass]="
+          currentPage === i + 1
+            ? 'btn-danger text-white'
+            : 'btn-outline-danger'
+        "
+        (click)="changePage(i + 1)"
+      >
+        {{ i + 1 }}
+      </button>
+    </ng-container>
+
+    <button
+      class="btn btn-outline-danger ms-3"
+      [disabled]="currentPage === totalPages"
+      (click)="changePage(currentPage + 1)"
+    >
+      Next
+    </button>
   </div>
 </section>
